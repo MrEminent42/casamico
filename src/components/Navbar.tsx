@@ -6,7 +6,7 @@ const Navbar = () => {
 
     return (
         <NavbarContainer>
-            <SideContainer>
+            <SideContainer onClick={() => navigate("/")}>
                 [logo]
             </SideContainer>
             <CenterContainer>
