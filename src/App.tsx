@@ -27,8 +27,5 @@ const FontWrapper = styled.div`
   font-family: Arial, Helvetica, sans-serif;
 `
 const MainContainer = styled.div`
-  border-radius: 30px;
-  padding: 100px 10px;
   color: black;
-  text-align: center;
 `
