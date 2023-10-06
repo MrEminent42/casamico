@@ -1,13 +1,12 @@
 import React from 'react'
 import styled from 'styled-components';
+import backbuttonsvg from '../images/arrow-left-circle.svg';
 
 const Page2 = () => {
     return (
         <TaskContainer>
             <BackButtonContainer>
-                {/* <BackButtonButton>
-
-                </BackButtonButton> */}
+                <img src={backbuttonsvg} />
             </BackButtonContainer>
         </TaskContainer>
     )
