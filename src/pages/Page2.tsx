@@ -6,7 +6,8 @@ const Page2 = () => {
     return (
         <TaskContainer>
             <BackButtonContainer>
-                <img src={backbuttonsvg} />
+                <BackButton src={backbuttonsvg}></BackButton>
+                <BackLabel>back</BackLabel>
             </BackButtonContainer>
         </TaskContainer>
     )
@@ -23,4 +24,17 @@ const TaskContainer = styled.div`
 const BackButtonContainer = styled.div`
     border: 2px solid red;
     display: flex;
+    align-items: center;
+    padding: 0;
+`
+
+const BackButton = styled.img`
+    border: 2px solid green;
+    width: 30px;
+    height: 30px;
+`
+
+const BackLabel = styled.p`
+    font-size: 15px;
+    margin: 0;
 `
