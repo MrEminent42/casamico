@@ -12,19 +12,19 @@ const PropertyCardView = () => {
         <PropertyCardViewContainer>
             <PropertyCardRowCenterContainer>
                 <PropertyCardRowContainer>
-                    <PropertyCardContainer onClick={() => navigate("/1")} style={{ width: cardW, marginLeft: cardMargin, marginRight: cardMargin }}>
+                    <PropertyCardContainer onClick={() => navigate("/2")} style={{ width: cardW, marginLeft: cardMargin, marginRight: cardMargin }}>
                         <img src={defaultHouseImage} alt="Default House" />
                         <div> Property 1</div>
                         <div> 1 Task </div>
                     </PropertyCardContainer>
 
-                    <PropertyCardContainer onClick={() => navigate("/1")} style={{ width: cardW, marginLeft: cardMargin, marginRight: cardMargin }}>
+                    <PropertyCardContainer onClick={() => navigate("/2")} style={{ width: cardW, marginLeft: cardMargin, marginRight: cardMargin }}>
                         <img src={defaultHouseImage} alt="Default House" />
                         <div> Property 2</div>
                         <div> 2 Tasks </div>
                     </PropertyCardContainer>
 
-                    <PropertyCardContainer onClick={() => navigate("/1")} style={{ width: cardW, marginLeft: cardMargin, marginRight: cardMargin }}>
+                    <PropertyCardContainer onClick={() => navigate("/2")} style={{ width: cardW, marginLeft: cardMargin, marginRight: cardMargin }}>
                         <img src={defaultHouseImage} alt="Default House" />
                         <div> Property 3</div>
                         <div> 0 Tasks </div>
@@ -34,19 +34,19 @@ const PropertyCardView = () => {
 
             <PropertyCardRowCenterContainer>
                 <PropertyCardRowContainer>
-                    <PropertyCardContainer onClick={() => navigate("/1")} style={{ width: cardW, marginLeft: cardMargin, marginRight: cardMargin }}>
+                    <PropertyCardContainer onClick={() => navigate("/2")} style={{ width: cardW, marginLeft: cardMargin, marginRight: cardMargin }}>
                         <img src={defaultHouseImage} alt="Default House" />
                         <div> Property 4</div>
                         <div> 1 Task </div>
                     </PropertyCardContainer>
 
-                    <PropertyCardContainer onClick={() => navigate("/1")} style={{ width: cardW, marginLeft: cardMargin, marginRight: cardMargin }}>
+                    <PropertyCardContainer onClick={() => navigate("/2")} style={{ width: cardW, marginLeft: cardMargin, marginRight: cardMargin }}>
                         <img src={defaultHouseImage} alt="Default House" />
                         <div> Property 5</div>
                         <div> 2 Tasks </div>
                     </PropertyCardContainer>
 
-                    <PropertyCardContainer onClick={() => navigate("/1")} style={{ width: cardW, marginLeft: cardMargin, marginRight: cardMargin }}>
+                    <PropertyCardContainer onClick={() => navigate("/2")} style={{ width: cardW, marginLeft: cardMargin, marginRight: cardMargin }}>
                         <img src={defaultHouseImage} alt="Default House" />
                         <div> Property 6</div>
                         <div> 0 Tasks </div>
