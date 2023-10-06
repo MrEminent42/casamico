@@ -1,10 +1,29 @@
 This is a Cal Poly CSC 308/309 project and is intended to comply with all standard software engineering practices.
 # casamico
+A task tracker for your house!
+
+## Contributing
+
+1. Clone this repo locally
+2. Install NodeJS and NPM, LTS version 18.18.0: https://nodejs.org/en/download
+
+3. In this repo's directory, run `npm i` to install all the required packages associated with this project
+
+4. In this repo's directory, run `npm start` to start the program
+
+5. Make & checkout to a feature branch with `git branch feature-branch name` and `git checkout feature-branch-name` 
+
+6. Make your changes
+
+7. Make a pull request and get your stuff merged!
+
 
 ## Description
 A task tracker for your AirBnB/rental home.
 
-## Definitions
+## Design
+
+### Definitions
 
 * Task: a database entry with the following characteristics:
     * title,
@@ -23,7 +42,7 @@ A task tracker for your AirBnB/rental home.
 * Filterable characteristics: due date, tag(s), occurrence type, room(s), status.
 * Sortable characteristics: title, due date, status.
 
-## User Stories
+### User Stories
 
 1. As a Host,* I want to add custom Tasks*, so that I can keep track of Tasks* in my house. 
 2. As a Host,* I want to mark Tasks* as completed, so that 2. I can focus only on Tasks* that need to be completed.
@@ -38,7 +57,7 @@ A task tracker for your AirBnB/rental home.
 11. As a Host,* I want to perform perform US 1-10 for multiple properties, so that I can manage the Tasks* in multiple properties under one profile.
 12. As a Host,* I want to perform US 1-10 for one property at a time, so that I can focus on a single property without distraction.
 
-## Functional Requirements
+### Functional Requirements
 
 1.The system shall provide a form for the user to create and update a Task*.
 
