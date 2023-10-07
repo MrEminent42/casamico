@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 import { useNavigate } from 'react-router-dom';
 import defaultHouseImage from '../assets/default_house.png';
+import PropertyCard from './PropertyCard';
 
 const PropertyCardView = () => {
     const navigate = useNavigate();
@@ -8,59 +9,37 @@ const PropertyCardView = () => {
     return (
         <div>
             <PropertyCardViewContainer>
-                <PropertyCardContainer onClick={() => navigate("/2")}>
-                    <img src={defaultHouseImage} alt="Default House" />
-                    <div> Property 1</div>
-                    <div> 1 Task </div>
-                </PropertyCardContainer>
 
-                <PropertyCardContainer onClick={() => navigate("/2")}>
-                    <img src={defaultHouseImage} alt="Default House" />
-                    <div> Property 2</div>
-                    <div> 2 Tasks </div>
-                </PropertyCardContainer>
-
-                <PropertyCardContainer onClick={() => navigate("/2")}>
-                    <img src={defaultHouseImage} alt="Default House" />
-                    <div> Property 3</div>
-                    <div> 0 Tasks </div>
-                </PropertyCardContainer>
-
-                <PropertyCardContainer onClick={() => navigate("/2")}>
-                    <img src={defaultHouseImage} alt="Default House" />
-                    <div> Property 4</div>
-                    <div> 1 Task </div>
-                </PropertyCardContainer>
-
-                <PropertyCardContainer onClick={() => navigate("/2")}>
-                    <img src={defaultHouseImage} alt="Default House" />
-                    <div> Property 5</div>
-                    <div> 2 Tasks </div>
-                </PropertyCardContainer>
-
-                <PropertyCardContainer onClick={() => navigate("/2")}>
-                    <img src={defaultHouseImage} alt="Default House" />
-                    <div> Property 6</div>
-                    <div> 0 Tasks </div>
-                </PropertyCardContainer>
-
-                <PropertyCardContainer onClick={() => navigate("/2")}>
-                    <img src={defaultHouseImage} alt="Default House" />
-                    <div> Property 7</div>
-                    <div> 1 Task </div>
-                </PropertyCardContainer>
-
-                <PropertyCardContainer onClick={() => navigate("/2")}>
-                    <img src={defaultHouseImage} alt="Default House" />
-                    <div> Property 8</div>
-                    <div> 2 Tasks </div>
-                </PropertyCardContainer>
-
-                <PropertyCardContainer onClick={() => navigate("/2")}>
-                    <img src={defaultHouseImage} alt="Default House" />
-                    <div> Property 9</div>
-                    <div> 0 Tasks </div>
-                </PropertyCardContainer>
+                <PropertyCard
+                    name="Property 1"
+                    address="123 Main St"
+                    image={"https://images.pexels.com/photos/1029599/pexels-photo-1029599.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"}
+                    numTasks={1}
+                />
+                <PropertyCard
+                    name="Property 2"
+                    address="123 Main St"
+                    image={"https://images.pexels.com/photos/2102587/pexels-photo-2102587.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"}
+                    numTasks={1}
+                />
+                <PropertyCard
+                    name="Property 3"
+                    address="123 Main St"
+                    image={"https://images.pexels.com/photos/1115804/pexels-photo-1115804.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"}
+                    numTasks={1}
+                />
+                <PropertyCard
+                    name="Property 4"
+                    address="123 Main St"
+                    image={"https://images.pexels.com/photos/2581922/pexels-photo-2581922.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"}
+                    numTasks={1}
+                />
+                <PropertyCard
+                    name="Property 5"
+                    address="123 Main St"
+                    image={"https://images.pexels.com/photos/1029599/pexels-photo-1029599.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"}
+                    numTasks={1}
+                />
             </PropertyCardViewContainer>
         </div>
     )
@@ -70,16 +49,7 @@ export default PropertyCardView
 
 const PropertyCardViewContainer = styled.div`
     display: grid;
-    gap: 10px;
-    grid-template-columns: auto auto auto;
+    /* gap: 10px; */
+    grid-template-columns: 33% 33% 33%;
     color: black;
-`
-
-const PropertyCardContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 10px;
-    border: 1px dotted black;
-    border-radius: 10px;
 `
