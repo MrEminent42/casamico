@@ -6,63 +6,61 @@ const PropertyCardView = () => {
     const navigate = useNavigate();
 
     return (
-        <div>
-            <PropertyCardViewContainer>
-                <PropertyCardContainer onClick={() => navigate("/2")}>
-                    <img src={defaultHouseImage} alt="Default House" />
-                    <div> Property 1</div>
-                    <div> 1 Task </div>
-                </PropertyCardContainer>
+        <PropertyCardViewContainer>
+            <PropertyCardContainer onClick={() => navigate("/2")}>
+                <img src={defaultHouseImage} alt="Default House" />
+                <div> Property 1</div>
+                <div> 1 Task </div>
+            </PropertyCardContainer>
 
-                <PropertyCardContainer onClick={() => navigate("/2")}>
-                    <img src={defaultHouseImage} alt="Default House" />
-                    <div> Property 2</div>
-                    <div> 2 Tasks </div>
-                </PropertyCardContainer>
+            <PropertyCardContainer onClick={() => navigate("/2")}>
+                <img src={defaultHouseImage} alt="Default House" />
+                <div> Property 2</div>
+                <div> 2 Tasks </div>
+            </PropertyCardContainer>
 
-                <PropertyCardContainer onClick={() => navigate("/2")}>
-                    <img src={defaultHouseImage} alt="Default House" />
-                    <div> Property 3</div>
-                    <div> 0 Tasks </div>
-                </PropertyCardContainer>
+            <PropertyCardContainer onClick={() => navigate("/2")}>
+                <img src={defaultHouseImage} alt="Default House" />
+                <div> Property 3</div>
+                <div> 0 Tasks </div>
+            </PropertyCardContainer>
 
-                <PropertyCardContainer onClick={() => navigate("/2")}>
-                    <img src={defaultHouseImage} alt="Default House" />
-                    <div> Property 4</div>
-                    <div> 1 Task </div>
-                </PropertyCardContainer>
+            <PropertyCardContainer onClick={() => navigate("/2")}>
+                <img src={defaultHouseImage} alt="Default House" />
+                <div> Property 4</div>
+                <div> 1 Task </div>
+            </PropertyCardContainer>
 
-                <PropertyCardContainer onClick={() => navigate("/2")}>
-                    <img src={defaultHouseImage} alt="Default House" />
-                    <div> Property 5</div>
-                    <div> 2 Tasks </div>
-                </PropertyCardContainer>
+            <PropertyCardContainer onClick={() => navigate("/2")}>
+                <img src={defaultHouseImage} alt="Default House" />
+                <div> Property 5</div>
+                <div> 2 Tasks </div>
+            </PropertyCardContainer>
 
-                <PropertyCardContainer onClick={() => navigate("/2")}>
-                    <img src={defaultHouseImage} alt="Default House" />
-                    <div> Property 6</div>
-                    <div> 0 Tasks </div>
-                </PropertyCardContainer>
+            <PropertyCardContainer onClick={() => navigate("/2")}>
+                <img src={defaultHouseImage} alt="Default House" />
+                <div> Property 6</div>
+                <div> 0 Tasks </div>
+            </PropertyCardContainer>
 
-                <PropertyCardContainer onClick={() => navigate("/2")}>
-                    <img src={defaultHouseImage} alt="Default House" />
-                    <div> Property 7</div>
-                    <div> 1 Task </div>
-                </PropertyCardContainer>
+            <PropertyCardContainer onClick={() => navigate("/2")}>
+                <img src={defaultHouseImage} alt="Default House" />
+                <div> Property 7</div>
+                <div> 1 Task </div>
+            </PropertyCardContainer>
 
-                <PropertyCardContainer onClick={() => navigate("/2")}>
-                    <img src={defaultHouseImage} alt="Default House" />
-                    <div> Property 8</div>
-                    <div> 2 Tasks </div>
-                </PropertyCardContainer>
+            <PropertyCardContainer onClick={() => navigate("/2")}>
+                <img src={defaultHouseImage} alt="Default House" />
+                <div> Property 8</div>
+                <div> 2 Tasks </div>
+            </PropertyCardContainer>
 
-                <PropertyCardContainer onClick={() => navigate("/2")}>
-                    <img src={defaultHouseImage} alt="Default House" />
-                    <div> Property 9</div>
-                    <div> 0 Tasks </div>
-                </PropertyCardContainer>
-            </PropertyCardViewContainer>
-        </div>
+            <PropertyCardContainer onClick={() => navigate("/2")}>
+                <img src={defaultHouseImage} alt="Default House" />
+                <div> Property 9</div>
+                <div> 0 Tasks </div>
+            </PropertyCardContainer>
+        </PropertyCardViewContainer>
     )
 }
 
@@ -73,6 +71,11 @@ const PropertyCardViewContainer = styled.div`
     gap: 10px;
     grid-template-columns: auto auto auto;
     color: black;
+    height: 83vh;
+    -ms-overflow-style: none;
+    overflow: auto;
+    padding: 0 1rem;
+    scrollbar-width: none;
 `
 
 const PropertyCardContainer = styled.div`
