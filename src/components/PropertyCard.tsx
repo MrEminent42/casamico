@@ -1,6 +1,7 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { PropertyGridViewWrapper } from './PropertyCardView';
 
 
 interface PropertyCardProps {
@@ -15,7 +16,7 @@ const PropertyCard = (props: PropertyCardProps) => {
     let navigate = useNavigate();
 
     return (
-        <GridWrapper>
+        <PropertyGridViewWrapper>
             <PropertyCardContainer
                 onClick={() => navigate("/2")}
             >
@@ -28,23 +29,17 @@ const PropertyCard = (props: PropertyCardProps) => {
                     <div> {numTasks} Tasks </div>
                 </CardText>
             </PropertyCardContainer>
-        </GridWrapper>
+        </PropertyGridViewWrapper>
     )
 }
 
 
 export default PropertyCard
 
-// to give padding to each item
-const GridWrapper = styled.div`
-    padding: 10px;
-`
-
 // to contain the image, title, and text, etc.
 const PropertyCardContainer = styled.div`
     display: flex;
     flex-direction: column;
-    padding: 10px;
     
 `
 const PropertyImage = styled.img`
@@ -55,7 +50,7 @@ const PropertyImage = styled.img`
     object-fit: cover;
 
     // extra space so image can grow a bit
-    margin: 10px 0px;
+    margin-bottom: 10px;
 
     // add a nice-looking border radius and shadow
     border-radius: 10px;

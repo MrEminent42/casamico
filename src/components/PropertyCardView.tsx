@@ -2,6 +2,7 @@ import styled from 'styled-components'
 import { useNavigate } from 'react-router-dom';
 import defaultHouseImage from '../assets/default_house.png';
 import PropertyCard from './PropertyCard';
+import NewPropertyCard from './NewPropertyCard';
 
 const PropertyCardView = () => {
     const navigate = useNavigate();
@@ -40,6 +41,7 @@ const PropertyCardView = () => {
                     image={"https://images.pexels.com/photos/1029599/pexels-photo-1029599.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"}
                     numTasks={1}
                 />
+                <NewPropertyCard />
             </PropertyCardViewContainer>
         </div>
     )
@@ -52,4 +54,10 @@ const PropertyCardViewContainer = styled.div`
     /* gap: 10px; */
     grid-template-columns: 33% 33% 33%;
     color: black;
+`
+
+
+// to be used by each child in the grid
+export const PropertyGridViewWrapper = styled.div`
+    padding: 20px;
 `
