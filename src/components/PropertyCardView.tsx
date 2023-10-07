@@ -43,6 +43,24 @@ const PropertyCardView = () => {
                     <div> Property 6</div>
                     <div> 0 Tasks </div>
                 </PropertyCardContainer>
+
+                <PropertyCardContainer onClick={() => navigate("/2")}>
+                    <img src={defaultHouseImage} alt="Default House" />
+                    <div> Property 7</div>
+                    <div> 1 Task </div>
+                </PropertyCardContainer>
+
+                <PropertyCardContainer onClick={() => navigate("/2")}>
+                    <img src={defaultHouseImage} alt="Default House" />
+                    <div> Property 8</div>
+                    <div> 2 Tasks </div>
+                </PropertyCardContainer>
+
+                <PropertyCardContainer onClick={() => navigate("/2")}>
+                    <img src={defaultHouseImage} alt="Default House" />
+                    <div> Property 9</div>
+                    <div> 0 Tasks </div>
+                </PropertyCardContainer>
             </PropertyCardViewContainer>
         </div>
     )
