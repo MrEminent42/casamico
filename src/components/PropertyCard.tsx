@@ -5,14 +5,13 @@ import { PropertyGridViewWrapper } from './PropertyCardView';
 
 
 interface PropertyCardProps {
-    name: string;
     address: string;
     image: string;
     numTasks: number;
 }
 
 const PropertyCard = (props: PropertyCardProps) => {
-    let { name, address, image, numTasks } = props;
+    let { address, image, numTasks } = props;
     let navigate = useNavigate();
 
     return (
@@ -22,11 +21,10 @@ const PropertyCard = (props: PropertyCardProps) => {
             >
                 <PropertyImage src={image} />
                 <CardTitle>
-                    {name}
+                    {address}
                 </CardTitle>
                 <CardText>
-                    <div> {address} </div>
-                    <div> {numTasks} Tasks </div>
+                    {numTasks} Tasks
                 </CardText>
             </PropertyCardContainer>
         </PropertyGridViewWrapper>
@@ -77,4 +75,5 @@ const CardText = styled.div`
     font-size: 16px;
     font-weight: 500;
     margin: 5px 0px;
+    color: grey;
 `

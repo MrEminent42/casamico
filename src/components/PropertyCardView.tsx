@@ -12,31 +12,26 @@ const PropertyCardView = () => {
             <PropertyCardViewContainer>
 
                 <PropertyCard
-                    name="Property 1"
                     address="123 Main St"
                     image={"https://images.pexels.com/photos/1029599/pexels-photo-1029599.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"}
                     numTasks={1}
                 />
                 <PropertyCard
-                    name="Property 2"
                     address="123 Main St"
                     image={"https://images.pexels.com/photos/2102587/pexels-photo-2102587.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"}
                     numTasks={1}
                 />
                 <PropertyCard
-                    name="Property 3"
                     address="123 Main St"
                     image={"https://images.pexels.com/photos/1115804/pexels-photo-1115804.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"}
                     numTasks={1}
                 />
                 <PropertyCard
-                    name="Property 4"
                     address="123 Main St"
                     image={"https://images.pexels.com/photos/2581922/pexels-photo-2581922.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"}
                     numTasks={1}
                 />
                 <PropertyCard
-                    name="Property 5"
                     address="123 Main St"
                     image={"https://images.pexels.com/photos/1029599/pexels-photo-1029599.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"}
                     numTasks={1}
