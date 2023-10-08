@@ -10,7 +10,6 @@ const PropertyCardView = () => {
     return (
         <div>
             <PropertyCardViewContainer>
-
                 <PropertyCard
                     address="123 Main St"
                     image={"https://images.pexels.com/photos/1029599/pexels-photo-1029599.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"}
@@ -49,6 +48,11 @@ const PropertyCardViewContainer = styled.div`
     /* gap: 10px; */
     grid-template-columns: 33% 33% 33%;
     color: black;
+    height: 83vh;
+    -ms-overflow-style: none;
+    overflow: auto;
+    padding: 0 1rem;
+    scrollbar-width: none;
 `
 
 
