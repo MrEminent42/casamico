@@ -1,8 +1,16 @@
 import styled from 'styled-components'
 import PropertyCard from './PropertyCard';
 import NewPropertyCard from './NewPropertyCard';
+import { useEffect } from 'react';
+import { getAllProperties } from '../controllers/PropertyController';
 
 const PropertyCardView = () => {
+
+    // this runs when a webpage is loaded
+    useEffect(() => {
+        getAllProperties();
+    }, []);
+
 
     return (
         <div>
