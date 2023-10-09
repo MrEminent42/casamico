@@ -1,11 +1,8 @@
 import styled from 'styled-components'
-import { useNavigate } from 'react-router-dom';
-import defaultHouseImage from '../assets/default_house.png';
 import PropertyCard from './PropertyCard';
 import NewPropertyCard from './NewPropertyCard';
 
 const PropertyCardView = () => {
-    const navigate = useNavigate();
 
     return (
         <div>
