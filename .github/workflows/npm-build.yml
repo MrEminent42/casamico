@@ -25,5 +25,10 @@ jobs:
     - name: npm clean install
       run: npm ci
 
+    - name: warn that warnings are ignored
+      run: echo "HEADS UP - this Action ignores warnings in builds. There may be issues deploying."
+      
     - name: basic build
+      env: 
+        CI: false
       run: npm run build
