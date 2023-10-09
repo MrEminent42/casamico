@@ -14,12 +14,9 @@ const AddPropertyView = () => {
         <div>
             <h3> New Property </h3>
             <AddPropertyForm onSubmit={handleSubmit}>
-                <GridItemCol1>
+                <GridItemCol12>
                     <TitleAndText title="Street Address" name="address" />
-                </GridItemCol1>
-                <GridItemCol2>
-                    <TitleAndText title="City" name="city" />
-                </GridItemCol2>
+                </GridItemCol12>
                 <PreviewContainer>
                     Preview:
                     <PreviewBorderContainer>
@@ -31,23 +28,28 @@ const AddPropertyView = () => {
                     </PreviewBorderContainer>
                 </PreviewContainer>
                 <GridItemCol1>
-                    <TitleAndText title="State/Province" name="state" />
+                    <TitleAndText title="City" name="city" />
                 </GridItemCol1>
                 <GridItemCol2>
-                    <TitleAndText title="Country" name="country" />
+                    <TitleAndText title="State/Province" name="state" />
                 </GridItemCol2>
                 <GridItemCol1>
-                    <TitleAndText title="Photo" name="photo" />
+                    <TitleAndText title="Country" name="country" />
                 </GridItemCol1>
                 <GridItemCol2>
-                    <TitleAndText title="Rooms" name="rooms" />
+                    <TitleAndText title="Photo" name="photo" />
                 </GridItemCol2>
-                <SubmitButton>
-                    Save
-                </SubmitButton>
-                <SubmitButton>
-                    Exit Without Saving
-                </SubmitButton>
+                <GridItemCol12>
+                    <TitleAndText title="Rooms" name="rooms" />
+                </GridItemCol12>
+                <SubmitButtonsContainer>
+                    <SubmitButton>
+                        Save
+                    </SubmitButton>
+                    <SubmitButton>
+                        Exit Without Saving
+                    </SubmitButton>
+                </SubmitButtonsContainer>
             </AddPropertyForm>
         </div>
     )
@@ -57,7 +59,7 @@ const TitleAndText = (props: TitleTextProps) => {
     return (
         <div>
             <div> {props.title} </div>
-            <input name={props.name}/>
+            <input name={props.name} style={{width: "100%", margin:10}} />
         </div>
     )
 }
@@ -79,10 +81,18 @@ const AddPropertyForm = styled.form`
 
 const GridItemCol1 = styled.div`
     grid-column-start: 1;
+    margin-right: 2.5%;
 `
 
 const GridItemCol2 = styled.div`
     grid-column-start: 2;
+    margin-right: 5%;
+`
+
+const GridItemCol12 = styled.div`
+    grid-column-start: 1;
+    grid-column-end: 3;
+    margin-right: 2.5%;
 `
 
 const PreviewContainer = styled.div`
@@ -104,7 +114,7 @@ const PreviewBorderContainer = styled.div`
 
 const SubmitButton = styled.button`
     type: submit;
-    background-color: #4e82ad;
+    background-color: #77c855;
     color: white;
     padding: 10px;
     width: 50%;
@@ -112,7 +122,7 @@ const SubmitButton = styled.button`
     grid-column-start: 3;
 
     //border
-    border: 2px solid #6ea2cd;
+    border: 2px solid #97e875;
     border-radius: 10px;
     box-shadow: 2px 2px 10px rgba(0,0,0,0.1); 
     transition: 0.3s ease-in-out;
@@ -125,4 +135,9 @@ const SubmitButton = styled.button`
         cursor: pointer;
         box-shadow: 2px 2px 20px rgba(0,0,0,0.2);
     }
+`
+
+const SubmitButtonsContainer = styled.div`
+    display: flex;
+    flex-direction: column;
 `
