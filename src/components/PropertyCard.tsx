@@ -43,8 +43,7 @@ const PropertyCardContainer = styled.div`
 const PropertyImage = styled.img`
     // prevent image from overflowing
     max-width: 100%;
-    max-height: 250px;
-    min-height: 250px;
+    height: 250px;
     object-fit: cover;
 
     // extra space so image can grow a bit
