@@ -1,0 +1,34 @@
+name: Basic build test
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: npm clean install
+      run: npm ci
+
+    - name: warn that warnings are ignored
+      run: echo "HEADS UP - this Action ignores warnings in builds. There may be issues deploying."
+      
+    - name: basic build
+      env: 
+        CI: false
+      run: npm run build
