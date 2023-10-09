@@ -44,7 +44,7 @@ const PropertyImage = styled.img`
     // prevent image from overflowing
     max-width: 100%;
     max-height: 250px;
-    height: auto;
+    min-height: 250px;
     object-fit: cover;
 
     // extra space so image can grow a bit
