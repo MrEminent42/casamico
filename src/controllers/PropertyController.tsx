@@ -1,6 +1,17 @@
+import { Property } from "../Types";
+import { supabase } from "../supabase/supabaseClient";
 
-export const getAllProperties = () => {
+export const getAllProperties = async () => {
     alert("You have asked PropertyController to fetch all properties.");
+    const res = await supabase
+        .from('Properties')
+        .select();
+
+    if (res.error) {
+        throw (res.error);
+    }
+
+    return res.data as Property[];
 }
 
 export const createProperty = () => {
