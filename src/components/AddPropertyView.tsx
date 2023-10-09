@@ -93,6 +93,7 @@ const PreviewContainer = styled.div`
     grid-column-start: 3;
     grid-row-start: 1;
     grid-row-end: 4;
+    pointer-events: none;
 `
 
 const PreviewBorderContainer = styled.div`
