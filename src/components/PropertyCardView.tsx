@@ -43,7 +43,7 @@ export default PropertyCardView
 const PropertyCardViewContainer = styled.div`
     display: grid;
     /* gap: 10px; */
-    grid-template-columns: 33% 33% 33%;
+    grid-template-columns: 1fr 1fr 1fr;
     color: black;
     height: 83vh;
     -ms-overflow-style: none;
