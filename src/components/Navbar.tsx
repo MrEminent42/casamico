@@ -78,6 +78,7 @@ const CenterContainer = styled.div`
 
 const LogoWrapper = styled.div`
     height: 50px;
+    cursor: pointer;
 `
 
 const LogoImage = styled.img`
