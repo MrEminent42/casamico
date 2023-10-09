@@ -108,8 +108,21 @@ const SubmitButton = styled.button`
     color: white;
     padding: 10px;
     width: 50%;
-    margin: auto;
-    border: none;
-    border-radius: 10px;
+    margin: 5px auto;
     grid-column-start: 3;
+
+    //border
+    border: 2px solid #6ea2cd;
+    border-radius: 10px;
+    box-shadow: 2px 2px 10px rgba(0,0,0,0.1); 
+    transition: 0.3s ease-in-out;
+
+    // on hover, "raise" it by scaling the image up a bit, 
+    // and making more shadow.
+    // also, cursor should change to a pointer to indicate clickable
+    &:hover {
+        transform: scale(1.03);
+        cursor: pointer;
+        box-shadow: 2px 2px 20px rgba(0,0,0,0.2);
+    }
 `
