@@ -19,7 +19,7 @@ const PropertyCard = (props: PropertyCardProps) => {
         <PropertyGridViewWrapper>
             <PropertyCardContainer
                 onClick={() => {
-                    navigate("/2");
+                    navigate("/tasks");
                     setSelectedProperty(address)
                 }}
             >
