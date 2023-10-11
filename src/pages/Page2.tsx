@@ -36,9 +36,19 @@ const Page2 = () => {
                 </AddButton>
             </FilterandSortContainer>
             <TaskListContainer>
-                Task1
-                Task2
-                Task3
+                <BackgroundOfTaskContainer>
+                    <TheTaskContainer>
+                        <TextTaskTitle>
+                        Clean the Damn Dishes yurr
+                        </TextTaskTitle>
+                        <DaysLeftLabel>
+                            2 Days
+                        </DaysLeftLabel>
+                    </TheTaskContainer>
+                    <AddyLabel>
+                        Property 1
+                    </AddyLabel>
+                </BackgroundOfTaskContainer>
             </TaskListContainer>
         </TaskContainer>
     )
@@ -92,7 +102,7 @@ const HouseLabel = styled.p`
     bottom: 200px;
     left: 10px;
     -webkit-text-stroke-width: .5px;
-    -webkit-text-stroke-color: black;
+    -webkit-text-stroke-color: white;
 `
 //container to hold the filter and sort buttons and add buttons
 const FilterandSortContainer = styled.div`
@@ -114,7 +124,7 @@ const FilterButton = styled.button`
     font-size: 16px;
     margin: 4px 2px;
     cursor: pointer;
-    border-radius: 8px;
+    border-radius: 40px;
     
 
 `
@@ -130,7 +140,7 @@ const SortButton = styled.button`
     font-size: 16px;
     margin: 4px 2px;
     cursor: pointer;
-    border-radius: 8px;
+    border-radius: 40px;
     
 
 `
@@ -146,7 +156,7 @@ const AddButton = styled.button`
     font-size: 16px;
     margin: 4px 2px;
     cursor: pointer;
-    border-radius: 8px;
+    border-radius: 40px;
     margin-left: auto 
 
 `
@@ -162,4 +172,51 @@ const TaskListContainer = styled.div`
 const Mask1 = styled.mask`
     -webkit-mask-image: linear-gradient(black, transparent);
     mask-image: linear-gradient(black, transparent);
+`
+const BackgroundOfTaskContainer = styled.div`
+    border: 2px solid red;
+    background-color: #DFC5FE;
+    display: flex;
+    align-items: left;
+    padding:0
+    flex-direction: column;
+    height: 55px;
+    border-radius: 40px;
+`
+const TheTaskContainer = styled.div`
+    border: 2px solid orange;
+    background-color: #C994E3;
+    opacity:1;
+    display: flex;
+    align-items: left;
+    padding:0
+    flex-direction: column;
+    height: 55px;
+    border-radius: 40px;
+    width: 800px;
+`
+
+const TextTaskTitle = styled.p`
+    font-size: 28px;
+    color: black;
+    margin: 10px;
+    padding-left: 10px;
+    -webkit-text-stroke-width: .5px;
+    -webkit-text-stroke-color: ;
+`
+
+const DaysLeftLabel = styled.p`
+    font-size: 28px;
+    color: grey;
+    margin: 10px;
+    margin-left: auto;
+    padding-right: 10px;
+`
+
+const AddyLabel = styled.p`
+    font-size: 28px;
+    color: grey;
+    margin: 10px;
+    margin-left: auto;
+    padding-right: 10px;
 `
