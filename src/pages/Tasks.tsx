@@ -1,9 +1,9 @@
 import React from 'react'
 import styled from 'styled-components';
-import backbuttonsvg from '../images/arrow-left-circle.svg';
-import house from "../images/house.jpg";
-import addbuttonsvg from "../images/plus-button.svg";
-import FilterButton from '../components/FilterButton';
+import backbuttonsvg from '../assets/arrow-left-circle.svg';
+import house from "../assets/house.jpg";
+import addbuttonsvg from "../assets/plus-button.svg";
+import TaskViewButton from '../components/TaskViewButton';
 import Task from '../components/Task';
 
 const Page2 = () => {
@@ -20,11 +20,11 @@ const Page2 = () => {
                 </HouseLabel>
             </HouseContainer>
             <FilterandSortContainer>
-                <FilterButton 
+                <TaskViewButton 
                     label="Filter"
                     onClick={() => console.log("Filter button clicked")}
                 />
-                <FilterButton
+                <TaskViewButton
                     label="Sort"
                     onClick={() => console.log("Sort button clicked")}
                 />

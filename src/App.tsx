@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Page1 from './pages/Page1';
-import Page2 from './pages/Page2';
+import Tasks from './pages/Tasks';
 
 function App() {
   // store the currently selected property in what's called a "state"
@@ -24,7 +24,7 @@ function App() {
           {/* Again, pass the state and the function to update it. */}
           <Route path="/" element={<Home setSelectedProperty={setSelectedProperty} />} />
           <Route path="/1" element={<Page1 />} />
-          <Route path="/2" element={<Page2 />} />
+          <Route path="/2" element={<Tasks />} />
         </Routes>
       </MainContainer>
     </FontWrapper>
