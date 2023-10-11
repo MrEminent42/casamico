@@ -1,7 +1,7 @@
 import React from 'react'
-import { PropertyGridViewWrapper } from './PropertyCardView'
+import { PropertyGridViewWrapper } from '../../pages/Home';
 import styled from 'styled-components'
-import addIcon from '../assets/add.png';
+import addIcon from '../../assets/add.png';
 
 const NewPropertyCard = () => {
     return (

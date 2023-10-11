@@ -1,8 +1,8 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { PropertyGridViewWrapper } from './PropertyCardView';
-import { Property } from '../Types';
+import { PropertyGridViewWrapper } from '../../pages/Home';
+import { Property } from '../../Types';
 
 // check out Navbar.tsx for an explanation of this
 interface PropertyCardProps {
