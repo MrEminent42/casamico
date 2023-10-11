@@ -38,6 +38,7 @@ const AddPropertyView = () => {
                 </GridItemCol1>
                 <GridItemCol2>
                     <TitleAndText title="Photo" name="photo" />
+                    <SubmitButton>Browse</SubmitButton>
                 </GridItemCol2>
                 <GridItemCol12>
                     <TitleAndText title="Rooms" name="rooms" />
@@ -81,12 +82,13 @@ const AddPropertyForm = styled.form`
 
 const GridItemCol1 = styled.div`
     grid-column-start: 1;
-    margin-right: 2.5%;
+    margin-right: 5%;
 `
 
 const GridItemCol2 = styled.div`
     grid-column-start: 2;
     margin-right: 5%;
+
 `
 
 const GridItemCol12 = styled.div`
@@ -131,9 +133,9 @@ const SubmitButton = styled.button`
     // and making more shadow.
     // also, cursor should change to a pointer to indicate clickable
     &:hover {
-        transform: scale(1.03);
         cursor: pointer;
-        box-shadow: 2px 2px 20px rgba(0,0,0,0.2);
+        border: 2px solid #87d865;
+        background-color: #67b845;
     }
 `
 
