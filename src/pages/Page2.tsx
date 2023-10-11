@@ -11,17 +11,9 @@ const Page2 = () => {
                 <BackLabel>Back</BackLabel>
             </BackButtonContainer>
             <HouseContainer>
-                <Mask1>
-                <HouseImage style={{backgroundImage:
-                `url(${house})`, 
-                fontSize:'50px',
-                backgroundPosition: 'left',
-                backgroundSize: 'cover',
-                backgroundRepeat: 'no-repeat'}}>
-                </HouseImage>
-                </Mask1>
+                <HouseImageOverlay></HouseImageOverlay>
                 <HouseLabel>
-                    PROPERTY 1
+                    property 1
                 </HouseLabel>
             </HouseContainer>
             <FilterandSortContainer>
@@ -84,26 +76,34 @@ const BackLabel = styled.p`
 //container to hold the house photo and the text
 const HouseContainer = styled.div`
     border: 2px solid blue;
-    display: flex;
-    width: 600px;
-    height: 400px;
+    width: 80vw;
+    height: 250px;
+    position: relative;
+    border-radius: 10px;
+
+    background-image: url(${house});
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
 `
-//container for the house image
-const HouseImage= styled.img`
-    border: 2px solid yellow;
-    width: 600px;
-    height: 400px;
+//the overlay for the house image
+const HouseImageOverlay = styled.div`
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100px;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.7));
+    content: "";
 `
-//label to hold the name of the property
+
 const HouseLabel = styled.p`
-    font-size: 85px;
-    color: grey;
+    font-size: 50px;
+    color: white;
     margin: 0;
     position: absolute;
-    bottom: 200px;
+    bottom: 5px;
     left: 10px;
-    -webkit-text-stroke-width: .5px;
-    -webkit-text-stroke-color: white;
 `
 //container to hold the filter and sort buttons and add buttons
 const FilterandSortContainer = styled.div`
@@ -169,11 +169,7 @@ const TaskListContainer = styled.div`
     padding: 0;
     flex-direction: column;
 `
-//created a mask to apply a gradient to the property photo
-const Mask1 = styled.mask`
-    -webkit-mask-image: linear-gradient(black, transparent);
-    mask-image: linear-gradient(black, transparent);
-`
+
 const BackgroundOfTaskContainer = styled.div`
     border: 2px solid red;
     background-color: #DFC5FE;
