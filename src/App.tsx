@@ -24,7 +24,7 @@ function App() {
           {/* Again, pass the state and the function to update it. */}
           <Route path="/" element={<Home setSelectedProperty={setSelectedProperty} />} />
           <Route path="/1" element={<Page1 />} />
-          <Route path="/2" element={<Page2 />} />
+          <Route path="/property/:id" element={<Page2 />} />
         </Routes>
       </MainContainer>
     </FontWrapper>

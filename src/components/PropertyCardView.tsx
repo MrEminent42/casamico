@@ -25,11 +25,9 @@ const PropertyCardView = (props: PropertyCardViewProps) => {
                 {
                     properties.map((property) => (
                         <PropertyCard
-                            address={property.address}
-                            image={property.image_url}
-                            numTasks={-1}
-                            key={property.property_id}
                             setSelectedProperty={props.setSelectedProperty}
+                            property={property}
+                            key={property.property_id}
                         />
                     ))
                 }

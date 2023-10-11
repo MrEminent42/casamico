@@ -2,33 +2,33 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { PropertyGridViewWrapper } from './PropertyCardView';
+import { Property } from '../Types';
 
 // check out Navbar.tsx for an explanation of this
 interface PropertyCardProps {
-    address: string;
-    image: string;
-    numTasks: number;
+    property: Property;
     setSelectedProperty: (property: string) => void;
 }
 
 const PropertyCard = (props: PropertyCardProps) => {
-    let { address, image, numTasks, setSelectedProperty } = props;
+    let { property, setSelectedProperty } = props;
+    let { address, image_url, property_id } = property;
     let navigate = useNavigate();
 
     return (
         <PropertyGridViewWrapper>
             <PropertyCardContainer
                 onClick={() => {
-                    navigate("/2");
+                    navigate("/property/" + property_id);
                     setSelectedProperty(address)
                 }}
             >
-                <PropertyImage src={image} />
+                <PropertyImage src={image_url} />
                 <CardTitle>
                     {address}
                 </CardTitle>
                 <CardText>
-                    {numTasks} Tasks
+                    -1 Tasks
                 </CardText>
             </PropertyCardContainer>
         </PropertyGridViewWrapper>
