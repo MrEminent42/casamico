@@ -25,15 +25,13 @@ const AddPropertyPage = (props: AddEditPropertyProps) => {
                     <TitleAndText title="Street Address" name="address" />
                 </GridItemCol12>
                 <PreviewContainer>
-                    Preview:
-                    <PreviewBorderContainer>
-                        <PropertyCard
-                            address="Preview Address"
-                            image={"https://images.pexels.com/photos/1029599/pexels-photo-1029599.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"}
-                            numTasks={0}
-                            setSelectedProperty={props.setSelectedProperty}
-                        />
-                    </PreviewBorderContainer>
+                    <h3>Preview</h3>
+                    <PropertyCard
+                        address="Preview Address"
+                        image={"https://images.pexels.com/photos/1029599/pexels-photo-1029599.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"}
+                        numTasks={0}
+                        setSelectedProperty={props.setSelectedProperty}
+                    />
                 </PreviewContainer>
                 <GridItemCol1>
                     <TitleAndText title="City" name="city" />
@@ -89,7 +87,7 @@ const TextInput = styled.input`
 `
 
 const AddPropertyForm = styled.form`
-    color: black;
+    color: gray;
     margin: 0px 50px;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
@@ -121,18 +119,12 @@ const PreviewContainer = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: auto;
+    margin: 0px auto;
     grid-column-start: 3;
-    grid-row-start: 2;
+    grid-row-start: 1;
     grid-row-end: 6;
     pointer-events: none;
     border: 1px dotted black;
-`
-
-const PreviewBorderContainer = styled.div`
-    border: 1px solid black;
-    border-radius: 10px;
-    margin: 10px;
 `
 
 const SubmitButton = styled.button`
