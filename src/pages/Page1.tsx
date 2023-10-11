@@ -19,19 +19,23 @@ const AddPropertyPage = (props: AddEditPropertyProps) => {
     return (
         <AddPropertyForm onSubmit={handleSubmit}>
             <GridItemCol12>
-                <h3> New Property </h3>
+                <h3> Property Information </h3>
             </GridItemCol12>
             <GridItemCol12>
                 <TitleAndText title="Street Address" name="address" />
             </GridItemCol12>
             <PreviewContainer>
                 <h3>Preview</h3>
-                <PropertyCard
-                    address="Preview Address"
-                    image={"https://images.pexels.com/photos/1029599/pexels-photo-1029599.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"}
-                    numTasks={0}
-                    setSelectedProperty={props.setSelectedProperty}
-                />
+                <label style={{ marginTop: 10, marginBottom:10 }}>Card View</label>
+                <div style={{display:"flex", flexDirection:"column", alignItems:"center"}}>
+                    <PropertyCard
+                        address="Preview Address"
+                        image={"https://images.pexels.com/photos/1029599/pexels-photo-1029599.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"}
+                        numTasks={0}
+                        noPadding
+                        setSelectedProperty={props.setSelectedProperty}
+                    />
+                </div>
             </PreviewContainer>
             <GridItemCol1>
                 <TitleAndText title="City" name="city" />
@@ -43,14 +47,11 @@ const AddPropertyPage = (props: AddEditPropertyProps) => {
                 <TitleAndText title="Country" name="country" />
             </GridItemCol12>
             <GridItemCol12>
-                <TitleAndFile title="Photo" name="photo" />
+                <TitleAndFile title="Upload Photo" name="photo" />
             </GridItemCol12>
             <SubmitButtonsContainer>
                 <SubmitButton>
                     Save
-                </SubmitButton>
-                <SubmitButton>
-                    Exit Without Saving
                 </SubmitButton>
             </SubmitButtonsContainer>
             <GridItemCol12>
@@ -65,7 +66,8 @@ export default AddPropertyPage
 
 const TitleAndText = (props: TitleAndInputProps) => {
     return (
-        <label> {props.title}
+        <label>
+            {props.title}
             <TextInput name={props.name} />
         </label>
     )
@@ -73,7 +75,8 @@ const TitleAndText = (props: TitleAndInputProps) => {
 
 const TitleAndFile = (props: TitleAndInputProps) => {
     return (
-        <label> {props.title} 
+        <label>
+            {props.title} 
             <FileInputArea title={props.title} name={props.name} />
         </label>
     )
@@ -90,9 +93,12 @@ const TextInput = styled.input`
     border: none;
     border-radius: 5px;
     background-color: #eeeeee;
+    padding: 10px;
     box-sizing: border-box;
     webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
+    color: gray;
+    font-weight: bold;
 `
 
 const FileInputArea = (props: TitleAndInputProps) => {
@@ -110,8 +116,10 @@ const FileInputArea = (props: TitleAndInputProps) => {
 }
 
 const FileInputDiv = styled.div`
-    background-color: #eeeeee;
+    margin: 10px 0px;
     border-radius: 5px;
+    background-color: #eeeeee;
+    color: #a5a5a5;
     height: 100px;
     display: flex;
     justify-content: center;
@@ -123,53 +131,52 @@ const AddPropertyForm = styled.form`
     margin: 0px 50px;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: 0.5fr 1fr 1fr 1fr 1.5fr 1fr;
+    grid-template-rows: 0.5fr 0.5fr 0.5fr 0.5fr 1.5fr 1fr;
     gap: 10px;
-    border: 1px dotted black;
+    //border: 1px dotted black;
 `
 
 const GridItemCol1 = styled.div`
     grid-column-start: 1;
     margin-right: 5%;
-    border: 1px dotted black;
+    //border: 1px dotted black;
 `
 
 const GridItemCol2 = styled.div`
     grid-column-start: 2;
     margin-right: 5%;
-    border: 1px dotted black;
+    //border: 1px dotted black;
 `
 
 const GridItemCol12 = styled.div`
     grid-column-start: 1;
     grid-column-end: 3;
     margin-right: 2.5%;
-    border: 1px dotted black;
+    //border: 1px dotted black;
 `
 
 const PreviewContainer = styled.div`
     display: flex;
     flex-direction: column;
-    align-items: center;
     margin: 0px auto;
     grid-column-start: 3;
     grid-row-start: 1;
     grid-row-end: 6;
     pointer-events: none;
-    border: 1px dotted black;
+    //border: 1px dotted black;
 `
 
 const SubmitButton = styled.button`
     type: submit;
-    background-color: #77c855;
-    color: white;
-    padding: 10px;
-    width: 50%;
-    margin: 5px 0px;
+    background-color: #e0f4dc;
+    color: #5f6f67;
+    font-weight: bold;
+    padding: 10px 30px;
+    margin: 5px 10px;
     grid-column-start: 3;
 
     //border
-    border: 2px solid #97e875;
+    border: none;
     border-radius: 10px;
     box-shadow: 2px 2px 10px rgba(0,0,0,0.1); 
     transition: 0.3s ease-in-out;
@@ -179,16 +186,15 @@ const SubmitButton = styled.button`
     // also, cursor should change to a pointer to indicate clickable
     &:hover {
         cursor: pointer;
-        border: 2px solid #87d865;
-        background-color: #67b845;
+        background-color: #d0e4cc;
     }
 `
 
 const SubmitButtonsContainer = styled.div`
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    align-items: end;
+    justify-content: end;
     grid-column-start: 3;
     grid-row-start: 6;
-    border: 1px dotted black;
+    //border: 1px dotted black;
 `

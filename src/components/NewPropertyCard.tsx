@@ -1,5 +1,5 @@
 import React from 'react'
-import { PropertyGridViewWrapper } from './PropertyCardView'
+import { PropertyGridItemPadding } from './PropertyCardView'
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components'
 import addIcon from '../assets/add.png';
@@ -8,13 +8,13 @@ const NewPropertyCard = () => {
     let navigate = useNavigate();
 
     return (
-        <PropertyGridViewWrapper
+        <PropertyGridItemPadding
             onClick={() => navigate("/1")}
         >
             <AddPropertyCard>
                 <AddIconImage src={addIcon} />
             </AddPropertyCard>
-        </PropertyGridViewWrapper>
+        </PropertyGridItemPadding>
     )
 }
 
