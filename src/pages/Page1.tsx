@@ -34,15 +34,11 @@ const AddPropertyPage = () => {
                 <GridItemCol2>
                     <TitleAndText title="State/Province" name="state" />
                 </GridItemCol2>
-                <GridItemCol1>
-                    <TitleAndText title="Country" name="country" />
-                </GridItemCol1>
-                <GridItemCol2>
-                    <TitleAndText title="Photo" name="photo" />
-                    <SubmitButton style={{ width: "25%", marginLeft: "75%" }}>Browse</SubmitButton>
-                </GridItemCol2>
                 <GridItemCol12>
-                    <TitleAndText title="Rooms" name="rooms" />
+                    <TitleAndText title="Country" name="country" />
+                </GridItemCol12>
+                <GridItemCol12>
+                    <TitleAndText title="Photo" name="photo" />
                 </GridItemCol12>
                 <SubmitButtonsContainer>
                     <SubmitButton>
@@ -52,6 +48,9 @@ const AddPropertyPage = () => {
                         Exit Without Saving
                     </SubmitButton>
                 </SubmitButtonsContainer>
+                <GridItemCol12>
+                    <TitleAndText title="Rooms" name="rooms" />
+                </GridItemCol12>
             </AddPropertyForm>
         </div>
     )
@@ -87,23 +86,28 @@ const AddPropertyForm = styled.form`
     margin: 0px 50px;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
     gap: 10px;
+    border: 1px dotted black;
 `
 
 const GridItemCol1 = styled.div`
     grid-column-start: 1;
     margin-right: 5%;
+    border: 1px dotted black;
 `
 
 const GridItemCol2 = styled.div`
     grid-column-start: 2;
     margin-right: 5%;
+    border: 1px dotted black;
 `
 
 const GridItemCol12 = styled.div`
     grid-column-start: 1;
     grid-column-end: 3;
     margin-right: 2.5%;
+    border: 1px dotted black;
 `
 
 const PreviewContainer = styled.div`
@@ -113,8 +117,9 @@ const PreviewContainer = styled.div`
     margin: auto;
     grid-column-start: 3;
     grid-row-start: 1;
-    grid-row-end: 4;
+    grid-row-end: 5;
     pointer-events: none;
+    border: 1px dotted black;
 `
 
 const PreviewBorderContainer = styled.div`
@@ -129,7 +134,7 @@ const SubmitButton = styled.button`
     color: white;
     padding: 10px;
     width: 50%;
-    margin: 5px auto;
+    margin: 5px 0px;
     grid-column-start: 3;
 
     //border
@@ -151,4 +156,8 @@ const SubmitButton = styled.button`
 const SubmitButtonsContainer = styled.div`
     display: flex;
     flex-direction: column;
+    align-items: center;
+    grid-column-start: 3;
+    grid-row-start: 5;
+    border: 1px dotted black;
 `
