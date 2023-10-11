@@ -1,5 +1,11 @@
 import { createClient } from "@supabase/supabase-js";
 
+// these types were provided by Supabase to match the database schema
+// in the case that the database schema changes, these types will need to be updated
+// they can be created on the Supabase dashboard
+
+// this type was provided but unused... 
+// but I left it here in case it's useful in the future
 // type Json =
 //     | string
 //     | number
