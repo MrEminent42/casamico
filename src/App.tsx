@@ -10,7 +10,6 @@ function App() {
     <FontWrapper>
       <Navbar />
       <MainContainer>
-        Hello there! Welcome to Casamico.
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/1" element={<Page1 />} />
@@ -24,8 +23,9 @@ function App() {
 export default App;
 
 const FontWrapper = styled.div`
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Montserrat', sans-serif;
 `
+
 const MainContainer = styled.div`
   color: black;
 `

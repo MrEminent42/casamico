@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components';
 import backbuttonsvg from '../images/arrow-left-circle.svg';
 import house from "../images/house.jpg";
+import addbuttonsvg from "../images/plus-button.svg";
 
 const Page2 = () => {
     return (
@@ -23,9 +24,7 @@ const Page2 = () => {
                 <SortButton>
                     Sort
                 </SortButton>
-                <AddButton>
-                    +
-                </AddButton>
+                <AddButton src={addbuttonsvg}></AddButton>
             </FilterandSortContainer>
             <TaskListContainer>
                 <BackgroundOfTaskContainer>
@@ -72,6 +71,7 @@ const BackLabel = styled.p`
     font-size: 15px;
     margin: 0;
     padding: 5px;
+    color: #D9D9D9;
 `
 //container to hold the house photo and the text
 const HouseContainer = styled.div`
@@ -99,67 +99,55 @@ const HouseImageOverlay = styled.div`
 
 const HouseLabel = styled.p`
     font-size: 50px;
+    font-weight: 100;
     color: white;
     margin: 0;
     position: absolute;
-    bottom: 5px;
-    left: 10px;
+    bottom: 10px;
+    left: 15px;
 `
 //container to hold the filter and sort buttons and add buttons
 const FilterandSortContainer = styled.div`
     border: 2px solid brown;
     display: flex;
-    align-items: left;
+    align-items: center;
+    justify-content: left;
     padding: 0;
-    
+    gap: 10px;
+    width: 80vw;
 `
 //button for the filter option
 const FilterButton = styled.button`
-    background-color: #a9a9a9;
+    background-color: #D9D9D9;
     border: none;
-    color: white;
-    padding: 15px 32px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
+    color: #5F5F5F;
+    width: 100px;
+    height: 40px;
+    padding: 10px 0;
     font-size: 16px;
-    margin: 4px 2px;
+    margin: 5px 0;
     cursor: pointer;
     border-radius: 40px;
-    
-
 `
 //button for the sort option
 const SortButton = styled.button`
-    background-color: #a9a9a9;
+    background-color: #D9D9D9;
     border: none;
-    color: white;
-    padding: 15px 32px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
+    color: #5F5F5F;
+    width: 100px;
+    height: 40px;
+    padding: 10px 0;
     font-size: 16px;
-    margin: 4px 2px;
+    margin: 5px 0;
     cursor: pointer;
     border-radius: 40px;
-    
-
 `
-//add task button
-const AddButton = styled.button`
-    background-color: #a9a9a9;
-    border: none;
-    color: white;
-    padding: 15px 20px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
+const AddButton = styled.img`
+    border: 2px solid green;
+    width: 40px;
+    height: 40px;
     cursor: pointer;
-    border-radius: 40px;
-    margin-left: auto 
-
+    margin-left: auto;
 `
 //container for the task list
 const TaskListContainer = styled.div`
