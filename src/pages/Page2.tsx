@@ -9,7 +9,7 @@ const Page2 = () => {
     }, []);
 
     return (
-        <div>THIS IS PAGE 2!</div>
+        <div>Tasks page coming soon!</div>
     )
 }
 
