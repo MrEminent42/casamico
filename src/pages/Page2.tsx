@@ -8,7 +8,7 @@ const Page2 = () => {
         <TaskContainer>
             <BackButtonContainer>
                 <BackButton src={backbuttonsvg}></BackButton>
-                <BackLabel>back</BackLabel>
+                <BackLabel>Back</BackLabel>
             </BackButtonContainer>
             <HouseContainer>
                 <Mask1>
@@ -26,8 +26,11 @@ const Page2 = () => {
             </HouseContainer>
             <FilterandSortContainer>
                 <FilterButton>
-
+                    Filter
                 </FilterButton>
+                <SortButton>
+                    Sort
+                </SortButton>
             </FilterandSortContainer>
             <TaskListContainer>
                 Task1
@@ -57,11 +60,13 @@ const BackButton = styled.img`
     border: 2px solid green;
     width: 30px;
     height: 30px;
+    cursor: pointer;
 `
 
 const BackLabel = styled.p`
     font-size: 15px;
     margin: 0;
+    padding: 5px;
 `
 //container to hold the house photo and the text
 const HouseContainer = styled.div`
@@ -96,9 +101,7 @@ const FilterandSortContainer = styled.div`
 `
 //button for the filter option
 const FilterButton = styled.button`
-    border = 2px solid green;
-    border-radius: 12px;
-    background-color: #4CAF50; /* Green */
+    background-color: #4CAF50;
     border: none;
     color: white;
     padding: 15px 32px;
@@ -106,6 +109,23 @@ const FilterButton = styled.button`
     text-decoration: none;
     display: inline-block;
     font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    
+
+`
+//button for the sort option
+const SortButton = styled.button`
+    background-color: #9FA355;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
     
 
 `
