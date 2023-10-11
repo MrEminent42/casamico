@@ -64,7 +64,7 @@ const TitleAndText = (props: TitleTextProps) => {
     return (
         <div>
             <div> {props.title} </div>
-            <input name={props.name} style={{ width: "100%", margin: 10 }} />
+            <TextInput name={props.name}/>
         </div>
     )
 }
@@ -73,6 +73,14 @@ interface TitleTextProps {
     title: string;
     name: string;
 }
+
+const TextInput = styled.input`
+    width: 100%;
+    margin: 10px 0px;
+    box-sizing: border-box;
+    webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+`
 
 const AddPropertyForm = styled.form`
     color: black;
@@ -90,7 +98,6 @@ const GridItemCol1 = styled.div`
 const GridItemCol2 = styled.div`
     grid-column-start: 2;
     margin-right: 5%;
-
 `
 
 const GridItemCol12 = styled.div`
