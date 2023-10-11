@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { useNavigate } from 'react-router-dom'
-import PropertyCard from '../components/PropertyCard';
+import PropertyCard from '../components/properties/PropertyCard';
 import uploadImage from '../assets/upload.png';
 
 interface AddEditPropertyProps {
