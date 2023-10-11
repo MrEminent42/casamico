@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { useNavigate } from 'react-router-dom'
 import PropertyCard from '../components/PropertyCard';
+import uploadImage from '../assets/upload.png';
 
 interface AddEditPropertyProps {
     setSelectedProperty: (property: string) => void;
@@ -16,64 +17,69 @@ const AddPropertyPage = (props: AddEditPropertyProps) => {
     }
 
     return (
-        <div>
-            <AddPropertyForm onSubmit={handleSubmit}>
-                <GridItemCol12>
-                    <h3> New Property </h3>
-                </GridItemCol12>
-                <GridItemCol12>
-                    <TitleAndText title="Street Address" name="address" />
-                </GridItemCol12>
-                <PreviewContainer>
-                    <h3>Preview</h3>
-                    <PropertyCard
-                        address="Preview Address"
-                        image={"https://images.pexels.com/photos/1029599/pexels-photo-1029599.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"}
-                        numTasks={0}
-                        setSelectedProperty={props.setSelectedProperty}
-                    />
-                </PreviewContainer>
-                <GridItemCol1>
-                    <TitleAndText title="City" name="city" />
-                </GridItemCol1>
-                <GridItemCol2>
-                    <TitleAndText title="State/Province" name="state" />
-                </GridItemCol2>
-                <GridItemCol12>
-                    <TitleAndText title="Country" name="country" />
-                </GridItemCol12>
-                <GridItemCol12>
-                    <TitleAndText title="Photo" name="photo" />
-                </GridItemCol12>
-                <SubmitButtonsContainer>
-                    <SubmitButton>
-                        Save
-                    </SubmitButton>
-                    <SubmitButton>
-                        Exit Without Saving
-                    </SubmitButton>
-                </SubmitButtonsContainer>
-                <GridItemCol12>
-                    <TitleAndText title="Rooms" name="rooms" />
-                </GridItemCol12>
-            </AddPropertyForm>
-        </div>
+        <AddPropertyForm onSubmit={handleSubmit}>
+            <GridItemCol12>
+                <h3> New Property </h3>
+            </GridItemCol12>
+            <GridItemCol12>
+                <TitleAndText title="Street Address" name="address" />
+            </GridItemCol12>
+            <PreviewContainer>
+                <h3>Preview</h3>
+                <PropertyCard
+                    address="Preview Address"
+                    image={"https://images.pexels.com/photos/1029599/pexels-photo-1029599.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"}
+                    numTasks={0}
+                    setSelectedProperty={props.setSelectedProperty}
+                />
+            </PreviewContainer>
+            <GridItemCol1>
+                <TitleAndText title="City" name="city" />
+            </GridItemCol1>
+            <GridItemCol2>
+                <TitleAndText title="State/Province" name="state" />
+            </GridItemCol2>
+            <GridItemCol12>
+                <TitleAndText title="Country" name="country" />
+            </GridItemCol12>
+            <GridItemCol12>
+                <TitleAndFile title="Photo" name="photo" />
+            </GridItemCol12>
+            <SubmitButtonsContainer>
+                <SubmitButton>
+                    Save
+                </SubmitButton>
+                <SubmitButton>
+                    Exit Without Saving
+                </SubmitButton>
+            </SubmitButtonsContainer>
+            <GridItemCol12>
+                <TitleAndText title="Rooms" name="rooms" />
+            </GridItemCol12>
+        </AddPropertyForm>
     )
 }
 
 export default AddPropertyPage
 
 
-const TitleAndText = (props: TitleTextProps) => {
+const TitleAndText = (props: TitleAndInputProps) => {
     return (
-        <div>
-            <div> {props.title} </div>
-            <TextInput name={props.name}/>
-        </div>
+        <label> {props.title}
+            <TextInput name={props.name} />
+        </label>
     )
 }
 
-interface TitleTextProps {
+const TitleAndFile = (props: TitleAndInputProps) => {
+    return (
+        <label> {props.title} 
+            <FileInputArea title={props.title} name={props.name} />
+        </label>
+    )
+}
+
+interface TitleAndInputProps {
     title: string;
     name: string;
 }
@@ -81,9 +87,35 @@ interface TitleTextProps {
 const TextInput = styled.input`
     width: 100%;
     margin: 10px 0px;
+    border: none;
+    border-radius: 5px;
+    background-color: #eeeeee;
     box-sizing: border-box;
     webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
+`
+
+const FileInputArea = (props: TitleAndInputProps) => {
+    return (
+        <div>
+            <input name={props.name} type="file" accept="image/*" id="input-file-upload" style={{display: "none"}} />
+            <FileInputDiv>
+                <label id="label-file-upload" htmlFor="input-file-upload" style={{display:"flex", flexDirection:"column", alignItems:"center"} }>
+                        <img src={uploadImage} alt="upload icon" style={{height:25}} />
+                        <div style={{textAlign:"center", margin: 5}}> Drag & Drop </div>
+                </label>
+            </FileInputDiv>
+        </div>
+    )
+}
+
+const FileInputDiv = styled.div`
+    background-color: #eeeeee;
+    border-radius: 5px;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 `
 
 const AddPropertyForm = styled.form`
@@ -91,7 +123,7 @@ const AddPropertyForm = styled.form`
     margin: 0px 50px;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: 0.5fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: 0.5fr 1fr 1fr 1fr 1.5fr 1fr;
     gap: 10px;
     border: 1px dotted black;
 `
