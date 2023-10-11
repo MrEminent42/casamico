@@ -34,8 +34,9 @@ function App() {
 export default App;
 
 const FontWrapper = styled.div`
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Montserrat', sans-serif;
 `
+
 const MainContainer = styled.div`
   color: black;
 `
