@@ -38,6 +38,36 @@ const Page2 = () => {
                 />
             </TaskListContainer>
         </TaskContainer>
+        <TaskContainer>
+            <BackButtonContainer>
+                <BackButton src={backbuttonsvg}></BackButton>
+                <BackLabel>Back</BackLabel>
+            </BackButtonContainer>
+            <HouseContainer>
+                <HouseImageOverlay></HouseImageOverlay>
+                <HouseLabel>
+                    property 1
+                </HouseLabel>
+            </HouseContainer>
+            <FilterandSortContainer>
+                <FilterButton 
+                    label="Filter"
+                    onClick={() => console.log("Filter button clicked")}
+                />
+                <FilterButton
+                    label="Sort"
+                    onClick={() => console.log("Sort button clicked")}
+                />
+                <AddButton src={addbuttonsvg}></AddButton>
+            </FilterandSortContainer>
+            <TaskListContainer>
+                <Task
+                    title="Task 1"
+                    due="Due 1"
+                    bg_color="#E1CAE8"
+                />
+            </TaskListContainer>
+        </TaskContainer>
     )
 }
 
