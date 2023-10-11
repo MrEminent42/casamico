@@ -11,20 +11,23 @@ const Page2 = () => {
                 <BackLabel>back</BackLabel>
             </BackButtonContainer>
             <HouseContainer>
+                <Mask1>
                 <HouseImage style={{backgroundImage:
                 `url(${house})`, 
                 fontSize:'50px',
                 backgroundPosition: 'left',
                 backgroundSize: 'cover',
-                backgroundRepeat: 'no-repeat',
-                filter: 'blur(2px) opacity(80%)'}}>
+                backgroundRepeat: 'no-repeat'}}>
                 </HouseImage>
+                </Mask1>
                 <HouseLabel>
                     PROPERTY 1
                 </HouseLabel>
             </HouseContainer>
             <FilterandSortContainer>
-                Yo
+                <FilterButton>
+
+                </FilterButton>
             </FilterandSortContainer>
             <TaskListContainer>
                 Task1
@@ -66,35 +69,55 @@ const HouseContainer = styled.div`
     width: 600px;
     height: 400px;
 `
+//container for the house image
 const HouseImage= styled.img`
     border: 2px solid yellow;
     width: 600px;
     height: 400px;
 `
-
+//label to hold the name of the property
 const HouseLabel = styled.p`
     font-size: 85px;
-    color: white;
+    color: grey;
     margin: 0;
     position: absolute;
     bottom: 200px;
     left: 10px;
-    filter: drop-shadow(5px 5px 15px black);
     -webkit-text-stroke-width: .5px;
     -webkit-text-stroke-color: black;
 `
-
+//container to hold the filter and sort buttons
 const FilterandSortContainer = styled.div`
     border: 2px solid brown;
     display: flex;
     align-items: left;
     padding: 0;
 `
+//button for the filter option
+const FilterButton = styled.button`
+    border = 2px solid green;
+    border-radius: 12px;
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    
 
+`
+//container for the task list
 const TaskListContainer = styled.div`
     border: 2px solid purple;
     display: flex;
     align-items: left;
     padding: 0;
     flex-direction: column;
+`
+//created a mask to apply a gradient to the property photo
+const Mask1 = styled.mask`
+    -webkit-mask-image: linear-gradient(black, transparent);
+    mask-image: linear-gradient(black, transparent);
 `
