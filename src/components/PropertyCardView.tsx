@@ -4,12 +4,8 @@ import NewPropertyCard from './NewPropertyCard';
 import { useEffect, useState } from 'react';
 import { getAllProperties } from '../controllers/PropertyController';
 import { Property } from '../Types';
-// check out Navbar.tsx for an explanation of this
-interface PropertyCardViewProps {
-    setSelectedProperty: (property: string) => void;
-}
 
-const PropertyCardView = (props: PropertyCardViewProps) => {
+const PropertyCardView = () => {
     const [properties, setProperties] = useState<Property[]>([]);
 
     // this runs when a webpage is loaded
@@ -25,7 +21,6 @@ const PropertyCardView = (props: PropertyCardViewProps) => {
                 {
                     properties.map((property) => (
                         <PropertyCard
-                            setSelectedProperty={props.setSelectedProperty}
                             property={property}
                             key={property.property_id}
                         />

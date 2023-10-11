@@ -1,15 +1,10 @@
 import React from 'react'
 import PropertyCardView from '../components/PropertyCardView'
 
-// check out Navbar.tsx for an explanation of this
-interface HomeProps {
-    setSelectedProperty: (property: string) => void;
-}
-
-const Home = (props: HomeProps) => {
+const Home = () => {
     return (
         <div>
-            <PropertyCardView setSelectedProperty={props.setSelectedProperty} />
+            <PropertyCardView />
         </div>
     )
 }

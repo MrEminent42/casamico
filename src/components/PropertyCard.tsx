@@ -7,12 +7,10 @@ import { Property } from '../Types';
 // check out Navbar.tsx for an explanation of this
 interface PropertyCardProps {
     property: Property;
-    setSelectedProperty: (property: string) => void;
 }
 
 const PropertyCard = (props: PropertyCardProps) => {
-    let { property, setSelectedProperty } = props;
-    let { address, image_url, property_id } = property;
+    let { address, image_url, property_id } = props.property;
     let navigate = useNavigate();
 
     return (
@@ -20,7 +18,6 @@ const PropertyCard = (props: PropertyCardProps) => {
             <PropertyCardContainer
                 onClick={() => {
                     navigate("/property/" + property_id);
-                    setSelectedProperty(address)
                 }}
             >
                 <PropertyImage src={image_url} />

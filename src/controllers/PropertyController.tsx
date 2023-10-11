@@ -14,6 +14,10 @@ export const getAllProperties = async () => {
     return res.data as Property[];
 }
 
+export const getProperty = async (propertyId: number) => {
+    alert("You have asked PropertyController to fetch a property.");
+}
+
 export const createProperty = () => {
     alert("You have asked PropertyController to create a property.");
 }
