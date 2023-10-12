@@ -23,7 +23,7 @@ function App() {
         <Routes>
           {/* Again, pass the state and the function to update it. */}
           <Route path="/" element={<Home setSelectedProperty={setSelectedProperty} />} />
-          <Route path="/1" element={<Page1 />} />
+          <Route path="/1" element={<Page1 setSelectedProperty={setSelectedProperty} />} />
           <Route path="/tasks" element={<Tasks />} />
         </Routes>
       </MainContainer>

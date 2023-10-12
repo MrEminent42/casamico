@@ -1,40 +1,50 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { PropertyGridViewWrapper } from '../../pages/Home';
+import { PropertyGridItemPadding } from '../../pages/Home';
 
 // check out Navbar.tsx for an explanation of this
 interface PropertyCardProps {
     address: string;
     image: string;
     numTasks: number;
+    noPadding?: boolean;
     setSelectedProperty: (property: string) => void;
 }
 
 const PropertyCard = (props: PropertyCardProps) => {
+    return (
+        props.noPadding ? (
+            <PropertyCardContents {...props} />
+        ) : (
+            <PropertyGridItemPadding>
+                <PropertyCardContents {...props} />
+            </PropertyGridItemPadding>
+        )
+    )
+}
+
+const PropertyCardContents = (props: PropertyCardProps) => {
     let { address, image, numTasks, setSelectedProperty } = props;
     let navigate = useNavigate();
 
     return (
-        <PropertyGridViewWrapper>
-            <PropertyCardContainer
-                onClick={() => {
-                    navigate("/tasks");
-                    setSelectedProperty(address)
-                }}
-            >
-                <PropertyImage src={image} />
-                <CardTitle>
-                    {address}
-                </CardTitle>
-                <CardText>
-                    {numTasks} Tasks
-                </CardText>
-            </PropertyCardContainer>
-        </PropertyGridViewWrapper>
+        <PropertyCardContainer
+            onClick={() => {
+                navigate("/tasks");
+                setSelectedProperty(address)
+            }}
+        >
+            <PropertyImage src={image} />
+            <CardTitle>
+                {address}
+            </CardTitle>
+            <CardText>
+                {numTasks} Tasks
+            </CardText>
+        </PropertyCardContainer>
     )
 }
-
 
 export default PropertyCard
 
@@ -72,6 +82,7 @@ const CardTitle = styled.div`
     font-size: 20px;
     font-weight: 600;
     margin: 5px 0px;
+    color: #4c4c4c;
 `
 
 const CardText = styled.div`

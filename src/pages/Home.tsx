@@ -63,6 +63,6 @@ const PropertyCardViewContainer = styled.div`
 
 
 // to be used by each child in the grid
-export const PropertyGridViewWrapper = styled.div`
+export const PropertyGridItemPadding = styled.div`
     padding: 20px;
 `
