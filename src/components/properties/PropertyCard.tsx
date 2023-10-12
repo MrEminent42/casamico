@@ -1,37 +1,46 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { PropertyGridViewWrapper } from '../../pages/Home';
+import { PropertyGridItemPadding } from '../../pages/Home';
 import { Property } from '../../Types';
 
-// check out Navbar.tsx for an explanation of this
 interface PropertyCardProps {
     property: Property;
+    noPadding?: boolean;
 }
 
 const PropertyCard = (props: PropertyCardProps) => {
+    return (
+        props.noPadding ? (
+            <PropertyCardContents {...props} />
+        ) : (
+            <PropertyGridItemPadding>
+                <PropertyCardContents {...props} />
+            </PropertyGridItemPadding>
+        )
+    )
+}
+
+const PropertyCardContents = (props: PropertyCardProps) => {
     let { address, image_url, property_id } = props.property;
     let navigate = useNavigate();
 
     return (
-        <PropertyGridViewWrapper>
-            <PropertyCardContainer
-                onClick={() => {
-                    navigate("/property/" + property_id);
-                }}
-            >
-                <PropertyImage src={image_url} />
-                <CardTitle>
-                    {address}
-                </CardTitle>
-                <CardText>
-                    -1 Tasks
-                </CardText>
-            </PropertyCardContainer>
-        </PropertyGridViewWrapper>
+        <PropertyCardContainer
+            onClick={() => {
+                navigate("/property/" + property_id);
+            }}
+        >
+            <PropertyImage src={image_url} />
+            <CardTitle>
+                {address}
+            </CardTitle>
+            <CardText>
+                -1 Tasks
+            </CardText>
+        </PropertyCardContainer>
     )
 }
-
 
 export default PropertyCard
 
@@ -69,6 +78,7 @@ const CardTitle = styled.div`
     font-size: 20px;
     font-weight: 600;
     margin: 5px 0px;
+    color: #4c4c4c;
 `
 
 const CardText = styled.div`

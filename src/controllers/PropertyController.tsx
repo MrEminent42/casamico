@@ -16,6 +16,17 @@ export const getAllProperties = async () => {
 
 export const getProperty = async (propertyId: number) => {
     alert("You have asked PropertyController to fetch a property.");
+    const res = await supabase
+        .from('Properties')
+        .select()
+        .eq('property_id', propertyId)
+        .maybeSingle();
+
+    if (res.error || res.data === null) {
+        throw (res.error || `Property id ${propertyId} not found.`);
+    }
+
+    return res.data;
 }
 
 export const createProperty = () => {
