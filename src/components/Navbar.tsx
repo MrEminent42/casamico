@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import { useNavigate } from 'react-router-dom';
-import fullLogo from '../assets/Casamico.png'
+import fullLogo from '../assets/casamico-2.png'
 
 const Navbar = () => {
     const navigate = useNavigate();
@@ -49,10 +49,12 @@ const CenterContainer = styled.div`
 const LogoWrapper = styled.div`
     height: 50px;
     cursor: pointer;
+    display: flex;
+    align-items: center;
 `
 
 const LogoImage = styled.img`
-    height: 100%;
-    width: 100%;
-    object-fit: cover;
+    height: 30px;
+    object-fit: contain;
+    padding-left: 25px;
 `

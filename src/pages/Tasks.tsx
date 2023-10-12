@@ -80,6 +80,7 @@ export default Page2
 const TaskContainer = styled.div`
     display: flex;
     flex-direction: column;
+    padding-left: 35px;
 `
 
 const BackButtonContainer = styled.div`
