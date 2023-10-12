@@ -15,12 +15,12 @@ interface PropertyCardProps {
 const PropertyCard = (props: PropertyCardProps) => {
     return (
         props.noPadding ? (
+            <PropertyCardContents {...props} />
+        ) : (
+            <PropertyGridItemPadding>
                 <PropertyCardContents {...props} />
-            ) : (
-                <PropertyGridItemPadding>
-                    <PropertyCardContents {...props} />
-                </PropertyGridItemPadding>
-            )
+            </PropertyGridItemPadding>
+        )
     )
 }
 
@@ -31,7 +31,7 @@ const PropertyCardContents = (props: PropertyCardProps) => {
     return (
         <PropertyCardContainer
             onClick={() => {
-                navigate("/2");
+                navigate("/tasks");
                 setSelectedProperty(address)
             }}
         >
