@@ -12,7 +12,7 @@ const Home = () => {
     useEffect(() => {
         getAllProperties()
             .then((res) => setProperties(res))
-            .catch(err => console.log(err));
+            .catch(err => alert(err));
     }, []);
 
     return (

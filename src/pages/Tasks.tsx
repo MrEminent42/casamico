@@ -5,10 +5,12 @@ import house from "../assets/house.jpg";
 import addbuttonsvg from "../assets/plus-button.svg";
 import TaskViewButton from '../components/TaskViewButton';
 import Task from '../components/Task';
-import { useNavigate, useParams } from 'react-router';
+import { Route, Routes, useNavigate, useParams } from 'react-router';
 import { getTasksOfProperty } from '../controllers/TaskController';
 import { getProperty } from '../controllers/PropertyController';
 import { Property } from '../Types';
+import AddTaskPage from './AddTask';
+import Popup from '../components/Popup';
 
 const Page2 = () => {
 
@@ -42,36 +44,47 @@ const Page2 = () => {
     }, [params.id, navigate])
 
     return (
-        <TaskContainer>
-            <BackButtonContainer>
-                <BackButton src={backbuttonsvg}></BackButton>
-                <BackLabel>Back</BackLabel>
-            </BackButtonContainer>
-            <HouseContainer style={{ backgroundImage: `url(${property?.image_url})` }}>
-                <HouseImageOverlay></HouseImageOverlay>
-                <HouseLabel>
-                    {property?.address}
-                </HouseLabel>
-            </HouseContainer>
-            <FilterandSortContainer>
-                <TaskViewButton
-                    label="Filter"
-                    onClick={() => console.log("Filter button clicked")}
-                />
-                <TaskViewButton
-                    label="Sort"
-                    onClick={() => console.log("Sort button clicked")}
-                />
-                <AddButton src={addbuttonsvg}></AddButton>
-            </FilterandSortContainer>
-            <TaskListContainer>
-                <Task
-                    title="Task 1"
-                    due="Due 1"
-                    bg_color="#E1CAE8"
-                />
-            </TaskListContainer>
-        </TaskContainer>
+        <>
+            <TaskContainer>
+                <BackButtonContainer>
+                    <BackButton src={backbuttonsvg}></BackButton>
+                    <BackLabel>Back</BackLabel>
+                </BackButtonContainer>
+                <HouseContainer style={{ backgroundImage: `url(${property?.image_url})` }}>
+                    <HouseImageOverlay></HouseImageOverlay>
+                    <HouseLabel>
+                        {property?.address}
+                    </HouseLabel>
+                </HouseContainer>
+                <FilterandSortContainer>
+                    <TaskViewButton
+                        label="Filter"
+                        onClick={() => console.log("Filter button clicked")}
+                    />
+                    <TaskViewButton
+                        label="Sort"
+                        onClick={() => console.log("Sort button clicked")}
+                    />
+                    <AddButton src={addbuttonsvg} onClick={() => navigate("add")}></AddButton>
+                </FilterandSortContainer>
+                <TaskListContainer>
+                    <Task
+                        title="Task 1"
+                        due="Due 1"
+                        bg_color="#E1CAE8"
+                    />
+                </TaskListContainer>
+            </TaskContainer>
+            <Routes>
+                <Route path="add" element={
+                    <Popup
+                        onClickOutside={() => navigate("")}
+                        onKeyboardEsc={() => navigate("")}
+                        element={<AddTaskPage goBack={() => navigate("")} />}
+                    />
+                } />
+            </Routes>
+        </>
     )
 }
 
