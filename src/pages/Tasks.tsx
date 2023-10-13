@@ -1,26 +1,60 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components';
 import backbuttonsvg from '../assets/arrow-left-circle.svg';
 import house from "../assets/house.jpg";
 import addbuttonsvg from "../assets/plus-button.svg";
 import TaskViewButton from '../components/TaskViewButton';
 import Task from '../components/Task';
+import { useNavigate, useParams } from 'react-router';
+import { getTasksOfProperty } from '../controllers/TaskController';
+import { getProperty } from '../controllers/PropertyController';
+import { Property } from '../Types';
 
 const Page2 = () => {
+
+    const navigate = useNavigate();
+    const [propertyId, setPropertyId] = useState<number>(0);
+    const [property, setProperty] = useState<Property | null>(null);
+    const params = useParams();
+
+    // this runs once when a webpage is loaded
+    useEffect(() => {
+        if (propertyId) {
+            getTasksOfProperty();
+
+            getProperty(propertyId).then((property) => {
+                setProperty(property);
+            }).catch((error) => {
+                alert(JSON.stringify(error));
+                navigate('/');
+            });
+        }
+    }, [propertyId, navigate]);
+
+    // this runs whenever params.id or navigate changes
+    useEffect(() => {
+        if (!params.id) {
+            alert("No property id provided!");
+            navigate('/');
+        } else {
+            setPropertyId(+params.id);
+        }
+    }, [params.id, navigate])
+
     return (
         <TaskContainer>
             <BackButtonContainer>
                 <BackButton src={backbuttonsvg}></BackButton>
                 <BackLabel>Back</BackLabel>
             </BackButtonContainer>
-            <HouseContainer>
+            <HouseContainer style={{ backgroundImage: `url(${property?.image_url})` }}>
                 <HouseImageOverlay></HouseImageOverlay>
                 <HouseLabel>
-                    property 1
+                    {property?.address}
                 </HouseLabel>
             </HouseContainer>
             <FilterandSortContainer>
-                <TaskViewButton 
+                <TaskViewButton
                     label="Filter"
                     onClick={() => console.log("Filter button clicked")}
                 />
@@ -73,7 +107,7 @@ const HouseContainer = styled.div`
     position: relative;
     border-radius: 12px;
 
-    background-image: url(${house});
+    /* background-image: url(${house}); */
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;

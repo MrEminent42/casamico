@@ -2,14 +2,11 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { PropertyGridItemPadding } from '../../pages/Home';
+import { Property } from '../../Types';
 
-// check out Navbar.tsx for an explanation of this
 interface PropertyCardProps {
-    address: string;
-    image: string;
-    numTasks: number;
+    property: Property;
     noPadding?: boolean;
-    setSelectedProperty: (property: string) => void;
 }
 
 const PropertyCard = (props: PropertyCardProps) => {
@@ -25,22 +22,21 @@ const PropertyCard = (props: PropertyCardProps) => {
 }
 
 const PropertyCardContents = (props: PropertyCardProps) => {
-    let { address, image, numTasks, setSelectedProperty } = props;
+    let { address, image_url, property_id } = props.property;
     let navigate = useNavigate();
 
     return (
         <PropertyCardContainer
             onClick={() => {
-                navigate("/tasks");
-                setSelectedProperty(address)
+                navigate("/property/" + property_id);
             }}
         >
-            <PropertyImage src={image} />
+            <PropertyImage src={image_url} />
             <CardTitle>
                 {address}
             </CardTitle>
             <CardText>
-                {numTasks} Tasks
+                -1 Tasks
             </CardText>
         </PropertyCardContainer>
     )

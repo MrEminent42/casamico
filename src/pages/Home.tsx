@@ -1,47 +1,31 @@
-import React from 'react'
+import { useEffect, useState } from 'react';
 import PropertyCard from '../components/properties/PropertyCard';
 import NewPropertyCard from '../components/properties/NewPropertyCard'
 import styled from 'styled-components';
+import { getAllProperties } from '../controllers/PropertyController';
+import { Property } from '../Types';
 
-// check out Navbar.tsx for an explanation of this
-interface HomeProps {
-    setSelectedProperty: (property: string) => void;
-}
+const Home = () => {
+    const [properties, setProperties] = useState<Property[]>([]);
 
-const Home = (props: HomeProps) => {
+    // this runs when a webpage is loaded
+    useEffect(() => {
+        getAllProperties()
+            .then((res) => setProperties(res))
+            .catch(err => console.log(err));
+    }, []);
+
     return (
         <div>
             <PropertyCardViewContainer>
-                <PropertyCard
-                    address="123 Main St"
-                    image={"https://images.pexels.com/photos/1029599/pexels-photo-1029599.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"}
-                    numTasks={1}
-                    setSelectedProperty={props.setSelectedProperty}
-                />
-                <PropertyCard
-                    address="123 Main St"
-                    image={"https://images.pexels.com/photos/2102587/pexels-photo-2102587.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"}
-                    numTasks={1}
-                    setSelectedProperty={props.setSelectedProperty}
-                />
-                <PropertyCard
-                    address="123 Main St"
-                    image={"https://images.pexels.com/photos/1115804/pexels-photo-1115804.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"}
-                    numTasks={1}
-                    setSelectedProperty={props.setSelectedProperty}
-                />
-                <PropertyCard
-                    address="123 Main St"
-                    image={"https://images.pexels.com/photos/2581922/pexels-photo-2581922.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"}
-                    numTasks={1}
-                    setSelectedProperty={props.setSelectedProperty}
-                />
-                <PropertyCard
-                    address="123 Main St"
-                    image={"https://images.pexels.com/photos/1029599/pexels-photo-1029599.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"}
-                    numTasks={1}
-                    setSelectedProperty={props.setSelectedProperty}
-                />
+                {
+                    properties.map((property) => (
+                        <PropertyCard
+                            property={property}
+                            key={property.property_id}
+                        />
+                    ))
+                }
                 <NewPropertyCard />
             </PropertyCardViewContainer>
         </div>
