@@ -49,3 +49,12 @@ export const updateProperty = () => {
 export const deleteProperty = () => {
     alert("You have asked PropertyController to delete a property.");
 }
+
+export const getPropertyPhotoUrl = (filename: string) => {
+    const { data } = supabase
+        .storage
+        .from('property-photos')
+        .getPublicUrl(filename);
+
+    return data.publicUrl;
+}

@@ -2,14 +2,14 @@ import React, { FormEvent, useState } from 'react'
 import styled from 'styled-components'
 import { useNavigate } from 'react-router-dom'
 import PropertyCard from '../components/properties/PropertyCard';
-import uploadImage from '../assets/upload.png';
+import uploadIcon from '../assets/upload.png';
 import { Property } from '../Types';
-import { createProperty } from '../controllers/PropertyController';
+import { createProperty, getPropertyPhotoUrl } from '../controllers/PropertyController';
 
 const AddPropertyPage = () => {
     let navigate = useNavigate();
 
-    const [newProperty, setNewProperty] = useState<Property>({ image_url: "https://images.pexels.com/photos/1029599/pexels-photo-1029599.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" } as Property);
+    const [newProperty, setNewProperty] = useState<Property>({ image_url: getPropertyPhotoUrl('default_house.png') } as Property);
     const [newRooms, setNewRooms] = useState("");
 
     const handleChange = (event: FormEvent<HTMLInputElement>) => {
@@ -126,10 +126,10 @@ const TextInput = styled.input`
 const FileInputArea = (props: TitleAndInputProps) => {
     return (
         <div>
-            <input name={props.name} type="file" accept="image/*" id="input-file-upload" style={{ display: "none" }} />
+            <input name={props.name} type="file" accept="image/*" id="input-file-upload" style={{ display: "none" }} onChange={uploadIcon} />
             <FileInputDiv>
                 <label id="label-file-upload" htmlFor="input-file-upload" style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-                    <img src={uploadImage} alt="upload icon" style={{ height: 25 }} />
+                    <img src={uploadIcon} alt="upload icon" style={{ height: 25 }} />
                     <div style={{ textAlign: "center", margin: 5 }}> Drag & Drop </div>
                 </label>
             </FileInputDiv>
