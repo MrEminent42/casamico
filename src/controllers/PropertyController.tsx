@@ -26,7 +26,7 @@ export const getProperty = async (propertyId: number) => {
         throw (res.error || `Property id ${propertyId} not found.`);
     }
 
-    return res.data;
+    return res.data as Property; //change back at end to avoid conflict
 }
 
 export const createProperty = async (property: Property) => {
