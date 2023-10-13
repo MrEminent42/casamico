@@ -20,21 +20,30 @@ interface Database {
             Properties: {
                 Row: {
                     address: string
+                    city: string | null
+                    country: string | null
                     created_at: string
                     image_url: string
                     property_id: number
+                    state_province: string | null
                 }
                 Insert: {
                     address: string
+                    city?: string | null
+                    country?: string | null
                     created_at?: string
                     image_url: string
                     property_id?: number
+                    state_province?: string | null
                 }
                 Update: {
                     address?: string
+                    city?: string | null
+                    country?: string | null
                     created_at?: string
                     image_url?: string
                     property_id?: number
+                    state_province?: string | null
                 }
                 Relationships: []
             }

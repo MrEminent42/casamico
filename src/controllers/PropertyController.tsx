@@ -29,8 +29,17 @@ export const getProperty = async (propertyId: number) => {
     return res.data;
 }
 
-export const createProperty = () => {
+export const createProperty = async (property: Property) => {
     alert("You have asked PropertyController to create a property.");
+    const { error } = await supabase
+        .from('Properties')
+        .insert(property);
+
+    if (error) {
+        throw error;
+    }
+
+    return;
 }
 
 export const updateProperty = () => {

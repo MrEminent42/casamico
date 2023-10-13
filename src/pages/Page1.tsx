@@ -1,16 +1,42 @@
-import React from 'react'
+import React, { FormEvent, useState } from 'react'
 import styled from 'styled-components'
 import { useNavigate } from 'react-router-dom'
 import PropertyCard from '../components/properties/PropertyCard';
 import uploadImage from '../assets/upload.png';
 import { Property } from '../Types';
+import { createProperty } from '../controllers/PropertyController';
 
 const AddPropertyPage = () => {
     let navigate = useNavigate();
 
+    const [newProperty, setNewProperty] = useState<Property>({ image_url: "https://images.pexels.com/photos/1029599/pexels-photo-1029599.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" } as Property);
+    const [newRooms, setNewRooms] = useState("");
+
+    const handleChange = (event: FormEvent<HTMLInputElement>) => {
+        const name = event.currentTarget.name;
+        const value = event.currentTarget.value;
+        setNewProperty(values => ({ ...values, [name]: value }) as Property)
+    }
+
+    const handleRoomsChange = (event: FormEvent<HTMLInputElement>) => {
+        setNewRooms(event.currentTarget.value);
+    }
+
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        navigate("/")
+        alert(`Entered Propery with following attributes:\n
+            ${newProperty ?
+            (newProperty.address ? newProperty.address : "undef address") + "\n" +
+            (newProperty.city ? newProperty.city : "undef city") + "\n" +
+            (newProperty.state_province ? newProperty.state_province : "undef state") + "\n" +
+            (newProperty.country ? newProperty.country : "undef country") + "\n" +
+            (newProperty.image_url ? newProperty.image_url : "undef image url") + "\n" +
+            newRooms
+            : "undef property"
+            }`);
+        createProperty(newProperty)
+            .catch(err => alert(`error in createProperty: ${err}`));
+        navigate("/");
     }
 
     return (
@@ -19,37 +45,29 @@ const AddPropertyPage = () => {
                 <h3> Property Information </h3>
             </GridItemCol12>
             <GridItemCol12>
-                <TitleAndText title="Street Address" name="address" />
+                <TitleAndText title="Street Address" name="address" value={newProperty.address} handleChange={handleChange}/>
             </GridItemCol12>
             <PreviewContainer>
                 <h3>Preview</h3>
                 <label style={{ marginTop: 10, marginBottom: 10 }}>Card View</label>
                 <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
                     <PropertyCard
-                        // TODO: fill in dummy object with info
-                        property={
-                            {
-                                address: "Preview Address",
-                                image_url: "https://images.pexels.com/photos/1029599/pexels-photo-1029599.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-                                property_id: 0,
-                                created_at: "",
-                            } as Property
-                        }
+                        property={newProperty}
                         noPadding
                     />
                 </div>
             </PreviewContainer>
             <GridItemCol1>
-                <TitleAndText title="City" name="city" />
+                <TitleAndText title="City" name="city" value={newProperty.city} handleChange={handleChange} />
             </GridItemCol1>
             <GridItemCol2>
-                <TitleAndText title="State/Province" name="state" />
+                <TitleAndText title="State/Province" name="state_province" value={newProperty.state_province} handleChange={handleChange} />
             </GridItemCol2>
             <GridItemCol12>
-                <TitleAndText title="Country" name="country" />
+                <TitleAndText title="Country" name="country" value={newProperty.country} handleChange={handleChange} />
             </GridItemCol12>
             <GridItemCol12>
-                <TitleAndFile title="Upload Photo" name="photo" />
+                <TitleAndFile title="Upload Photo" name="photo" value={newProperty.image_url} handleChange={handleChange} />
             </GridItemCol12>
             <SubmitButtonsContainer>
                 <SubmitButton>
@@ -57,7 +75,7 @@ const AddPropertyPage = () => {
                 </SubmitButton>
             </SubmitButtonsContainer>
             <GridItemCol12>
-                <TitleAndText title="Rooms" name="rooms" />
+                <TitleAndText title="Rooms" name="rooms" value={newRooms} handleChange={handleRoomsChange} />
             </GridItemCol12>
         </AddPropertyForm>
     )
@@ -70,7 +88,7 @@ const TitleAndText = (props: TitleAndInputProps) => {
     return (
         <label>
             {props.title}
-            <TextInput name={props.name} />
+            <TextInput name={props.name} value={props.value || ""} onChange={props.handleChange} />
         </label>
     )
 }
@@ -79,7 +97,7 @@ const TitleAndFile = (props: TitleAndInputProps) => {
     return (
         <label>
             {props.title}
-            <FileInputArea title={props.title} name={props.name} />
+            <FileInputArea title={props.title} name={props.name} handleChange={props.handleChange} />
         </label>
     )
 }
@@ -87,6 +105,8 @@ const TitleAndFile = (props: TitleAndInputProps) => {
 interface TitleAndInputProps {
     title: string;
     name: string;
+    value?: string;
+    handleChange: (e: FormEvent<HTMLInputElement>) => void;
 }
 
 const TextInput = styled.input`
