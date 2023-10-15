@@ -12,6 +12,7 @@ const AddPropertyPage = () => {
     const [newProperty, setNewProperty] = useState<Property>({ image_url: getPropertyPhotoUrl('default_house.png') } as Property);
     const [newRooms, setNewRooms] = useState("");
     const [newPhoto, setNewPhoto] = useState<File>();
+    const [preview, setPreview] = useState<string>()
 
     const handleChange = (event: FormEvent<HTMLInputElement>) => {
         const name = event.currentTarget.name;
@@ -25,46 +26,84 @@ const AddPropertyPage = () => {
 
     const uploadFile = async (event: FormEvent<HTMLInputElement>) => {
         alert(`uploading file: ${event.currentTarget.files ? (event.currentTarget.files[0] ? event.currentTarget.files[0].name : "no file") : "no file list"}`);
-        setNewPhoto(event.currentTarget.files ? (event.currentTarget.files[0] ? event.currentTarget.files[0] : undefined) : undefined);
+
+        //if files list is undef or empty, newPhoto is undef
+        if (!event.currentTarget.files || event.currentTarget.files.length === 0) {
+            setNewPhoto(undefined);
+            return;
+        }
+
+        // only selecting one image
+        setNewPhoto(event.currentTarget.files[0]);
     }
 
     //called whenever newPhoto is changed
-    //also called when page opens, and newPhoto is undef there, so be careful to deal with that
+    //create a preview as a side effect, whenever selected file is changed to use in property card
+    //must store photo and change newProperty image_url to url of stored photo later
     useEffect(() => {
-        async function storeAndSetPhoto() {
-            let url: string | void="";
-            if (newPhoto) {
-                url = await storePropertyPhoto(newPhoto)
-                    .catch(err => alert(err));
+        if (!newPhoto) {
+            setPreview(undefined);
+            return;
+        }
+
+        const objectUrl = URL.createObjectURL(newPhoto);
+        setPreview(objectUrl);
+
+        // free memory when ever this component is unmounted
+        return () => URL.revokeObjectURL(objectUrl);
+    }, [newPhoto])
+
+    //called whenever preview is changed
+    //change newProperty to use this preview photo
+    useEffect(() => {
+        if (preview) {
+            setNewProperty(values => ({ ...values, image_url: preview }) as Property);
+        }
+    }, [preview])
+
+    //called whenever newProperty is changed
+    //only does something if image_url is changed to something that isn't default or preview
+    //this is only when submit button is pressed and photo is stored to db
+    //this handles saving newProperty to db and returning to home
+    useEffect(() => {
+        if (!newProperty.image_url.startsWith("blob:") && newProperty.image_url !== getPropertyPhotoUrl('default_house.png')) {
+
+            //store property info to db
+            if (newProperty.address) {
+                alert(`Entered Property with following attributes:\n
+        ${newProperty ?
+                        (newProperty.address ? newProperty.address : "undef address") + "\n" +
+                        (newProperty.city ? newProperty.city : "undef city") + "\n" +
+                        (newProperty.state_province ? newProperty.state_province : "undef state") + "\n" +
+                        (newProperty.country ? newProperty.country : "undef country") + "\n" +
+                        (newProperty.image_url ? newProperty.image_url : "undef image url") + "\n" +
+                        newRooms
+                        : "undef property"
+                    }`);
+                createProperty(newProperty)
+                    .catch(err => alert(`error in createProperty: ${err}`));
+                navigate("/");
             }
             else {
-                alert("not new photo");
+                alert("Property street address is a required field");
             }
-            setNewProperty(values => ({ ...values, image_url: getPropertyPhotoUrl(url ? url : 'default_house.png') }) as Property);
         }
-        storeAndSetPhoto();
-    }, [newPhoto]);
+    }, [navigate, newProperty, newRooms])
+
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        if (newProperty.address) {
-            alert(`Entered Property with following attributes:\n
-            ${newProperty ?
-                    (newProperty.address ? newProperty.address : "undef address") + "\n" +
-                    (newProperty.city ? newProperty.city : "undef city") + "\n" +
-                    (newProperty.state_province ? newProperty.state_province : "undef state") + "\n" +
-                    (newProperty.country ? newProperty.country : "undef country") + "\n" +
-                    (newProperty.image_url ? newProperty.image_url : "undef image url") + "\n" +
-                    newRooms
-                    : "undef property"
-                }`);
-            createProperty(newProperty)
-                .catch(err => alert(`error in createProperty: ${err}`));
-            navigate("/");
+
+        //store image to db on submit
+        let url: string | void = "";
+        if (newPhoto) {
+            url = await storePropertyPhoto(newPhoto)
+                .catch(err => alert(err));
         }
         else {
-            alert("Property street address is a required field");
+            alert("not new photo");
         }
+        setNewProperty(values => ({ ...values, image_url: getPropertyPhotoUrl(url ? url : 'default_house.png') }) as Property);
     }
 
     return (
