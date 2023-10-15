@@ -1,16 +1,17 @@
-import React, { FormEvent, useState } from 'react'
+import React, { FormEvent, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { useNavigate } from 'react-router-dom'
 import PropertyCard from '../components/properties/PropertyCard';
 import uploadIcon from '../assets/upload.png';
 import { Property } from '../Types';
-import { createProperty, getPropertyPhotoUrl } from '../controllers/PropertyController';
+import { createProperty, getPropertyPhotoUrl, storePropertyPhoto } from '../controllers/PropertyController';
 
 const AddPropertyPage = () => {
     let navigate = useNavigate();
 
     const [newProperty, setNewProperty] = useState<Property>({ image_url: getPropertyPhotoUrl('default_house.png') } as Property);
     const [newRooms, setNewRooms] = useState("");
+    const [newPhoto, setNewPhoto] = useState<File>();
 
     const handleChange = (event: FormEvent<HTMLInputElement>) => {
         const name = event.currentTarget.name;
@@ -22,9 +23,31 @@ const AddPropertyPage = () => {
         setNewRooms(event.currentTarget.value);
     }
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const uploadFile = async (event: FormEvent<HTMLInputElement>) => {
+        alert(`uploading file: ${event.currentTarget.files ? (event.currentTarget.files[0] ? event.currentTarget.files[0].name : "no file") : "no file list"}`);
+        setNewPhoto(event.currentTarget.files ? (event.currentTarget.files[0] ? event.currentTarget.files[0] : undefined) : undefined);
+    }
+
+    //called whenever newPhoto is changed
+    //also called when page opens, and newPhoto is undef there, so be careful to deal with that
+    useEffect(() => {
+        async function storeAndSetPhoto() {
+            let url: string | void="";
+            if (newPhoto) {
+                url = await storePropertyPhoto(newPhoto)
+                    .catch(err => alert(err));
+            }
+            else {
+                alert("not new photo");
+            }
+            setNewProperty(values => ({ ...values, image_url: getPropertyPhotoUrl(url ? url : 'default_house.png') }) as Property);
+        }
+        storeAndSetPhoto();
+    }, [newPhoto]);
+
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        alert(`Entered Propery with following attributes:\n
+        alert(`Entered Property with following attributes:\n
             ${newProperty ?
             (newProperty.address ? newProperty.address : "undef address") + "\n" +
             (newProperty.city ? newProperty.city : "undef city") + "\n" +
@@ -67,7 +90,7 @@ const AddPropertyPage = () => {
                 <TitleAndText title="Country" name="country" value={newProperty.country} handleChange={handleChange} />
             </GridItemCol12>
             <GridItemCol12>
-                <TitleAndFile title="Upload Photo" name="photo" value={newProperty.image_url} handleChange={handleChange} />
+                <TitleAndFile title="Upload Photo" name="photo" handleChange={uploadFile} />
             </GridItemCol12>
             <SubmitButtonsContainer>
                 <SubmitButton>
@@ -126,7 +149,7 @@ const TextInput = styled.input`
 const FileInputArea = (props: TitleAndInputProps) => {
     return (
         <div>
-            <input name={props.name} type="file" accept="image/*" id="input-file-upload" style={{ display: "none" }} onChange={uploadIcon} />
+            <input name={props.name} type="file" accept="image/*" id="input-file-upload" style={{ /*display: "none"*/ }} onChange={props.handleChange} />
             <FileInputDiv>
                 <label id="label-file-upload" htmlFor="input-file-upload" style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
                     <img src={uploadIcon} alt="upload icon" style={{ height: 25 }} />

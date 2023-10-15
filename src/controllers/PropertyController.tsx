@@ -50,6 +50,22 @@ export const deleteProperty = () => {
     alert("You have asked PropertyController to delete a property.");
 }
 
+export const storePropertyPhoto = async (photo: File) => {
+    const { data, error } = await supabase
+        .storage
+        .from('property-photos')
+        .upload(photo.name, photo, {
+            cacheControl: '3600',
+            upsert: false
+        })
+
+    if (error) {
+        throw error;
+    }
+
+    return data.path;
+}
+
 export const getPropertyPhotoUrl = (filename: string) => {
     const { data } = supabase
         .storage
