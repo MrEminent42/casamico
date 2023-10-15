@@ -47,19 +47,24 @@ const AddPropertyPage = () => {
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        alert(`Entered Property with following attributes:\n
+        if (newProperty.address) {
+            alert(`Entered Property with following attributes:\n
             ${newProperty ?
-            (newProperty.address ? newProperty.address : "undef address") + "\n" +
-            (newProperty.city ? newProperty.city : "undef city") + "\n" +
-            (newProperty.state_province ? newProperty.state_province : "undef state") + "\n" +
-            (newProperty.country ? newProperty.country : "undef country") + "\n" +
-            (newProperty.image_url ? newProperty.image_url : "undef image url") + "\n" +
-            newRooms
-            : "undef property"
-            }`);
-        createProperty(newProperty)
-            .catch(err => alert(`error in createProperty: ${err}`));
-        navigate("/");
+                    (newProperty.address ? newProperty.address : "undef address") + "\n" +
+                    (newProperty.city ? newProperty.city : "undef city") + "\n" +
+                    (newProperty.state_province ? newProperty.state_province : "undef state") + "\n" +
+                    (newProperty.country ? newProperty.country : "undef country") + "\n" +
+                    (newProperty.image_url ? newProperty.image_url : "undef image url") + "\n" +
+                    newRooms
+                    : "undef property"
+                }`);
+            createProperty(newProperty)
+                .catch(err => alert(`error in createProperty: ${err}`));
+            navigate("/");
+        }
+        else {
+            alert("Property street address is a required field");
+        }
     }
 
     return (
