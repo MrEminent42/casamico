@@ -51,10 +51,12 @@ export const deleteProperty = () => {
 }
 
 export const storePropertyPhoto = async (photo: File) => {
+    const ext = photo.name.substring(photo.name.indexOf('.'));
+
     const { data, error } = await supabase
         .storage
         .from('property-photos')
-        .upload(photo.name, photo, {
+        .upload(crypto.randomUUID()+ext, photo, {
             cacheControl: '3600',
             upsert: false
         })

@@ -154,7 +154,7 @@ const TextInput = styled.input`
 const FileInputArea = (props: TitleAndInputProps) => {
     return (
         <div>
-            <input name={props.name} type="file" accept="image/*" id="input-file-upload" style={{ /*display: "none"*/ }} onChange={props.handleChange} />
+            <input name={props.name} type="file" accept="image/*" id="input-file-upload" style={{ display: "none" }} onChange={props.handleChange} />
             <FileInputDiv>
                 <label id="label-file-upload" htmlFor="input-file-upload" style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
                     <img src={uploadIcon} alt="upload icon" style={{ height: 25 }} />
