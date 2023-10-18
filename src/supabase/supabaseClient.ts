@@ -1,5 +1,4 @@
 import { createClient } from "@supabase/supabase-js";
-import { Room, Task } from "../Types";
 
 // these types were provided by Supabase to match the database schema
 // in the case that the database schema changes, these types will need to be updated
