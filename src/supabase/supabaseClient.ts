@@ -1,4 +1,3 @@
-import { createClient } from "@supabase/supabase-js";
 
 // these types were provided by Supabase to match the database schema
 // in the case that the database schema changes, these types will need to be updated
@@ -14,7 +13,7 @@ import { createClient } from "@supabase/supabase-js";
 //     | { [key: string]: Json | undefined }
 //     | Json[]
 
-interface Database {
+export interface Database {
     public: {
         Tables: {
             Properties: {
@@ -200,8 +199,3 @@ interface Database {
         }
     }
 }
-
-
-export const supabase = createClient<Database>(
-    process.env.REACT_APP_SUPABASE_URL || "",
-    process.env.REACT_APP_SUPABASE_KEY || "");
