@@ -14,7 +14,7 @@ import { createClient } from "@supabase/supabase-js";
 //     | { [key: string]: Json | undefined }
 //     | Json[]
 
-interface Database {
+export interface Database {
     public: {
         Tables: {
             Properties: {
@@ -56,55 +56,36 @@ interface Database {
                 Insert: {
                     created_at?: string
                     name: string
+                    property_id: number
                     room_id?: number
                 }
                 Update: {
                     created_at?: string
                     name?: string
-                    room_id?: number
-                }
-                Relationships: []
-            }
-            RoomsInProperties: {
-                Row: {
-                    property_id: number
-                    room_id: number
-                }
-                Insert: {
-                    property_id: number
-                    room_id: number
-                }
-                Update: {
                     property_id?: number
                     room_id?: number
                 }
                 Relationships: [
                     {
-                        foreignKeyName: "RoomsInProperties_property_id_fkey"
+                        foreignKeyName: "Rooms_property_id_fkey"
                         columns: ["property_id"]
                         referencedRelation: "Properties"
                         referencedColumns: ["property_id"]
-                    },
-                    {
-                        foreignKeyName: "RoomsInProperties_room_id_fkey"
-                        columns: ["room_id"]
-                        referencedRelation: "Rooms"
-                        referencedColumns: ["room_id"]
                     }
                 ]
             }
             Tags: {
                 Row: {
                     created_at: string
-                    tag: string
+                    tag_name: string
                 }
                 Insert: {
                     created_at?: string
-                    tag: string
+                    tag_name: string
                 }
                 Update: {
                     created_at?: string
-                    tag?: string
+                    tag_name?: string
                 }
                 Relationships: []
             }
@@ -124,6 +105,7 @@ interface Database {
                     done: boolean
                     due_date: string
                     icon_url?: string
+                    property_id: number
                     task_id?: number
                     title?: string
                 }
@@ -133,36 +115,16 @@ interface Database {
                     done?: boolean
                     due_date?: string
                     icon_url?: string
+                    property_id?: number
                     task_id?: number
                     title?: string
                 }
-                Relationships: []
-            }
-            TasksWithRooms: {
-                Row: {
-                    room_id: number
-                    tag_name: string
-                }
-                Insert: {
-                    room_id: number
-                    tag_name: string
-                }
-                Update: {
-                    room_id?: number
-                    tag_name?: string
-                }
                 Relationships: [
                     {
-                        foreignKeyName: "TasksWithRooms_room_id_fkey"
-                        columns: ["room_id"]
-                        referencedRelation: "Rooms"
-                        referencedColumns: ["room_id"]
-                    },
-                    {
-                        foreignKeyName: "TasksWithRooms_tag_name_fkey"
-                        columns: ["tag_name"]
-                        referencedRelation: "Tags"
-                        referencedColumns: ["tag"]
+                        foreignKeyName: "Tasks_property_id_fkey"
+                        columns: ["property_id"]
+                        referencedRelation: "Properties"
+                        referencedColumns: ["property_id"]
                     }
                 ]
             }
@@ -184,7 +146,7 @@ interface Database {
                         foreignKeyName: "TasksWithTags_tag_name_fkey"
                         columns: ["tag_name"]
                         referencedRelation: "Tags"
-                        referencedColumns: ["tag"]
+                        referencedColumns: ["tag_name"]
                     },
                     {
                         foreignKeyName: "TasksWithTags_task_id_fkey"
@@ -209,7 +171,6 @@ interface Database {
         }
     }
 }
-
 
 export const supabase = createClient<Database>(
     process.env.REACT_APP_SUPABASE_URL || "",
