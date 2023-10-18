@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import PropertyCard from '../components/properties/PropertyCard';
 import uploadIcon from '../assets/upload.png';
 import { Property } from '../Types';
-import { createProperty, getPropertyPhotoUrl, storePropertyPhoto } from '../controllers/PropertyController';
+import { createProperty, createRooms, getPropertyPhotoUrl, storePropertyPhoto } from '../controllers/PropertyController';
 
 const AddPropertyPage = () => {
     let navigate = useNavigate();
@@ -76,7 +76,23 @@ const AddPropertyPage = () => {
     //this is only when submit button is pressed and photo is stored to db
     //this handles saving newProperty to db and returning to home
     useEffect(() => {
+        async function makeRooms() {
+            //internal function because useEffect can't be async
+            if (newRooms) {
+                let errors = await createRooms(newRooms, 1);
+
+                if (errors.length > 0) {
+                    errors.forEach(function (error) {
+                        console.log(error.code+" : "+error.message);
+                    })
+                    alert(errors[0].message);
+                }
+            }
+        }
+
         if (ready && !newProperty.image_url.startsWith("blob:")) {
+            //add new rooms
+            makeRooms();
 
             //store property info to db
             if (newProperty.address) {
@@ -113,6 +129,7 @@ const AddPropertyPage = () => {
         else {
             alert("not new photo");
         }
+
         setNewProperty(values => ({ ...values, image_url: getPropertyPhotoUrl(url ? url : 'default_house.png') }) as Property);
     }
 

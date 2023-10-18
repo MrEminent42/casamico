@@ -7,3 +7,10 @@ export interface Property {
     image_url: string
     property_id: number
 }
+
+export interface Room {
+    created_at: string
+    name: string
+    property_id: number
+    room_id: number
+}

@@ -1,5 +1,6 @@
-import { Property } from "../Types";
+import { Property, Room } from "../Types";
 import { supabase } from "../supabase/supabaseClient";
+import { PostgrestError } from "@supabase/supabase-js";
 
 export const getAllProperties = async () => {
     alert("You have asked PropertyController to fetch all properties.");
@@ -75,4 +76,23 @@ export const getPropertyPhotoUrl = (filename: string) => {
         .getPublicUrl(filename);
 
     return data.publicUrl;
+}
+
+export const createRooms = (input: string, property_id: number) => {
+    alert("You have asked PropertyController to make rooms");
+
+    //parse comma separated string
+    const names = input.split(',');
+    let errors: Array<PostgrestError> = [];
+    names.forEach(async function (name) {
+        const { error } = await supabase
+            .from('Rooms')
+            .insert({name: name, property_id: property_id} as Room);
+
+        if (error) {
+            errors.push(error);
+        }
+    })
+
+    return errors;
 }
