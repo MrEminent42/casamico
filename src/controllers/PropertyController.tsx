@@ -39,7 +39,9 @@ export const createProperty = async (property: Property, rooms: string) => {
         throw error;
     }
 
-    await createRooms(rooms, data[0].property_id);
+    if (rooms) {
+        await createRooms(rooms, data[0].property_id);
+    }
 
     return;
 }
