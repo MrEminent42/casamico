@@ -33,6 +33,12 @@ const AddPropertyPage = () => {
 
         //if files list is undef or empty, newPhoto is undef
         if (!event.currentTarget.files || event.currentTarget.files.length === 0) {
+            //if already have preview photo, don't want to change anything if no photo is selected after that
+            if (newPhoto!==undefined) {
+                return;
+            }
+
+            //if no photo has been selected yet and none is selected now, set to undef
             setNewPhoto(undefined);
             return;
         }
