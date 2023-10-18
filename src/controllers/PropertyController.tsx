@@ -3,7 +3,6 @@ import { supabase } from "../supabase/supabaseClient";
 import { PostgrestError } from "@supabase/supabase-js";
 
 export const getAllProperties = async () => {
-    alert("You have asked PropertyController to fetch all properties.");
     const res = await supabase
         .from('Properties')
         .select();
@@ -16,7 +15,6 @@ export const getAllProperties = async () => {
 }
 
 export const getProperty = async (propertyId: number) => {
-    alert("You have asked PropertyController to fetch a property.");
     const res = await supabase
         .from('Properties')
         .select()
@@ -27,7 +25,7 @@ export const getProperty = async (propertyId: number) => {
         throw (res.error || `Property id ${propertyId} not found.`);
     }
 
-    return res.data as Property; //change back at end to avoid conflict
+    return res.data as Property;
 }
 
 export const createProperty = async (property: Property, rooms: string) => {
