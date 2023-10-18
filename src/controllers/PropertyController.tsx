@@ -1,6 +1,6 @@
 import { Property } from "../Types";
 import { createClient } from "@supabase/supabase-js";
-import { Database } from "../supabase/supabaseClient"
+import { Database } from "../supabase/supabase"
 
 const supabase = createClient<Database>(
     process.env.REACT_APP_SUPABASE_URL || "",
