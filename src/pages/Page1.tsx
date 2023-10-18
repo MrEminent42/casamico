@@ -76,24 +76,7 @@ const AddPropertyPage = () => {
     //this is only when submit button is pressed and photo is stored to db
     //this handles saving newProperty to db and returning to home
     useEffect(() => {
-        async function makeRooms() {
-            //internal function because useEffect can't be async
-            if (newRooms) {
-                let errors = await createRooms(newRooms, 1); //TODO: need actual property id instead of 1!!!
-
-                if (errors.length > 0) {
-                    errors.forEach(function (error) {
-                        console.log(error.code+" : "+error.message);
-                    })
-                    alert(errors[0].message);
-                }
-            }
-        }
-
         if (ready && !newProperty.image_url.startsWith("blob:")) {
-            //add new rooms
-            makeRooms();
-
             //store property info to db
             if (newProperty.address) {
                 alert(`Entered Property with following attributes:\n
@@ -106,7 +89,7 @@ const AddPropertyPage = () => {
                         newRooms
                         : "undef property"
                     }`);
-                createProperty(newProperty)
+                createProperty(newProperty, newRooms)
                     .catch(err => alert(`error in createProperty: ${err}`));
                 navigate("/");
             }

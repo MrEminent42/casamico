@@ -30,15 +30,18 @@ export const getProperty = async (propertyId: number) => {
     return res.data as Property; //change back at end to avoid conflict
 }
 
-export const createProperty = async (property: Property) => {
+export const createProperty = async (property: Property, rooms: string) => {
     alert("You have asked PropertyController to create a property.");
-    const { error } = await supabase
+    const { data, error } = await supabase
         .from('Properties')
-        .insert(property);
+        .insert(property)
+        .select();
 
     if (error) {
         throw error;
     }
+
+    await createRooms(rooms, data[0].property_id);
 
     return;
 }
@@ -90,7 +93,8 @@ export const createRooms = (input: string, property_id: number) => {
             .insert({name: name, property_id: property_id} as Room);
 
         if (error) {
-            errors.push(error);
+           alert(error?.message);
+           throw(error);
         }
     })
 
