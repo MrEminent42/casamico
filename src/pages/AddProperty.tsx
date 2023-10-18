@@ -95,6 +95,7 @@ const AddProperty = () => {
             }
             else {
                 alert("Property street address is a required field");
+                setReady(false);
             }
         }
     }, [navigate, newProperty, newRooms, ready])
