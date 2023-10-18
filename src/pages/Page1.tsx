@@ -12,18 +12,22 @@ const AddPropertyPage = () => {
     const [newProperty, setNewProperty] = useState<Property>({ image_url: getPropertyPhotoUrl('default_house.png') } as Property);
     const [newRooms, setNewRooms] = useState("");
     const [newPhoto, setNewPhoto] = useState<File>();
-    const [preview, setPreview] = useState<string>()
+    const [preview, setPreview] = useState<string>();
+    const [ready, setReady] = useState(false);
 
+    //called from all form inputs except photo and room
     const handleChange = (event: FormEvent<HTMLInputElement>) => {
         const name = event.currentTarget.name;
         const value = event.currentTarget.value;
         setNewProperty(values => ({ ...values, [name]: value }) as Property)
     }
 
+    //called from room input
     const handleRoomsChange = (event: FormEvent<HTMLInputElement>) => {
         setNewRooms(event.currentTarget.value);
     }
 
+    //called from photo input
     const uploadFile = async (event: FormEvent<HTMLInputElement>) => {
         alert(`uploading file: ${event.currentTarget.files ? (event.currentTarget.files[0] ? event.currentTarget.files[0].name : "no file") : "no file list"}`);
 
@@ -66,7 +70,7 @@ const AddPropertyPage = () => {
     //this is only when submit button is pressed and photo is stored to db
     //this handles saving newProperty to db and returning to home
     useEffect(() => {
-        if (!newProperty.image_url.startsWith("blob:") && newProperty.image_url !== getPropertyPhotoUrl('default_house.png')) {
+        if (ready && !newProperty.image_url.startsWith("blob:")) {
 
             //store property info to db
             if (newProperty.address) {
@@ -88,12 +92,12 @@ const AddPropertyPage = () => {
                 alert("Property street address is a required field");
             }
         }
-    }, [navigate, newProperty, newRooms])
+    }, [navigate, newProperty, newRooms, ready])
 
-
+    //called when submit button is pressed
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-
+        setReady(true);
         //store image to db on submit
         let url: string | void = "";
         if (newPhoto) {
