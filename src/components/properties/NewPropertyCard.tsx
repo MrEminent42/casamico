@@ -9,7 +9,7 @@ const NewPropertyCard = () => {
 
     return (
         <PropertyGridItemPadding
-            onClick={() => navigate("/1")}
+            onClick={() => navigate("/add-property")}
         >
             <AddPropertyCard>
                 <AddIconImage src={addIcon} />

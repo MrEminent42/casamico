@@ -2,8 +2,9 @@ import { Routes, Route } from 'react-router-dom';
 import styled from 'styled-components';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
-import Page1 from './pages/Page1';
+import AddProperty from './pages/AddProperty';
 import Tasks from './pages/Tasks';
+
 
 function App() {
 
@@ -13,7 +14,7 @@ function App() {
       <MainContainer>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/1" element={<Page1 />} />
+          <Route path="/add-property" element={<AddProperty />} />
           <Route path="/property/:id" element={<Tasks />} />
         </Routes>
       </MainContainer>

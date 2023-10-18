@@ -4,9 +4,9 @@ import { useNavigate } from 'react-router-dom'
 import PropertyCard from '../components/properties/PropertyCard';
 import uploadIcon from '../assets/upload.png';
 import { Property } from '../Types';
-import { createProperty, createRooms, getPropertyPhotoUrl, storePropertyPhoto } from '../controllers/PropertyController';
+import { createProperty, getPropertyPhotoUrl, storePropertyPhoto } from '../controllers/PropertyController';
 
-const AddPropertyPage = () => {
+const AddProperty = () => {
     let navigate = useNavigate();
 
     const [newProperty, setNewProperty] = useState<Property>({ image_url: getPropertyPhotoUrl('default_house.png') } as Property);
@@ -158,7 +158,7 @@ const AddPropertyPage = () => {
     )
 }
 
-export default AddPropertyPage
+export default AddProperty
 
 
 const TitleAndText = (props: TitleAndInputProps) => {
