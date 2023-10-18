@@ -24,7 +24,7 @@ const AddPropertyCard = styled.div`
     border: 3px solid #cbcbcb;
     border-radius: 10px;
     height: 100%;
-    max-height: 250px;
+    height: 250px;
     display: flex;
     align-items: center;
     justify-content: center;
