@@ -79,7 +79,7 @@ const AddPropertyPage = () => {
         async function makeRooms() {
             //internal function because useEffect can't be async
             if (newRooms) {
-                let errors = await createRooms(newRooms, 1);
+                let errors = await createRooms(newRooms, 1); //TODO: need actual property id instead of 1!!!
 
                 if (errors.length > 0) {
                     errors.forEach(function (error) {
@@ -182,7 +182,7 @@ const TitleAndText = (props: TitleAndInputProps) => {
     return (
         <label>
             {props.title}
-            <TextInput name={props.name} value={props.value || ""} onChange={props.handleChange} />
+            <TextInput name={props.name!} value={props.value || ""} onChange={props.handleChange} />
         </label>
     )
 }
@@ -197,9 +197,9 @@ const TitleAndFile = (props: TitleAndInputProps) => {
 }
 
 interface TitleAndInputProps {
-    title: string;
-    name: string;
-    value?: string;
+    title: string | null;
+    name: string | null;
+    value?: string | null;
     handleChange: (e: FormEvent<HTMLInputElement>) => void;
 }
 
@@ -220,7 +220,7 @@ const TextInput = styled.input`
 const FileInputArea = (props: TitleAndInputProps) => {
     return (
         <div>
-            <input name={props.name} type="file" accept="image/*" id="input-file-upload" style={{ display: "none" }} onChange={props.handleChange} />
+            <input name={props.name!} type="file" accept="image/*" id="input-file-upload" style={{ display: "none" }} onChange={props.handleChange} />
             <FileInputDiv>
                 <label id="label-file-upload" htmlFor="input-file-upload" style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
                     <img src={uploadIcon} alt="upload icon" style={{ height: 25 }} />
