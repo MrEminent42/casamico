@@ -1,6 +1,5 @@
 import { Property, Room } from "../Types";
 import { supabase } from "../supabase/supabaseClient";
-import { PostgrestError } from "@supabase/supabase-js";
 
 export const getAllProperties = async () => {
     const res = await supabase
@@ -29,6 +28,7 @@ export const getProperty = async (propertyId: number) => {
 }
 
 export const createProperty = async (property: Property, rooms: string) => {
+    //create new Property entry in database
     const { data, error } = await supabase
         .from('Properties')
         .insert(property)
@@ -38,11 +38,14 @@ export const createProperty = async (property: Property, rooms: string) => {
         throw error;
     }
 
+    //create new Room entries in database if needed
+    let room_ids: Array<number | undefined>=[];
     if (rooms) {
-        await createRooms(rooms, data[0].property_id);
+        room_ids=await createRooms(rooms, data[0].property_id)
+            .catch(err => { throw (err); });
     }
 
-    return data[0].property_id;
+    return { property_id: data[0].property_id, room_ids: room_ids }; //return object containing property id and room ids
 }
 
 export const updateProperty = () => {
@@ -53,6 +56,7 @@ export const deleteProperty = () => {
     alert("You have asked PropertyController to delete a property.");
 }
 
+//store given file in the database Property Photos bucket
 export const storePropertyPhoto = async (photo: File) => {
     const ext = photo.name.substring(photo.name.lastIndexOf('.'));
 
@@ -71,6 +75,7 @@ export const storePropertyPhoto = async (photo: File) => {
     return data.path; //this is the file path to the stored file in the database
 }
 
+//get usable public URL for photo given its path in the database bucket
 export const getPropertyPhotoUrl = (filename: string) => {
     const { data } = supabase
         .storage
@@ -80,23 +85,26 @@ export const getPropertyPhotoUrl = (filename: string) => {
     return data.publicUrl;
 }
 
-export const createRooms = (input: string, property_id: number) => {
+export const createRooms = async (input: string, property_id: number) => {
     //parse comma separated string
     const names = input.split(',');
-    let errors: Array<PostgrestError> = [];
-    names.forEach(async function (name) {
-        name = name.trim();
+
+    //store new Room entry in database for each name and add room_id of each to returned array
+    let room_ids = await Promise.all(names.map(async name => {
         if (name) {
-            const { error } = await supabase
+            const { data, error } = await supabase
                 .from('Rooms')
-                .insert({ name: name, property_id: property_id } as Room);
+                .insert({ name: name, property_id: property_id } as Room)
+                .select();
 
             if (error) {
-                alert(error?.message);
                 throw (error);
             }
-        }
-    })
 
-    return errors;
+            return data[0].room_id;
+        }
+    }
+    ));
+
+    return room_ids; //return array of room ids of rooms created
 }
