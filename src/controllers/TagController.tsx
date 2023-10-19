@@ -15,11 +15,15 @@ export const getTags = async () => {
 }
 
 export const createTag = async (tag_name: string) => {
-    const { error } = await supabase
+    const res = await supabase
         .from("Tags")
-        .insert({ tag_name: tag_name });
+        .insert({ tag_name: tag_name })
+        .select()
+        .single();
 
-    if (error) {
-        throw error;
+    if (res.error) {
+        throw res.error;
     }
+
+    return res.data.tag_name;
 }

@@ -16,21 +16,31 @@ interface AddTaskProps {
 
 const AddTask = (props: AddTaskProps) => {
 
-    const [dbTags, setDbTags] = useState<Tag[]>([]);
     const [selectedTags, setSelectedTags] = useState<readonly Database['public']['Tables']['Tags']['Row'][]>([]);
     const [selectedRooms, setSelectedRooms] = useState<readonly Database['public']['Tables']['Rooms']['Row'][]>([]);
+
+    const [title, setTitle] = useState("");
+    const [description, setDescription] = useState("");
+    const [dueDate, setDueDate] = useState("");
+    const [done, setDone] = useState(false);
+
 
     const updateTagsIfNecessary = async () => {
         // compare selected tasks against existing tags
         // if any are not in the db, add them
-        const dbTagsNames = new Set();
-        dbTags.forEach((tag) => {
-            dbTagsNames.add(tag.tag_name);
-        })
 
-        const res = await Promise.all(selectedTags.map((tag) => {
-            if (!dbTagsNames.has(tag.tag_name)) {
-                return createTag(tag.tag_name);
+        const dbTagsNames = await getTags();
+
+        if (!dbTagsNames) {
+            return Promise.reject("Problem getting tags;");
+        }
+
+        const dbTagSet = new Set(dbTagsNames.map((tag) => tag.tag_name));
+
+        await Promise.all(selectedTags.map(async (tag) => {
+            if (!dbTagSet.has(tag.tag_name)) {
+                console.log("creating new tag for " + tag.tag_name)
+                return await createTag(tag.tag_name);
             }
         })).catch((err) => {
             return Promise.reject(err || "Error creating tags.");
@@ -45,16 +55,16 @@ const AddTask = (props: AddTaskProps) => {
             let res = await updateTagsIfNecessary();
             alert(res);
         } catch (err) {
-            alert(err);
+            alert(JSON.stringify(err));
             return;
         }
 
         const task: Database['public']['Tables']['Tasks']['Insert'] = {
+            description: description,
+            title: title,
+            due_date: dueDate,
+            done: done,
             property_id: props.property_id,
-            title: event.currentTarget.title,
-            description: event.currentTarget.description.value,
-            due_date: event.currentTarget.date.value,
-            done: false,
         }
 
         addTask(task).catch((err) => { alert(err) }).then(() => props.goBack());
@@ -70,38 +80,47 @@ const AddTask = (props: AddTaskProps) => {
             {/* Row 1 */}
             <GridItemCol1Span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
                 Status
-                <StatusCheckbox type="checkbox" name="done" />
+                <StatusCheckbox type="checkbox" checked={done} onChange={(e) => setDone(e.target.checked)} />
             </GridItemCol1Span>
 
             {/* Row 2 */}
             <GridItemCol1>
-                <TitleAndText title="Title" name="title" />
+                <label>
+                    Title
+                    <TextInput value={title} onChange={(e) => setTitle(e.target.value)} />
+                </label>
             </GridItemCol1>
             <GridItemCol2>
-                <TitleAndText title="Due Date" name="date" />
+                <label>
+                    Due date
+                    <TextInput value={dueDate} onChange={(e) => setDueDate(e.target.value)} type='date' />
+                </label>
             </GridItemCol2>
 
             {/* Row 3 */}
             <GridItemCol1Span>
-                Room
-                <AsyncSelect
-                    isMulti
-                    cacheOptions
-                    defaultOptions
-                    loadOptions={() => getRooms(props.property_id)}
-                    noOptionsMessage={() => <div>No rooms found. <Link to={"/"}>Create a new room first.</Link></div>}
-                    onChange={(selected) => setSelectedRooms(selected)}
-                    getOptionLabel={(option) => option.name}
-                    getOptionValue={(option) => option.name}
-                    filterOption={(option, inputValue) => {
-                        if (option.data.name.toLowerCase().includes(inputValue.toLowerCase())) {
-                            return true;
-                        }
-                        return false;
-                    }}
-                    styles={DropdownStyles}
-                />
+                <label>
 
+                    Room
+                    <AsyncSelect
+                        isMulti
+                        cacheOptions
+                        defaultOptions
+                        loadOptions={() => getRooms(props.property_id)}
+                        noOptionsMessage={() => <div>No rooms found. <Link to={"/"}>Create a new room first.</Link></div>}
+                        onChange={(selected) => setSelectedRooms(selected)}
+                        getOptionLabel={(option) => option.name}
+                        getOptionValue={(option) => option.name}
+                        filterOption={(option, inputValue) => {
+                            if (option.data.name.toLowerCase().includes(inputValue.toLowerCase())) {
+                                return true;
+                            }
+                            return false;
+                        }}
+                        styles={DropdownStyles}
+                    />
+
+                </label>
             </GridItemCol1Span>
 
             {/* Row 4 */}
@@ -131,7 +150,10 @@ const AddTask = (props: AddTaskProps) => {
 
             {/* Row 5 */}
             <GridItemCol1Span>
-                <TitleAndTextArea title="Description" name="description" />
+                <label>
+                    Description
+                    <TextArea value={description} onChange={(e) => setDescription(e.target.value)} />
+                </label>
             </GridItemCol1Span>
 
             {/* Row 6 */}
@@ -147,23 +169,23 @@ const AddTask = (props: AddTaskProps) => {
 export default AddTask
 
 
-const TitleAndText = (props: TitleAndInputProps) => {
-    return (
-        <label>
-            {props.title}
-            <TextInput name={props.name} type={props.type} style={props.style} />
-        </label>
-    )
-}
+// const TitleAndText = (props: TitleAndInputProps) => {
+//     return (
+//         <label>
+//             {props.title}
+//             <TextInput name={props.name} type={props.type} style={props.style} />
+//         </label>
+//     )
+// }
 
-const TitleAndTextArea = (props: TitleAndInputProps) => {
-    return (
-        <label>
-            {props.title}
-            <TextArea name={props.name} style={props.style} />
-        </label>
-    )
-}
+// const TitleAndTextArea = (props: TitleAndInputProps) => {
+//     return (
+//         <label>
+//             {props.title}
+//             <TextArea name={props.name} style={props.style} />
+//         </label>
+//     )
+// }
 
 interface TitleAndInputProps {
     title: string;
