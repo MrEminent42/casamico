@@ -14,7 +14,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/1" element={<Page1 />} />
-          <Route path="/property/:id" element={<Tasks />} />
+          <Route path="/property/:id/*" element={<Tasks />} />
         </Routes>
       </MainContainer>
     </FontWrapper>
