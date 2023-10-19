@@ -1,4 +1,3 @@
-import { Tag } from "../Types";
 import { supabase } from "../supabase/db";
 
 

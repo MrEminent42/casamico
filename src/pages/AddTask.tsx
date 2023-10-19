@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import { addTask } from '../controllers/TaskController';
-import { Tag } from '../Types';
 import { createTag, getTags } from '../controllers/TagController';
 import AsyncCreateableSelect from 'react-select/async-creatable';
 import AsyncSelect from 'react-select/async';
@@ -17,7 +16,7 @@ interface AddTaskProps {
 const AddTask = (props: AddTaskProps) => {
 
     const [selectedTags, setSelectedTags] = useState<readonly Database['public']['Tables']['Tags']['Row'][]>([]);
-    const [selectedRooms, setSelectedRooms] = useState<readonly Database['public']['Tables']['Rooms']['Row'][]>([]);
+    const [, setSelectedRoom] = useState<readonly Database['public']['Tables']['Rooms']['Row'][]>([]);
 
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
@@ -108,7 +107,7 @@ const AddTask = (props: AddTaskProps) => {
                         defaultOptions
                         loadOptions={() => getRooms(props.property_id)}
                         noOptionsMessage={() => <div>No rooms found. <Link to={"/"}>Create a new room first.</Link></div>}
-                        onChange={(selected) => setSelectedRooms(selected)}
+                        onChange={(selected) => setSelectedRoom(selected)}
                         getOptionLabel={(option) => option.name}
                         getOptionValue={(option) => option.name}
                         filterOption={(option, inputValue) => {
@@ -167,33 +166,6 @@ const AddTask = (props: AddTaskProps) => {
 }
 
 export default AddTask
-
-
-// const TitleAndText = (props: TitleAndInputProps) => {
-//     return (
-//         <label>
-//             {props.title}
-//             <TextInput name={props.name} type={props.type} style={props.style} />
-//         </label>
-//     )
-// }
-
-// const TitleAndTextArea = (props: TitleAndInputProps) => {
-//     return (
-//         <label>
-//             {props.title}
-//             <TextArea name={props.name} style={props.style} />
-//         </label>
-//     )
-// }
-
-interface TitleAndInputProps {
-    title: string;
-    name: string;
-    type?: string;
-    longText?: boolean;
-    style?: React.CSSProperties;
-}
 
 const TextInput = styled.input`
     width: 100%;

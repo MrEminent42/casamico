@@ -1,4 +1,3 @@
-import { Task } from "../Types"
 import { supabase } from "../supabase/db";
 import { Database } from "../supabase/supabase";
 
