@@ -29,7 +29,6 @@ export const getProperty = async (propertyId: number) => {
 }
 
 export const createProperty = async (property: Property, rooms: string) => {
-    alert("You have asked PropertyController to create a property.");
     const { data, error } = await supabase
         .from('Properties')
         .insert(property)
@@ -43,7 +42,7 @@ export const createProperty = async (property: Property, rooms: string) => {
         await createRooms(rooms, data[0].property_id);
     }
 
-    return;
+    return data[0].property_id;
 }
 
 export const updateProperty = () => {
@@ -55,7 +54,7 @@ export const deleteProperty = () => {
 }
 
 export const storePropertyPhoto = async (photo: File) => {
-    const ext = photo.name.substring(photo.name.indexOf('.'));
+    const ext = photo.name.substring(photo.name.lastIndexOf('.'));
 
     const { data, error } = await supabase
         .storage
@@ -69,7 +68,7 @@ export const storePropertyPhoto = async (photo: File) => {
         throw error;
     }
 
-    return data.path;
+    return data.path; //this is the file path to the stored file in the database
 }
 
 export const getPropertyPhotoUrl = (filename: string) => {
@@ -82,15 +81,13 @@ export const getPropertyPhotoUrl = (filename: string) => {
 }
 
 export const createRooms = (input: string, property_id: number) => {
-    alert("You have asked PropertyController to make rooms");
-
     //parse comma separated string
     const names = input.split(',');
     let errors: Array<PostgrestError> = [];
     names.forEach(async function (name) {
         const { error } = await supabase
             .from('Rooms')
-            .insert({name: name, property_id: property_id} as Room);
+            .insert({name: name.trim(), property_id: property_id} as Room);
 
         if (error) {
            alert(error?.message);

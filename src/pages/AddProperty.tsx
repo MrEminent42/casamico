@@ -29,8 +29,6 @@ const AddProperty = () => {
 
     //called from photo input
     const uploadFile = async (event: FormEvent<HTMLInputElement>) => {
-        alert(`uploading file: ${event.currentTarget.files ? (event.currentTarget.files[0] ? event.currentTarget.files[0].name : "no file") : "no file list"}`);
-
         //if files list is undef or empty, newPhoto is undef
         if (!event.currentTarget.files || event.currentTarget.files.length === 0) {
             //if already have preview photo, don't want to change anything if no photo is selected after that
@@ -79,16 +77,6 @@ const AddProperty = () => {
         if (ready && !newProperty.image_url.startsWith("blob:")) {
             //store property info to db
             if (newProperty.address) {
-                alert(`Entered Property with following attributes:\n
-        ${newProperty ?
-                        (newProperty.address ? newProperty.address : "undef address") + "\n" +
-                        (newProperty.city ? newProperty.city : "undef city") + "\n" +
-                        (newProperty.state_province ? newProperty.state_province : "undef state") + "\n" +
-                        (newProperty.country ? newProperty.country : "undef country") + "\n" +
-                        (newProperty.image_url ? newProperty.image_url : "undef image url") + "\n" +
-                        newRooms
-                        : "undef property"
-                    }`);
                 createProperty(newProperty, newRooms)
                     .catch(err => alert(`error in createProperty: ${err}`));
                 navigate("/");
@@ -109,9 +97,6 @@ const AddProperty = () => {
         if (newPhoto) {
             url = await storePropertyPhoto(newPhoto)
                 .catch(err => alert(err));
-        }
-        else {
-            alert("not new photo");
         }
 
         setNewProperty(values => ({ ...values, image_url: getPropertyPhotoUrl(url ? url : 'default_house.png') }) as Property);
