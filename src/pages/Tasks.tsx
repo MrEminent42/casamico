@@ -9,7 +9,7 @@ import { Route, Routes, useNavigate, useParams } from 'react-router';
 import { getTasksOfProperty } from '../controllers/TaskController';
 import { getProperty } from '../controllers/PropertyController';
 import { Property } from '../Types';
-import AddTaskPage from './AddTask';
+import AddTask from './AddTask';
 import Popup from '../components/Popup';
 
 const Page2 = () => {
@@ -80,7 +80,7 @@ const Page2 = () => {
                     <Popup
                         onClickOutside={() => navigate("")}
                         onKeyboardEsc={() => navigate("")}
-                        element={<AddTaskPage goBack={() => navigate("")} />}
+                        element={<AddTask goBack={() => navigate("")} property_id={propertyId} />}
                     />
                 } />
             </Routes>
