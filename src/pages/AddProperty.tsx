@@ -10,7 +10,7 @@ const AddProperty = () => {
     let navigate = useNavigate();
 
     const [newProperty, setNewProperty] = useState<Property>({ image_url: getPropertyPhotoUrl('default_house.png') } as Property);
-    const [newRooms, setNewRooms] = useState("");
+    const [newRooms, setNewRooms] = useState<string>();
     const [newPhoto, setNewPhoto] = useState<File>();
     const [preview, setPreview] = useState<string>();
 
@@ -80,7 +80,7 @@ const AddProperty = () => {
 
         //store property info to db
         if (newProperty.address) {
-            createProperty(({ ...newProperty, image_url: getPropertyPhotoUrl(url ? url : 'default_house.png') }) as Property, newRooms)
+            createProperty(({ ...newProperty, image_url: getPropertyPhotoUrl(url ? url : 'default_house.png') }) as Property, newRooms ?? "")
                 .catch(err => alert(`error in createProperty: ${err}`));
             navigate("/");
         }
