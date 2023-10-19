@@ -1,5 +1,5 @@
 import { Property } from "../Types";
-import { supabase } from "../supabase/supabaseClient";
+import { supabase } from "../supabase/db";
 
 export const getAllProperties = async () => {
     const res = await supabase

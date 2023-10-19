@@ -1,5 +1,5 @@
 import { Tag } from "../Types";
-import { supabase } from "../supabase/supabaseClient";
+import { supabase } from "../supabase/db";
 
 
 export const getTags = async () => {

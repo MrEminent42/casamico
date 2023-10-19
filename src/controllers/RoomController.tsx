@@ -1,4 +1,5 @@
-import { Database, supabase } from "../supabase/supabaseClient";
+import { supabase } from "../supabase/db";
+import { Database } from "../supabase/supabase";
 
 export const getRooms = async (property_id: Database['public']['Tables']['Properties']['Row']['property_id']) => {
     const res = await supabase

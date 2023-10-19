@@ -4,10 +4,10 @@ import { addTask } from '../controllers/TaskController';
 import TaskTagsDropdown from '../components/tasks/TaskRoomsDropdown';
 import { Tag } from '../Types';
 import { createTag, getTags } from '../controllers/TagController';
-import { Database } from '../supabase/supabaseClient';
 import AsyncCreateableSelect from 'react-select/async-creatable';
 import AsyncSelect from 'react-select/async';
 import { getRooms } from '../controllers/RoomController';
+import { Database } from '../supabase/supabase';
 
 interface AddTaskProps {
     goBack: () => void;
