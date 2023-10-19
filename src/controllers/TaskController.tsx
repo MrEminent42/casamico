@@ -13,10 +13,7 @@ export const getTasksOfProperty = async (propertyId: number) => {
         throw (res.error);
     }
 
-    console.log("propertyId: " + propertyId)
-
-    console.log(res.data)
-    return res.data as Task[];
+    return res.data;
 }
 
 /**

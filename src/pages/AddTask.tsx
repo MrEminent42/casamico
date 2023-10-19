@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { addTask } from '../controllers/TaskController';
-import TaskTagsDropdown from '../components/tasks/TaskRoomsDropdown';
 import { Tag } from '../Types';
 import { createTag, getTags } from '../controllers/TagController';
 import AsyncCreateableSelect from 'react-select/async-creatable';
 import AsyncSelect from 'react-select/async';
 import { getRooms } from '../controllers/RoomController';
 import { Database } from '../supabase/supabase';
+import { Link } from 'react-router-dom';
 
 interface AddTaskProps {
     goBack: () => void;
@@ -19,15 +19,6 @@ const AddTask = (props: AddTaskProps) => {
     const [dbTags, setDbTags] = useState<Tag[]>([]);
     const [selectedTags, setSelectedTags] = useState<readonly Database['public']['Tables']['Tags']['Row'][]>([]);
     const [selectedRooms, setSelectedRooms] = useState<readonly Database['public']['Tables']['Rooms']['Row'][]>([]);
-
-    // const handleTagsChange = (selected: Database['public']['Tables']['Tags']['Row'][]) => {
-    //     setSelectedTags(selected);
-    // }
-
-    // const handleRoomsChange = (selected: Database['public']['Tables']['Rooms']['Row'][]) => {
-    //     setSelectedRooms(selected);
-    // }
-
 
     const updateTagsIfNecessary = async () => {
         // compare selected tasks against existing tags
@@ -60,7 +51,7 @@ const AddTask = (props: AddTaskProps) => {
 
         const task: Database['public']['Tables']['Tasks']['Insert'] = {
             property_id: props.property_id,
-            title: event.currentTarget.name,
+            title: event.currentTarget.title,
             description: event.currentTarget.description.value,
             due_date: event.currentTarget.date.value,
             done: false,
@@ -84,31 +75,24 @@ const AddTask = (props: AddTaskProps) => {
 
             {/* Row 2 */}
             <GridItemCol1>
-                <TitleAndText title="Name" name="name" />
+                <TitleAndText title="Title" name="title" />
             </GridItemCol1>
             <GridItemCol2>
                 <TitleAndText title="Due Date" name="date" />
             </GridItemCol2>
 
-
+            {/* Row 3 */}
             <GridItemCol1Span>
-                {/* <TitleAndText title="Rooms" name="" /> */}
                 Room
-                {/* <TaskTagsDropdown
-                    loadOptions={getTags}
-                    onChange={handleTagsChange}
-                /> */}
                 <AsyncSelect
-                    isMulti={true}
+                    isMulti
                     cacheOptions
                     defaultOptions
                     loadOptions={() => getRooms(props.property_id)}
-                    noOptionsMessage={() => "Type to create a new tag..."}
+                    noOptionsMessage={() => <div>No rooms found. <Link to={"/"}>Create a new room first.</Link></div>}
                     onChange={(selected) => setSelectedRooms(selected)}
                     getOptionLabel={(option) => option.name}
                     getOptionValue={(option) => option.name}
-                    // getNewOptionData={(inputValue, optionLabel) => ({ tag_name: optionLabel as string, created_at: '' })}
-                    // getNewOptionData={(inputValue, optionLabel) => ({ tag_name: inputValue, created_at: '' })}
                     filterOption={(option, inputValue) => {
                         if (option.data.name.toLowerCase().includes(inputValue.toLowerCase())) {
                             return true;
@@ -122,14 +106,10 @@ const AddTask = (props: AddTaskProps) => {
 
             {/* Row 4 */}
             <GridItemCol1Span>
-                {/* <TaskTagsDropdown
-                    loadOptions={getTags}
-                    onChange={handleTagsChange}
-                /> */}
 
                 Tag
                 <AsyncCreateableSelect
-                    isMulti={true}
+                    isMulti
                     cacheOptions
                     defaultOptions
                     loadOptions={getTags}
@@ -137,8 +117,7 @@ const AddTask = (props: AddTaskProps) => {
                     onChange={(selected) => setSelectedTags(selected)}
                     getOptionLabel={(option) => option.tag_name}
                     getOptionValue={(option) => option.tag_name}
-                    // getNewOptionData={(inputValue, optionLabel) => ({ tag_name: optionLabel as string, created_at: '' })}
-                    getNewOptionData={(inputValue, optionLabel) => ({ tag_name: inputValue, created_at: '' })}
+                    getNewOptionData={(inputValue) => ({ tag_name: inputValue, created_at: '' })}
                     formatCreateLabel={(inputValue) => `Create tag: "${inputValue}"`}
                     filterOption={(option, inputValue) => {
                         if (option.data.tag_name.toLowerCase().includes(inputValue.toLowerCase())) {
@@ -148,15 +127,14 @@ const AddTask = (props: AddTaskProps) => {
                     }}
                     styles={DropdownStyles}
                 />
-
             </GridItemCol1Span>
 
-            {/* Row 3 */}
+            {/* Row 5 */}
             <GridItemCol1Span>
                 <TitleAndTextArea title="Description" name="description" />
             </GridItemCol1Span>
 
-            {/* Row 5 */}
+            {/* Row 6 */}
             <SubmitButtonsContainer>
                 <SubmitButton type='submit'>
                     Save
