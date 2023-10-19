@@ -85,13 +85,16 @@ export const createRooms = (input: string, property_id: number) => {
     const names = input.split(',');
     let errors: Array<PostgrestError> = [];
     names.forEach(async function (name) {
-        const { error } = await supabase
-            .from('Rooms')
-            .insert({name: name.trim(), property_id: property_id} as Room);
+        name = name.trim();
+        if (name) {
+            const { error } = await supabase
+                .from('Rooms')
+                .insert({ name: name, property_id: property_id } as Room);
 
-        if (error) {
-           alert(error?.message);
-           throw(error);
+            if (error) {
+                alert(error?.message);
+                throw (error);
+            }
         }
     })
 
