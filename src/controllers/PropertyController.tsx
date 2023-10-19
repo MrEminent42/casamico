@@ -1,10 +1,5 @@
 import { Property } from "../Types";
-import { createClient } from "@supabase/supabase-js";
-import { Database } from "../supabase/supabase"
-
-const supabase = createClient<Database>(
-    process.env.REACT_APP_SUPABASE_URL || "",
-    process.env.REACT_APP_SUPABASE_KEY || "");
+import { supabase } from "../supabase/db";
 
 export const getAllProperties = async () => {
     alert("You have asked PropertyController to fetch all properties.");
