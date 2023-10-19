@@ -13,7 +13,6 @@ const AddProperty = () => {
     const [newRooms, setNewRooms] = useState("");
     const [newPhoto, setNewPhoto] = useState<File>();
     const [preview, setPreview] = useState<string>();
-    const [ready, setReady] = useState(false);
 
     //called from all form inputs except photo and room
     const handleChange = (event: FormEvent<HTMLInputElement>) => {
@@ -69,29 +68,9 @@ const AddProperty = () => {
         }
     }, [preview])
 
-    //called whenever newProperty is changed
-    //only does something if image_url is changed to something that isn't default or preview
-    //this is only when submit button is pressed and photo is stored to db
-    //this handles saving newProperty to db and returning to home
-    useEffect(() => {
-        if (ready && !newProperty.image_url.startsWith("blob:")) {
-            //store property info to db
-            if (newProperty.address) {
-                createProperty(newProperty, newRooms)
-                    .catch(err => alert(`error in createProperty: ${err}`));
-                navigate("/");
-            }
-            else {
-                alert("Property street address is a required field");
-                setReady(false);
-            }
-        }
-    }, [navigate, newProperty, newRooms, ready])
-
     //called when submit button is pressed
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        setReady(true);
         //store image to db on submit
         let url: string | void = "";
         if (newPhoto) {
@@ -99,7 +78,15 @@ const AddProperty = () => {
                 .catch(err => alert(err));
         }
 
-        setNewProperty(values => ({ ...values, image_url: getPropertyPhotoUrl(url ? url : 'default_house.png') }) as Property);
+        //store property info to db
+        if (newProperty.address) {
+            createProperty(({ ...newProperty, image_url: getPropertyPhotoUrl(url ? url : 'default_house.png') }) as Property, newRooms)
+                .catch(err => alert(`error in createProperty: ${err}`));
+            navigate("/");
+        }
+        else {
+            alert("Property street address is a required field");
+        }
     }
 
     return (
