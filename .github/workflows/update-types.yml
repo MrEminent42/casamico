@@ -25,3 +25,7 @@ jobs:
         if: ${{contains(steps.git_status.outputs.status, ' ')}}
         run: |
           echo "There are file changes that need to be committed."
+      - name: Send success message if there are no file changes
+        if: ${{contains(steps.git_status.outputs.status, '')}}
+        run: |
+          echo "There are no file changes to commit."
