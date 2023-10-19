@@ -22,7 +22,7 @@ const Page2 = () => {
     // this runs once when a webpage is loaded
     useEffect(() => {
         if (propertyId) {
-            getTasksOfProperty();
+            getTasksOfProperty(propertyId);
 
             getProperty(propertyId).then((property) => {
                 setProperty(property);
