@@ -1,0 +1,30 @@
+name: Update database types
+
+on:
+  schedule:
+    - cron: '0 */4 * * *'
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-node@v2.1.5
+        with:
+          node-version: 16
+      - run: npm run update-types
+      - name: check for file changes
+        id: git_status
+        run: |
+          echo "::set-output name=status::$(git status -s)"
+      - name: Send alert if there are file changes
+        if: ${{contains(steps.git_status.outputs.status, ' ')}}
+        run: exit 1
+      - name: Send success message if there are no file changes
+        if: ${{contains(steps.git_status.outputs.status, '')}}
+        run: |
+          echo "There are no file changes to commit."
