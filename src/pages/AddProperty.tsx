@@ -119,14 +119,14 @@ const AddProperty = () => {
             <GridItemCol12>
                 <TitleAndFile title="Upload Photo" name="photo" handleChange={uploadFile} />
             </GridItemCol12>
+            <GridItemCol12>
+                <TitleAndText title="Rooms" name="rooms" value={newRooms} handleChange={handleRoomsChange} />
+            </GridItemCol12>
             <SubmitButtonsContainer>
                 <SubmitButton>
                     Save
                 </SubmitButton>
             </SubmitButtonsContainer>
-            <GridItemCol12>
-                <TitleAndText title="Rooms" name="rooms" value={newRooms} handleChange={handleRoomsChange} />
-            </GridItemCol12>
         </AddPropertyForm>
     )
 }
