@@ -54,10 +54,10 @@ const Page2 = () => {
         const ONE_DAY = 1000 * 60 * 60 * 24
     
         // Calculate the difference in milliseconds
-        const differenceMs = Math.abs(date1.getTime() - date2.getTime())
+        const differenceMs = date1.getTime() - date2.getTime()
     
         // Convert back to days and return
-        return Math.round(differenceMs / ONE_DAY)
+        return Math.round(differenceMs / ONE_DAY) + 1
     }
 
     return (
@@ -90,7 +90,7 @@ const Page2 = () => {
                             <TaskCard
                                 title={task.title}
                                 due={
-                                    daysBetween(new Date(task.due_date), currentDate) > 0 ?
+                                    daysBetween(new Date(task.due_date), currentDate) >= 0 ?
                                         daysBetween(new Date(task.due_date), currentDate) + " days left" :
                                         "Overdue"
                                 }
