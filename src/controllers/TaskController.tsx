@@ -1,6 +1,5 @@
 import { supabase } from "../supabase/db";
 import { Database } from "../supabase/supabase";
-import { Task } from "../Types";
 
 export const getTasksOfProperty = async (propertyId: number) => {
     const res = await supabase
