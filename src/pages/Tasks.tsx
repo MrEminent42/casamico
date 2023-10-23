@@ -4,13 +4,14 @@ import backbuttonsvg from '../assets/arrow-left-circle.svg';
 import house from "../assets/house.jpg";
 import addbuttonsvg from "../assets/plus-button.svg";
 import TaskViewButton from '../components/TaskViewButton';
-import Task from '../components/Task';
 import { Route, Routes, useNavigate, useParams } from 'react-router';
 import { getTasksOfProperty } from '../controllers/TaskController';
 import { getProperty } from '../controllers/PropertyController';
 import { Property } from '../Types';
 import AddTaskPage from './AddTask';
 import Popup from '../components/Popup';
+import { Task } from '../Types'
+import TaskComponent from '../components/Task';
 
 const Page2 = () => {
 
@@ -18,14 +19,18 @@ const Page2 = () => {
     const [propertyId, setPropertyId] = useState<number>(0);
     const [property, setProperty] = useState<Property | null>(null);
     const params = useParams();
+    const [tasks, setTasks] = useState<Task[]>([]);
 
     // this runs once when a webpage is loaded
     useEffect(() => {
         if (propertyId) {
-            getTasksOfProperty(propertyId);
-
             getProperty(propertyId).then((property) => {
                 setProperty(property);
+                getTasksOfProperty(propertyId).then((tasks) => {
+                    setTasks(tasks);
+                }).catch((error) => {
+                    alert(JSON.stringify(error));
+                });
             }).catch((error) => {
                 alert(JSON.stringify(error));
                 navigate('/');
@@ -68,11 +73,15 @@ const Page2 = () => {
                     <AddButton src={addbuttonsvg} onClick={() => navigate("add")}></AddButton>
                 </FilterandSortContainer>
                 <TaskListContainer>
-                    <Task
-                        title="Task 1"
-                        due="Due 1"
-                        bg_color="#E1CAE8"
-                    />
+                    {
+                        tasks.map((task) => (
+                            <TaskComponent
+                                title={task.title}
+                                due={task.due_date}
+                                bg_color="#E1CAE8"
+                            />
+                        ))
+                    }
                 </TaskListContainer>
             </TaskContainer>
             <Routes>
@@ -172,6 +181,7 @@ const TaskListContainer = styled.div`
     display: flex;
     align-items: left;
     flex-direction: column;
+    gap: 10px;
 
     margin: 0 10px 10px 0;
 
