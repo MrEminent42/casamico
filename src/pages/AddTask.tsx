@@ -1,13 +1,81 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import { addTask } from '../controllers/TaskController';
+import { createTag, getTags } from '../controllers/TagController';
+import AsyncCreateableSelect from 'react-select/async-creatable';
+import AsyncSelect from 'react-select/async';
+import { getRooms } from '../controllers/RoomController';
+import { Database } from '../supabase/supabase';
+import { Link } from 'react-router-dom';
 
-const AddTaskPage = (props: { goBack: () => void }) => {
+interface AddTaskProps {
+    goBack: () => void;
+    property_id: Database['public']['Tables']['Properties']['Row']['property_id'];
+}
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+const AddTask = (props: AddTaskProps) => {
+
+    const [selectedTags, setSelectedTags] = useState<readonly Database['public']['Tables']['Tags']['Row'][]>([]);
+    const [selectedRoom, setSelectedRoom] = useState<Database['public']['Tables']['Rooms']['Row'] | null>();
+
+    const [title, setTitle] = useState("");
+    const [description, setDescription] = useState("");
+    const [dueDate, setDueDate] = useState("");
+    const [done, setDone] = useState(false);
+
+
+    const updateTagsIfNecessary = async () => {
+        // compare selected tasks against existing tags
+        // if any are not in the db, add them
+
+        const dbTagsNames = await getTags();
+
+        if (!dbTagsNames) {
+            return Promise.reject("Problem getting tags;");
+        }
+
+        const dbTagSet = new Set(dbTagsNames.map((tag) => tag.tag_name));
+
+        await Promise.all(selectedTags.map(async (tag) => {
+            if (!dbTagSet.has(tag.tag_name)) {
+                return await createTag(tag.tag_name.trim());
+            }
+        })).catch((err) => {
+            // if any of the createTag promises reject, reject this individual promise
+            return Promise.reject(err || "Error creating tags.");
+        }).catch((err) => {
+            // re-throw any error caught from createTag (I hope)
+            throw new Error(err);
+        })
+        return Promise.resolve("Created tags successfully.");
+    }
+
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        addTask();
-        props.goBack();
+
+        if (!selectedRoom) {
+            alert("You must select a room.");
+            return;
+        }
+
+        try {
+            let res = await updateTagsIfNecessary();
+            alert(res);
+        } catch (err) {
+            alert(JSON.stringify(err));
+            return;
+        }
+
+        const task: Database['public']['Tables']['Tasks']['Insert'] = {
+            description: description,
+            title: title,
+            due_date: dueDate,
+            done: done,
+            property_id: props.property_id,
+            room_id: selectedRoom.room_id,
+        }
+
+        addTask(task).catch((err) => { alert(JSON.stringify(err)) }).then(() => props.goBack());
     }
 
     return (
@@ -19,32 +87,83 @@ const AddTaskPage = (props: { goBack: () => void }) => {
 
             {/* Row 1 */}
             <GridItemCol1Span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                Status
-                <StatusCheckbox type="checkbox" />
+                Completed?
+                <StatusCheckbox type="checkbox" checked={done} onChange={(e) => setDone(e.target.checked)} />
             </GridItemCol1Span>
 
             {/* Row 2 */}
             <GridItemCol1>
-                <TitleAndText title="Name" name="name" />
+                <label>
+                    Title
+                    <TextInput value={title} onChange={(e) => setTitle(e.target.value)} />
+                </label>
             </GridItemCol1>
             <GridItemCol2>
-                <TitleAndText title="Due Date" name="date" />
+                <label>
+                    Due date
+                    <TextInput value={dueDate} onChange={(e) => setDueDate(e.target.value)} type='date' />
+                </label>
             </GridItemCol2>
 
             {/* Row 3 */}
             <GridItemCol1Span>
-                <TitleAndTextArea title="Description" name="description" />
+                <label>
+                    Room
+                    <AsyncSelect
+                        cacheOptions
+                        defaultOptions
+                        loadOptions={() => getRooms(props.property_id)}
+                        noOptionsMessage={() => <div>No rooms found. <Link to={"/"}>Create a new room first.</Link></div>}
+                        onChange={(selected) => setSelectedRoom(selected)}
+                        getOptionLabel={(option) => option.name}
+                        getOptionValue={(option) => option.name}
+                        filterOption={(option, inputValue) => {
+                            if (option.data.name.toLowerCase().includes(inputValue.toLowerCase())) {
+                                return true;
+                            }
+                            return false;
+                        }}
+                        styles={DropdownStyles}
+                    />
+
+                </label>
             </GridItemCol1Span>
 
             {/* Row 4 */}
-            <GridItemCol1>
-                <TitleAndText title="Tags" name="" />
-            </GridItemCol1>
-            <GridItemCol2>
-                <TitleAndText title="Rooms" name="" />
-            </GridItemCol2>
+            <GridItemCol1Span>
+
+                Tag
+                <AsyncCreateableSelect
+                    isMulti
+                    cacheOptions
+                    createOptionPosition='first'
+                    defaultOptions
+                    loadOptions={getTags}
+                    noOptionsMessage={() => "Type to create a new tag..."}
+                    onChange={(selected) => setSelectedTags(selected)}
+                    getOptionLabel={(option) => option.tag_name}
+                    getOptionValue={(option) => option.tag_name}
+                    getNewOptionData={(option, inputValue) => ({ tag_name: "" + inputValue, created_at: '' })}
+                    formatCreateLabel={(inputValue) => `Create tag: ${inputValue}`}
+                    filterOption={(option, inputValue) => {
+                        if (option.data.tag_name.toLowerCase().includes(inputValue.toLowerCase())) {
+                            return true;
+                        }
+                        return false;
+                    }}
+                    styles={DropdownStyles}
+                />
+            </GridItemCol1Span>
 
             {/* Row 5 */}
+            <GridItemCol1Span>
+                <label>
+                    Description
+                    <TextArea value={description} onChange={(e) => setDescription(e.target.value)} />
+                </label>
+            </GridItemCol1Span>
+
+            {/* Row 6 */}
             <SubmitButtonsContainer>
                 <SubmitButton type='submit'>
                     Save
@@ -54,43 +173,7 @@ const AddTaskPage = (props: { goBack: () => void }) => {
     )
 }
 
-export default AddTaskPage
-
-
-const TitleAndText = (props: TitleAndInputProps) => {
-    return (
-        <label>
-            {props.title}
-            <TextInput name={props.name} type={props.type} style={props.style} />
-        </label>
-    )
-}
-
-const TitleAndTextArea = (props: TitleAndInputProps) => {
-    return (
-        <label>
-            {props.title}
-            <TextArea name={props.name} style={props.style} />
-        </label>
-    )
-}
-
-// const TitleAndFile = (props: TitleAndInputProps) => {
-//     return (
-//         <label>
-//             {props.title}
-//             <FileInputArea title={props.title} name={props.name} />
-//         </label>
-//     )
-// }
-
-interface TitleAndInputProps {
-    title: string;
-    name: string;
-    type?: string;
-    longText?: boolean;
-    style?: React.CSSProperties;
-}
+export default AddTask
 
 const TextInput = styled.input`
     width: 100%;
@@ -102,6 +185,9 @@ const TextInput = styled.input`
     box-sizing: border-box;
     color: gray;
     font-weight: bold;
+    
+    // sync with Dropdowns
+    min-height: 38px;
 `
 
 const TextArea = styled.textarea`
@@ -118,44 +204,21 @@ const TextArea = styled.textarea`
     height: 100px;
 `
 
-// const FileInputArea = (props: TitleAndInputProps) => {
-//     return (
-//         <div>
-//             <input name={props.name} type="file" accept="image/*" id="input-file-upload" style={{ display: "none" }} />
-//             <FileInputDiv>
-//                 <label id="label-file-upload" htmlFor="input-file-upload" style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-//                     <img src={uploadImage} alt="upload icon" style={{ height: 25 }} />
-//                     <div style={{ textAlign: "center", margin: 5 }}> Drag & Drop </div>
-//                 </label>
-//             </FileInputDiv>
-//         </div>
-//     )
-// }
-
 const StatusCheckbox = styled.input`
     border: 5px solid red;
     height: 1.5rem;
     width: 1.5rem;
 `
 
-// const FileInputDiv = styled.div`
-//     margin: 10px 0px;
-//     border-radius: 5px;
-//     background-color: #eeeeee;
-//     color: #a5a5a5;
-//     height: 100px;
-//     display: flex;
-//     justify-content: center;
-//     align-items: center;
-// `
-
 const AddPropertyForm = styled.form`
     color: gray;
     margin: 0px 30px;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: 0.5fr 0.3fr 0.5fr 0.5fr 0.5fr 0.3fr;
+    grid-template-rows: 3rem 3rem 5rem 5rem 5rem 9rem;
     gap: 10px 20px;
+    width: 700px;
+    height: 80vh;
 `
 
 const GridItemCol1 = styled.div`
@@ -169,6 +232,7 @@ const GridItemCol2 = styled.div`
 const GridItemCol1Span = styled.div`
     grid-column-start: 1;
     grid-column-end: 3;
+    max-width: 100%;
 `
 
 const SubmitButton = styled.button`
@@ -197,5 +261,26 @@ const SubmitButtonsContainer = styled.div`
     align-items: end;
     justify-content: end;
     grid-column-start: 2;
-    margin: 0;
+    margin: 0 0 15px 0;
 `
+
+const DropdownStyles = {
+    control: (baseStyles: any) => ({
+        ...baseStyles,
+        color: 'gray',
+        backgroundColor: '#eeeeee',
+        border: 'none',
+        margin: '10px 0px',
+    }),
+    valueContainer: (baseStyles: any) => ({
+        ...baseStyles,
+        flexWrap: "nowrap",
+        whiteSpace: "nowrap",
+        overflow: "hidden",
+        textOverflow: 'ellipsis',
+    }),
+    multiValue: (baseStyles: any) => ({
+        ...baseStyles,
+        backgroundColor: '#d1d1d1',
+    }),
+}
