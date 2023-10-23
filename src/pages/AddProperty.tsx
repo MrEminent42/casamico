@@ -97,16 +97,22 @@ const AddProperty = () => {
             <GridItemCol12>
                 <TitleAndText title="Street Address" name="address" value={newProperty.address} handleChange={handleChange}/>
             </GridItemCol12>
-            <PreviewContainer>
-                <h3>Preview</h3>
-                <label style={{ marginTop: 10, marginBottom: 10 }}>Card View</label>
-                <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-                    <PropertyCard
-                        property={newProperty}
-                        noPadding
-                    />
-                </div>
-            </PreviewContainer>
+            <PreviewAndSubmitContainer>
+                <PreviewContainer>
+                    <h3>Preview</h3>
+                    <label style={{ marginTop: 10, marginBottom: 10 }}>Card View</label>
+                    <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                        <PropertyCard
+                            property={newProperty}
+                            noPadding
+                        />
+                    </div>
+                </PreviewContainer>
+                <SubmitButtonsContainer>
+                    <CancelButton onClick={() => navigate("/")}>Cancel</CancelButton>
+                    <SubmitButton type="submit">Save</SubmitButton>
+                </SubmitButtonsContainer>
+            </PreviewAndSubmitContainer>
             <GridItemCol1>
                 <TitleAndText title="City" name="city" value={newProperty.city} handleChange={handleChange} />
             </GridItemCol1>
@@ -122,11 +128,6 @@ const AddProperty = () => {
             <GridItemCol12>
                 <TitleAndText title="Rooms" name="rooms" value={newRooms} handleChange={handleRoomsChange} />
             </GridItemCol12>
-            <SubmitButtonsContainer>
-                <SubmitButton>
-                    Save
-                </SubmitButton>
-            </SubmitButtonsContainer>
         </AddPropertyForm>
     )
 }
@@ -228,6 +229,7 @@ const GridItemCol12 = styled.div`
 `
 
 const PreviewContainer = styled.div`
+    flex: 1;
     display: flex;
     flex-direction: column;
     margin: 0px auto;
@@ -238,8 +240,15 @@ const PreviewContainer = styled.div`
     //border: 1px dotted black;
 `
 
+const PreviewAndSubmitContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    grid-column-start: 3;
+    grid-row-start: 1;
+    grid-row-end: 6;
+`
+
 const SubmitButton = styled.button`
-    type: submit;
     background-color: #e0f4dc;
     color: #5f6f67;
     font-weight: bold;
@@ -262,11 +271,33 @@ const SubmitButton = styled.button`
     }
 `
 
+const CancelButton = styled.button`
+    background-color: #f4e0e0;
+    color: #6f5f5f;
+    font-weight: bold;
+    padding: 10px 30px;
+    margin: 5px 10px;
+
+    //border
+    border: none;
+    border-radius: 10px;
+    box-shadow: 2px 2px 10px rgba(0,0,0,0.1); 
+    transition: 0.3s ease-in-out;
+
+    // on hover, "raise" it by scaling the image up a bit, 
+    // and making more shadow.
+    // also, cursor should change to a pointer to indicate clickable
+    &:hover {
+        cursor: pointer;
+        background-color: #e4d0d0;
+    }
+`
+
+
 const SubmitButtonsContainer = styled.div`
     display: flex;
-    align-items: end;
-    justify-content: end;
-    grid-column-start: 3;
-    grid-row-start: 6;
-    //border: 1px dotted black;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    top: 76px;
 `
