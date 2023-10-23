@@ -99,6 +99,7 @@ const AddTask = (props: AddTaskProps) => {
             done: done,
             property_id: props.property_id,
             room_id: selectedRoom.room_id,
+            color: colors.filter((color) => color.selected)[0].color,
         }
 
         addTask(task).catch((err) => { alert(JSON.stringify(err)) }).then(() => props.goBack());
