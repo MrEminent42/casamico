@@ -2,7 +2,6 @@ import { supabase } from "../supabase/db";
 import { Database } from "../supabase/supabase";
 
 export const getTasksOfProperty = async (propertyId: number) => {
-    alert("You have asked TaskController to fetch all tasks related to a property.")
     const res = await supabase
         .from('Tasks')
         .select()

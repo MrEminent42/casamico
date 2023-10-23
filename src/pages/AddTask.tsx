@@ -78,7 +78,7 @@ const AddTask = (props: AddTaskProps) => {
 
             {/* Row 1 */}
             <GridItemCol1Span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                Status
+                Completed?
                 <StatusCheckbox type="checkbox" checked={done} onChange={(e) => setDone(e.target.checked)} />
             </GridItemCol1Span>
 
@@ -99,7 +99,6 @@ const AddTask = (props: AddTaskProps) => {
             {/* Row 3 */}
             <GridItemCol1Span>
                 <label>
-
                     Room
                     <AsyncSelect
                         isMulti
@@ -207,7 +206,7 @@ const AddPropertyForm = styled.form`
     margin: 0px 30px;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: 5rem 3rem 5rem 5rem 5rem 9rem;
+    grid-template-rows: 3rem 3rem 5rem 5rem 5rem 9rem;
     gap: 10px 20px;
     width: 700px;
     height: 80vh;
@@ -253,7 +252,7 @@ const SubmitButtonsContainer = styled.div`
     align-items: end;
     justify-content: end;
     grid-column-start: 2;
-    margin: 0;
+    margin: 0 0 15px 0;
 `
 
 const DropdownStyles = {
