@@ -84,6 +84,7 @@ export interface Database {
       }
       Tasks: {
         Row: {
+          color: string
           created_at: string
           description: string
           done: boolean
@@ -95,6 +96,7 @@ export interface Database {
           title: string
         }
         Insert: {
+          color?: string
           created_at?: string
           description?: string
           done: boolean
@@ -106,6 +108,7 @@ export interface Database {
           title?: string
         }
         Update: {
+          color?: string
           created_at?: string
           description?: string
           done?: boolean
