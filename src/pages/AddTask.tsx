@@ -42,7 +42,11 @@ const AddTask = (props: AddTaskProps) => {
                 return await createTag(tag.tag_name);
             }
         })).catch((err) => {
+            // if any of the createTag promises reject, reject this individual promise
             return Promise.reject(err || "Error creating tags.");
+        }).catch((err) => {
+            // re-throw any error caught from createTag (I hope)
+            throw new Error(err);
         })
         return Promise.resolve("Created tags successfully.");
     }
@@ -66,7 +70,7 @@ const AddTask = (props: AddTaskProps) => {
             property_id: props.property_id,
         }
 
-        addTask(task).catch((err) => { alert(err) }).then(() => props.goBack());
+        addTask(task).catch((err) => { alert(JSON.stringify(err)) }).then(() => props.goBack());
     }
 
     return (
