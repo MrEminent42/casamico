@@ -46,7 +46,7 @@ const Page2 = () => {
     return (
         <>
             <TaskContainer>
-                <BackButtonContainer onClick={() => navigate("/")}>
+                <BackButtonContainer>
                     <BackButton src={backbuttonsvg}></BackButton>
                     <BackLabel>Back</BackLabel>
                 </BackButtonContainer>
@@ -96,19 +96,16 @@ const TaskContainer = styled.div`
     padding-left: 35px;
 `
 
-const BackButtonContainer = styled.button`
+const BackButtonContainer = styled.div`
     display: flex;
     align-items: center;
     margin: 10px 10px 10px 0;
-    background: none;
-    border: none;
-    width: 100px;
-    cursor: pointer;
 `
 
 const BackButton = styled.img`
     width: 30px;
     height: 30px;
+    cursor: pointer;
 `
 
 const BackLabel = styled.p`
