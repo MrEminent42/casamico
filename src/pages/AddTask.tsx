@@ -27,16 +27,16 @@ const AddTask = (props: AddTaskProps) => {
     // const colors = ["ef4444", "f97316", "eab308", "84cc16", "10b981", "06b6d4", "3b82f6", "8b5cf6", "d946ef", "4b5563"]
     const [colors, setColors] = useState(() => {
         return [
-            { color: "#f87171", selected: true },
-            { color: "#fb923c", selected: false },
-            { color: "#facc15", selected: false },
-            { color: "#a3e635", selected: false },
-            { color: "#34d399", selected: false },
-            { color: "#22d3ee", selected: false },
-            { color: "#60a5fa", selected: false },
-            { color: "#818cf8", selected: false },
-            { color: "#c084fc", selected: false },
-            { color: "#64748b", selected: false },
+            { color: "#fca5a5", selected: true },
+            { color: "#fdba74", selected: false },
+            { color: "#fde047", selected: false },
+            { color: "#bef264", selected: false },
+            { color: "#6ee7b7", selected: false },
+            { color: "#67e8f9", selected: false },
+            { color: "#93c5fd", selected: false },
+            { color: "#c4b5fd", selected: false },
+            { color: "#f0abfc", selected: false },
+            { color: "#94a3b8", selected: false },
         ];
     });
 

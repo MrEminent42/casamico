@@ -94,7 +94,7 @@ const Page2 = () => {
                                         daysBetween(new Date(task.due_date), currentDate) + " days left" :
                                         "Overdue"
                                 }
-                                bg_color="#E1CAE8"
+                                bg_color={task.color}
                             />
                         ))
                     }
