@@ -38,8 +38,7 @@ const AddTask = (props: AddTaskProps) => {
 
         await Promise.all(selectedTags.map(async (tag) => {
             if (!dbTagSet.has(tag.tag_name)) {
-                console.log("creating new tag for " + tag.tag_name)
-                return await createTag(tag.tag_name);
+                return await createTag(tag.tag_name.trim());
             }
         })).catch((err) => {
             // if any of the createTag promises reject, reject this individual promise
@@ -137,14 +136,15 @@ const AddTask = (props: AddTaskProps) => {
                 <AsyncCreateableSelect
                     isMulti
                     cacheOptions
+                    createOptionPosition='first'
                     defaultOptions
                     loadOptions={getTags}
                     noOptionsMessage={() => "Type to create a new tag..."}
                     onChange={(selected) => setSelectedTags(selected)}
                     getOptionLabel={(option) => option.tag_name}
                     getOptionValue={(option) => option.tag_name}
-                    getNewOptionData={(inputValue) => ({ tag_name: inputValue, created_at: '' })}
-                    formatCreateLabel={(inputValue) => `Create tag: "${inputValue}"`}
+                    getNewOptionData={(option, inputValue) => ({ tag_name: "" + inputValue, created_at: '' })}
+                    formatCreateLabel={(inputValue) => `Create tag: ${inputValue}`}
                     filterOption={(option, inputValue) => {
                         if (option.data.tag_name.toLowerCase().includes(inputValue.toLowerCase())) {
                             return true;
