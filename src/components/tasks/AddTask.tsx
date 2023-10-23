@@ -1,13 +1,13 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import { addTask } from '../controllers/TaskController';
-import { createTag, getTags } from '../controllers/TagController';
+import { addTask } from '../../controllers/TaskController';
+import { createTag, getTags } from '../../controllers/TagController';
 import AsyncCreateableSelect from 'react-select/async-creatable';
 import AsyncSelect from 'react-select/async';
-import { getRooms } from '../controllers/RoomController';
-import { Database } from '../supabase/supabase';
+import { getRooms } from '../../controllers/RoomController';
+import { Database } from '../../supabase/supabase';
 import { Link } from 'react-router-dom';
-import { DropdownStyles } from '../components/styles/Dropdown';
+import { DropdownStyles } from '../styles/Dropdown';
 
 interface AddTaskProps {
     goBack: () => void;

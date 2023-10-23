@@ -7,7 +7,7 @@ const Navbar = () => {
 
     return (
         <NavbarContainer>
-            <SideContainer onClick={() => navigate("/")}>
+            <SideContainer onClick={() => navigate("/properties")}>
                 <LogoWrapper>
                     <LogoImage src={fullLogo} alt="Casamico logo" />
                 </LogoWrapper>

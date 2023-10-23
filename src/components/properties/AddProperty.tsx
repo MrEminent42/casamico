@@ -1,15 +1,15 @@
 import React, { FormEvent, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { useNavigate } from 'react-router-dom'
-import PropertyCard from '../components/properties/PropertyCard';
-import uploadIcon from '../assets/upload.png';
-import { Property } from '../Types';
-import { createProperty, getPropertyPhotoUrl, storePropertyPhoto } from '../controllers/PropertyController';
+import PropertyCard from './PropertyCard';
+import uploadIcon from '../../assets/upload.png';
+import { Property } from '../../Types';
+import { createProperty, getPropertyPhotoUrl, storePropertyPhoto } from '../../controllers/PropertyController';
 import AsyncCreatableSelect from 'react-select/async-creatable';
-import { getAllUniqueRoomNames } from '../controllers/RoomController';
-import { DropdownStyles } from '../components/styles/Dropdown';
+import { getAllUniqueRoomNames } from '../../controllers/RoomController';
+import { DropdownStyles } from '../styles/Dropdown';
 
-const AddProperty = () => {
+const AddProperty = (props: { goBack: () => any }) => {
     let navigate = useNavigate();
 
     const [newProperty, setNewProperty] = useState<Property>({ image_url: getPropertyPhotoUrl('default_house.png') } as Property);
@@ -80,7 +80,7 @@ const AddProperty = () => {
         if (newProperty.address) {
             createProperty(({ ...newProperty, image_url: getPropertyPhotoUrl(url ? url : 'default_house.png') }) as Property, newRooms ?? [])
                 .catch(err => alert(`error in createProperty: ${err}`));
-            navigate("/");
+            navigate("/properties");
         }
         else {
             alert("Property street address is a required field");
@@ -212,31 +212,29 @@ const FileInputDiv = styled.div`
 
 const AddPropertyForm = styled.form`
     color: gray;
-    margin: 0px 50px;
+    margin: 0px 30px 30px 20px;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr 1.5fr ;
-    gap: 10px;
-    //border: 1px dotted black;
+    grid-template-rows: 3rem 5rem 5rem 5rem 5rem 9rem;
+    gap: 10px;  
+    width: 900px;
+    height: 80vh;
 `
 
 const GridItemCol1 = styled.div`
     grid-column-start: 1;
     margin-right: 5%;
-    //border: 1px dotted black;
 `
 
 const GridItemCol2 = styled.div`
     grid-column-start: 2;
     margin-right: 5%;
-    //border: 1px dotted black;
 `
 
 const GridItemCol12 = styled.div`
     grid-column-start: 1;
     grid-column-end: 3;
     margin-right: 2.5%;
-    //border: 1px dotted black;
 `
 
 const PreviewContainer = styled.div`
@@ -247,11 +245,9 @@ const PreviewContainer = styled.div`
     grid-row-start: 1;
     grid-row-end: 6;
     pointer-events: none;
-    //border: 1px dotted black;
 `
 
 const SubmitButton = styled.button`
-    type: submit;
     background-color: #e0f4dc;
     color: #5f6f67;
     font-weight: bold;
@@ -278,7 +274,7 @@ const SubmitButtonsContainer = styled.div`
     display: flex;
     align-items: end;
     justify-content: end;
-    grid-column-start: 3;
-    grid-row-start: 6;
-    //border: 1px dotted black;
+    grid-column-start: 1;
+    grid-column-end: 4;
+    grid-row-start: 7;
 `

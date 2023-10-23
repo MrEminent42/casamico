@@ -3,14 +3,14 @@ import styled from 'styled-components';
 import backbuttonsvg from '../assets/arrow-left-circle.svg';
 import house from "../assets/house.jpg";
 import addbuttonsvg from "../assets/plus-button.svg";
-import TaskViewButton from '../components/TaskViewButton';
-import Task from '../components/Task';
+import TaskViewButton from '../components/tasks/TaskViewButton';
 import { Route, Routes, useNavigate, useParams } from 'react-router';
 import { getTasksOfProperty } from '../controllers/TaskController';
 import { getProperty } from '../controllers/PropertyController';
 import { Property } from '../Types';
-import AddTask from './AddTask';
+import AddTask from '../components/tasks/AddTask';
 import Popup from '../components/Popup';
+import Task from '../components/tasks/Task';
 
 const Page2 = () => {
 

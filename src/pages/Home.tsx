@@ -4,9 +4,13 @@ import NewPropertyCard from '../components/properties/NewPropertyCard'
 import styled from 'styled-components';
 import { getAllProperties } from '../controllers/PropertyController';
 import { Property } from '../Types';
+import { Route, Routes, useNavigate } from 'react-router';
+import Popup from '../components/Popup';
+import AddProperty from '../components/properties/AddProperty';
 
 const Home = () => {
     const [properties, setProperties] = useState<Property[]>([]);
+    const navigate = useNavigate();
 
     // this runs when a webpage is loaded
     useEffect(() => {
@@ -28,6 +32,15 @@ const Home = () => {
                 }
                 <NewPropertyCard />
             </PropertyCardViewContainer>
+            <Routes>
+                <Route path="add" element={
+                    <Popup
+                        onClickOutside={() => navigate("")}
+                        onKeyboardEsc={() => navigate("")}
+                        element={<AddProperty goBack={() => navigate("")} />}
+                    />
+                } />
+            </Routes>
         </div>
     )
 }
