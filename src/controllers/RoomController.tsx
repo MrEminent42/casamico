@@ -13,3 +13,15 @@ export const getRooms = async (property_id: Database['public']['Tables']['Proper
 
     return res.data;
 }
+
+export const getAllUniqueRoomNames = async () => {
+    const res = await supabase
+        .from('Rooms')
+        .select('name');
+
+    if (res.error) {
+        throw (res.error);
+    }
+
+    return res.data;
+}

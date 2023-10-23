@@ -27,7 +27,7 @@ export const getProperty = async (propertyId: number) => {
     return res.data as Property;
 }
 
-export const createProperty = async (property: Property, rooms: string) => {
+export const createProperty = async (property: Property, rooms: string[]) => {
     //create new Property entry in database
     const { data, error } = await supabase
         .from('Properties')
@@ -39,9 +39,9 @@ export const createProperty = async (property: Property, rooms: string) => {
     }
 
     //create new Room entries in database if needed
-    let room_ids: Array<number | undefined>=[];
+    let room_ids: Array<number | undefined> = [];
     if (rooms) {
-        room_ids=await createRooms(rooms, data[0].property_id)
+        room_ids = await createRooms(rooms, data[0].property_id)
             .catch(err => { throw (err); });
     }
 
@@ -63,7 +63,7 @@ export const storePropertyPhoto = async (photo: File) => {
     const { data, error } = await supabase
         .storage
         .from('property-photos')
-        .upload(crypto.randomUUID()+ext, photo, {
+        .upload(crypto.randomUUID() + ext, photo, {
             cacheControl: '3600',
             upsert: false
         })
@@ -85,10 +85,7 @@ export const getPropertyPhotoUrl = (filename: string) => {
     return data.publicUrl;
 }
 
-export const createRooms = async (input: string, property_id: number) => {
-    //parse comma separated string
-    const names = input.split(',');
-
+export const createRooms = async (names: string[], property_id: number) => {
     //store new Room entry in database for each name and add room_id of each to returned array
     let room_ids = await Promise.all(names.map(async name => {
         if (name) {

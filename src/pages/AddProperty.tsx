@@ -5,12 +5,15 @@ import PropertyCard from '../components/properties/PropertyCard';
 import uploadIcon from '../assets/upload.png';
 import { Property } from '../Types';
 import { createProperty, getPropertyPhotoUrl, storePropertyPhoto } from '../controllers/PropertyController';
+import AsyncCreatableSelect from 'react-select/async-creatable';
+import { getAllUniqueRoomNames } from '../controllers/RoomController';
+import { DropdownStyles } from '../components/styles/Dropdown';
 
 const AddProperty = () => {
     let navigate = useNavigate();
 
     const [newProperty, setNewProperty] = useState<Property>({ image_url: getPropertyPhotoUrl('default_house.png') } as Property);
-    const [newRooms, setNewRooms] = useState<string>();
+    const [newRooms, setNewRooms] = useState<string[]>([]);
     const [newPhoto, setNewPhoto] = useState<File>();
     const [preview, setPreview] = useState<string>();
 
@@ -21,17 +24,12 @@ const AddProperty = () => {
         setNewProperty(values => ({ ...values, [name]: value }) as Property)
     }
 
-    //called from room input
-    const handleRoomsChange = (event: FormEvent<HTMLInputElement>) => {
-        setNewRooms(event.currentTarget.value);
-    }
-
     //called from photo input
     const uploadFile = async (event: FormEvent<HTMLInputElement>) => {
         //if files list is undef or empty, newPhoto is undef
         if (!event.currentTarget.files || event.currentTarget.files.length === 0) {
             //if already have preview photo, don't want to change anything if no photo is selected after that
-            if (newPhoto!==undefined) {
+            if (newPhoto !== undefined) {
                 return;
             }
 
@@ -80,7 +78,7 @@ const AddProperty = () => {
 
         //store property info to db
         if (newProperty.address) {
-            createProperty(({ ...newProperty, image_url: getPropertyPhotoUrl(url ? url : 'default_house.png') }) as Property, newRooms ?? "")
+            createProperty(({ ...newProperty, image_url: getPropertyPhotoUrl(url ? url : 'default_house.png') }) as Property, newRooms ?? [])
                 .catch(err => alert(`error in createProperty: ${err}`));
             navigate("/");
         }
@@ -95,7 +93,7 @@ const AddProperty = () => {
                 <h3> Property Information </h3>
             </GridItemCol12>
             <GridItemCol12>
-                <TitleAndText title="Street Address" name="address" value={newProperty.address} handleChange={handleChange}/>
+                <TitleAndText title="Street Address" name="address" value={newProperty.address} handleChange={handleChange} />
             </GridItemCol12>
             <PreviewContainer>
                 <h3>Preview</h3>
@@ -117,10 +115,25 @@ const AddProperty = () => {
                 <TitleAndText title="Country" name="country" value={newProperty.country} handleChange={handleChange} />
             </GridItemCol12>
             <GridItemCol12>
-                <TitleAndFile title="Upload Photo" name="photo" handleChange={uploadFile} />
+                {/* <TitleAndText title="Rooms" name="rooms" value={newRooms} handleChange={handleRoomsChange} /> */}
+                Rooms
+                <AsyncCreatableSelect
+                    isMulti
+                    cacheOptions
+                    createOptionPosition='first'
+                    defaultOptions
+                    loadOptions={getAllUniqueRoomNames}
+                    getOptionLabel={(option) => option.name}
+                    getOptionValue={(option) => option.name}
+                    getNewOptionData={(option, inputValue) => ({ name: option })}
+                    onChange={(selected) => setNewRooms(selected.map((room) => room.name))}
+                    filterOption={(option, inputValue) => option.data.name.toLocaleLowerCase().includes(inputValue.toLowerCase())}
+                    styles={DropdownStyles}
+                />
+
             </GridItemCol12>
             <GridItemCol12>
-                <TitleAndText title="Rooms" name="rooms" value={newRooms} handleChange={handleRoomsChange} />
+                <TitleAndFile title="Upload Photo" name="photo" handleChange={uploadFile} />
             </GridItemCol12>
             <SubmitButtonsContainer>
                 <SubmitButton>
@@ -167,7 +180,6 @@ const TextInput = styled.input`
     background-color: #eeeeee;
     padding: 10px;
     box-sizing: border-box;
-    webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     color: gray;
     font-weight: bold;
@@ -203,7 +215,7 @@ const AddPropertyForm = styled.form`
     margin: 0px 50px;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: 0.5fr 0.5fr 0.5fr 0.5fr 1.5fr 1fr;
+    grid-template-rows: 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr 1.5fr ;
     gap: 10px;
     //border: 1px dotted black;
 `
