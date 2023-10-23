@@ -11,7 +11,7 @@ import { Property } from '../Types';
 import AddTaskPage from './AddTask';
 import Popup from '../components/Popup';
 import { Task } from '../Types'
-import TaskComponent from '../components/Task';
+import TaskCard from '../components/Task';
 
 const Page2 = () => {
 
@@ -49,6 +49,17 @@ const Page2 = () => {
         }
     }, [params.id, navigate])
 
+    function daysBetween(date1: Date, date2: Date) {
+        // The number of milliseconds in one day
+        const ONE_DAY = 1000 * 60 * 60 * 24
+    
+        // Calculate the difference in milliseconds
+        const differenceMs = Math.abs(date1.getTime() - date2.getTime())
+    
+        // Convert back to days and return
+        return Math.round(differenceMs / ONE_DAY)
+    }
+
     return (
         <>
             <TaskContainer>
@@ -76,7 +87,7 @@ const Page2 = () => {
                 <TaskListContainer>
                     {
                         tasks.map((task) => (
-                            <TaskComponent
+                            <TaskCard
                                 title={task.title}
                                 due={
                                     daysBetween(new Date(task.due_date), currentDate) > 0 ?
@@ -190,14 +201,3 @@ const TaskListContainer = styled.div`
 
     margin: 0 10px 10px 0;
 `
-
-function daysBetween(date1: Date, date2: Date) {
-    // The number of milliseconds in one day
-    const ONE_DAY = 1000 * 60 * 60 * 24
-
-    // Calculate the difference in milliseconds
-    const differenceMs = Math.abs(date1.getTime() - date2.getTime())
-
-    // Convert back to days and return
-    return Math.round(differenceMs / ONE_DAY)
-}
