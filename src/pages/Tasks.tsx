@@ -20,6 +20,7 @@ const Page2 = () => {
     const [property, setProperty] = useState<Property | null>(null);
     const params = useParams();
     const [tasks, setTasks] = useState<Task[]>([]);
+    const currentDate = new Date();
 
     // this runs once when a webpage is loaded
     useEffect(() => {
@@ -77,7 +78,11 @@ const Page2 = () => {
                         tasks.map((task) => (
                             <TaskComponent
                                 title={task.title}
-                                due={task.due_date}
+                                due={
+                                    daysBetween(new Date(task.due_date), currentDate) > 0 ?
+                                        daysBetween(new Date(task.due_date), currentDate) + " days left" :
+                                        "Overdue"
+                                }
                                 bg_color="#E1CAE8"
                             />
                         ))
@@ -184,5 +189,15 @@ const TaskListContainer = styled.div`
     gap: 10px;
 
     margin: 0 10px 10px 0;
-
 `
+
+function daysBetween(date1: Date, date2: Date) {
+    // The number of milliseconds in one day
+    const ONE_DAY = 1000 * 60 * 60 * 24
+
+    // Calculate the difference in milliseconds
+    const differenceMs = Math.abs(date1.getTime() - date2.getTime())
+
+    // Convert back to days and return
+    return Math.round(differenceMs / ONE_DAY)
+}
