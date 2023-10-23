@@ -2,7 +2,6 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import styled from 'styled-components';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
-import AddProperty from './components/properties/AddProperty';
 import Tasks from './pages/Tasks';
 
 
