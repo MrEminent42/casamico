@@ -90,6 +90,7 @@ export interface Database {
           due_date: string
           icon_url: string
           property_id: number
+          room_id: number
           task_id: number
           title: string
         }
@@ -100,6 +101,7 @@ export interface Database {
           due_date: string
           icon_url?: string
           property_id: number
+          room_id: number
           task_id?: number
           title?: string
         }
@@ -110,6 +112,7 @@ export interface Database {
           due_date?: string
           icon_url?: string
           property_id?: number
+          room_id?: number
           task_id?: number
           title?: string
         }
@@ -119,6 +122,12 @@ export interface Database {
             columns: ["property_id"]
             referencedRelation: "Properties"
             referencedColumns: ["property_id"]
+          },
+          {
+            foreignKeyName: "Tasks_room_id_fkey"
+            columns: ["room_id"]
+            referencedRelation: "Rooms"
+            referencedColumns: ["room_id"]
           }
         ]
       }

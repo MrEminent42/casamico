@@ -16,7 +16,7 @@ interface AddTaskProps {
 const AddTask = (props: AddTaskProps) => {
 
     const [selectedTags, setSelectedTags] = useState<readonly Database['public']['Tables']['Tags']['Row'][]>([]);
-    const [, setSelectedRoom] = useState<readonly Database['public']['Tables']['Rooms']['Row'][]>([]);
+    const [selectedRoom, setSelectedRoom] = useState<Database['public']['Tables']['Rooms']['Row'] | null>();
 
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
@@ -54,6 +54,11 @@ const AddTask = (props: AddTaskProps) => {
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
+        if (!selectedRoom) {
+            alert("You must select a room.");
+            return;
+        }
+
         try {
             let res = await updateTagsIfNecessary();
             alert(res);
@@ -68,6 +73,7 @@ const AddTask = (props: AddTaskProps) => {
             due_date: dueDate,
             done: done,
             property_id: props.property_id,
+            room_id: selectedRoom.room_id,
         }
 
         addTask(task).catch((err) => { alert(JSON.stringify(err)) }).then(() => props.goBack());
@@ -105,7 +111,6 @@ const AddTask = (props: AddTaskProps) => {
                 <label>
                     Room
                     <AsyncSelect
-                        isMulti
                         cacheOptions
                         defaultOptions
                         loadOptions={() => getRooms(props.property_id)}
