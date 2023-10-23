@@ -71,5 +71,4 @@ const PopupContentsContainer = styled.div`
     opacity: 1;
     overflow: auto;
     z-index: 102;
-    position: relative;
 `
