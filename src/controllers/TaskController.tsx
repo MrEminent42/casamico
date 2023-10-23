@@ -12,7 +12,7 @@ export const getTasksOfProperty = async (propertyId: number) => {
         throw (res.error);
     }
 
-    return res.data as Task[];
+    return res.data as Database['public']['Tables']['Tasks']['Row'][];
 }
 
 /**

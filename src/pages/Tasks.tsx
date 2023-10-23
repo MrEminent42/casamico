@@ -10,7 +10,7 @@ import { getProperty } from '../controllers/PropertyController';
 import { Property } from '../Types';
 import AddTask from './AddTask';
 import Popup from '../components/Popup';
-import { Task } from '../Types'
+import { Database } from "../supabase/supabase";
 import TaskCard from '../components/Task';
 
 const Page2 = () => {
@@ -19,7 +19,7 @@ const Page2 = () => {
     const [propertyId, setPropertyId] = useState<number>(0);
     const [property, setProperty] = useState<Property | null>(null);
     const params = useParams();
-    const [tasks, setTasks] = useState<Task[]>([]);
+    const [tasks, setTasks] = useState<Database['public']['Tables']['Tasks']['Row'][]>([]);
     const currentDate = new Date();
 
     // this runs once when a webpage is loaded
