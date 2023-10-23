@@ -8,7 +8,7 @@ import { Route, Routes, useNavigate, useParams } from 'react-router';
 import { getTasksOfProperty } from '../controllers/TaskController';
 import { getProperty } from '../controllers/PropertyController';
 import { Property } from '../Types';
-import AddTaskPage from './AddTask';
+import AddTask from './AddTask';
 import Popup from '../components/Popup';
 import { Task } from '../Types'
 import TaskCard from '../components/Task';
@@ -63,7 +63,7 @@ const Page2 = () => {
     return (
         <>
             <TaskContainer>
-                <BackButtonContainer>
+                <BackButtonContainer onClick={() => navigate("/")}>
                     <BackButton src={backbuttonsvg}></BackButton>
                     <BackLabel>Back</BackLabel>
                 </BackButtonContainer>
@@ -105,7 +105,7 @@ const Page2 = () => {
                     <Popup
                         onClickOutside={() => navigate("")}
                         onKeyboardEsc={() => navigate("")}
-                        element={<AddTaskPage goBack={() => navigate("")} />}
+                        element={<AddTask goBack={() => navigate("")} property_id={propertyId} />}
                     />
                 } />
             </Routes>
@@ -121,16 +121,19 @@ const TaskContainer = styled.div`
     padding-left: 35px;
 `
 
-const BackButtonContainer = styled.div`
+const BackButtonContainer = styled.button`
     display: flex;
     align-items: center;
     margin: 10px 10px 10px 0;
+    background: none;
+    border: none;
+    width: 100px;
+    cursor: pointer;
 `
 
 const BackButton = styled.img`
     width: 30px;
     height: 30px;
-    cursor: pointer;
 `
 
 const BackLabel = styled.p`
