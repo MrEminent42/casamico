@@ -107,6 +107,7 @@ const AddTask = (props: AddTaskProps) => {
 
         try {
             taskId = await addTask(task);
+            props.goBack();
         } catch (err) {
             console.log(err);
             props.goBack();
