@@ -26,8 +26,8 @@ const TaskCard = ({ title, due, bg_color, complete, handleClick }: TaskProps) =>
     }
 
     return (
-        <TaskBackground style={{backgroundColor: bg_color}}>
-            <TaskForeground style={{backgroundColor: hexToRgb(bg_color, 0.5)}}>
+        <TaskBackground style={{backgroundColor: hexToRgb(bg_color, 0.5)}}>
+            <TaskForeground style={{backgroundColor: bg_color}}>
                 <BasicCheckbox 
                     checked={complete} 
                     onClick={handleCheckboxClick}
