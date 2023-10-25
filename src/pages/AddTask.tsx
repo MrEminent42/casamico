@@ -107,11 +107,12 @@ const AddTask = (props: AddTaskProps) => {
 
         try {
             taskId = await addTask(task);
-            props.goBack();
         } catch (err) {
             console.log(err);
-            props.goBack();
+            alert("Error adding task.")
             return;
+        } finally {
+            props.goBack();
         }
 
         await Promise.all(selectedTags.map(async (tag) => {
@@ -122,6 +123,7 @@ const AddTask = (props: AddTaskProps) => {
             return await addTaskWithTags(taskWithTag);
         })).catch((err) => {
             console.log(err);
+            alert("Error adding tags to task.");
             props.goBack();
         })
     }

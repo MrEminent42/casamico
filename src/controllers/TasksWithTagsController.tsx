@@ -13,5 +13,5 @@ export const addTaskWithTags = async (taskWithTag: Database['public']['Tables'][
     }
 
     // returns the newly created taskWithTag
-    return res.data as Database['public']['Tables']['TasksWithTags']['Row'];
+    return res.data;
 }
