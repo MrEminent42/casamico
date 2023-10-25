@@ -3,10 +3,10 @@ import PropertyCard from '../components/properties/PropertyCard';
 import NewPropertyCard from '../components/properties/NewPropertyCard'
 import styled from 'styled-components';
 import { getAllProperties } from '../controllers/PropertyController';
-import { Property } from '../Types';
+import { Database } from '../supabase/supabase';
 
 const Home = () => {
-    const [properties, setProperties] = useState<Property[]>([]);
+    const [properties, setProperties] = useState<Database['public']['Tables']['Properties']['Row'][]>([]);
 
     // this runs when a webpage is loaded
     useEffect(() => {
@@ -16,19 +16,17 @@ const Home = () => {
     }, []);
 
     return (
-        <div>
-            <PropertyCardViewContainer>
-                {
-                    properties.map((property) => (
-                        <PropertyCard
-                            property={property}
-                            key={property.property_id}
-                        />
-                    ))
-                }
-                <NewPropertyCard />
-            </PropertyCardViewContainer>
-        </div>
+        <PropertyCardViewContainer>
+            {
+                properties.map((property) => (
+                    <PropertyCard
+                        property={property}
+                        key={property.property_id}
+                    />
+                ))
+            }
+            <NewPropertyCard />
+        </PropertyCardViewContainer>
     )
 }
 

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { PropertyGridItemPadding } from '../../pages/Home';
-import { Task } from '../../Types';
 import { getTasksOfProperty } from '../../controllers/TaskController';
 import { Database } from '../../supabase/supabase';
 
@@ -21,7 +20,7 @@ const PropertyCard = (props: PropertyCardProps) => {
 const PropertyCardContents = (props: PropertyCardProps) => {
     let { address, image_url, property_id } = props.property;
     let navigate = useNavigate();
-    const [tasks, setTasks] = useState<Task[]>([]);
+    const [tasks, setTasks] = useState<Database['public']['Tables']['Tasks']['Row'][]>([]);
 
     useEffect(() => {
         getTasksOfProperty(property_id).then((tasks) => {
