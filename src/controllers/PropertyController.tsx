@@ -48,8 +48,28 @@ export const createProperty = async (property: Database['public']['Tables']['Pro
     return { property_id: data[0].property_id, room_ids: room_ids }; //return object containing property id and room ids
 }
 
-export const updateProperty = () => {
-    alert("You have asked PropertyController to update a property.");
+export const updateProperty = async (property: Database['public']['Tables']['Properties']['Update'], rooms: string) => {
+    //create new Property entry in database
+    if (property.property_id) {
+        const { data, error } = await supabase
+            .from('Properties')
+            .update(property)
+            .eq('property_id', property.property_id)
+            .select();
+        if (error) {
+            throw error;
+        }
+
+        //create new Room entries in database if needed
+        let room_ids: Array<number | undefined> = [];
+        if (rooms) {
+            room_ids = await createRooms(rooms, data[0].property_id)
+                .catch(err => { throw (err); });
+        }
+
+        return { property_id: data[0].property_id, room_ids: room_ids }; //return object containing property id and room ids
+    }
+    throw new Error("No property id was given");
 }
 
 export const deleteProperty = () => {

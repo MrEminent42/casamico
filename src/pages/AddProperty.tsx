@@ -1,8 +1,8 @@
 import React, { FormEvent, useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import uploadIcon from '../assets/upload.png';
-import { createProperty, getPropertyPhotoUrl, storePropertyPhoto } from '../controllers/PropertyController';
+import { createProperty, getProperty, getPropertyPhotoUrl, storePropertyPhoto, updateProperty } from '../controllers/PropertyController';
 import PropertyCardPreview from '../components/properties/PropertyCardPreview';
 
 interface DummyProperty {
@@ -14,7 +14,8 @@ interface DummyProperty {
 }
 
 const AddProperty = () => {
-    let navigate = useNavigate();
+    const navigate = useNavigate();
+    const params = useParams();
 
     const [newProperty, setNewProperty] = useState<DummyProperty>({ image_url: getPropertyPhotoUrl('default_house.png') } as DummyProperty);
     const [newRooms, setNewRooms] = useState<string>();
@@ -50,6 +51,18 @@ const AddProperty = () => {
         // only selecting one image
         setNewPhoto(event.currentTarget.files[0]);
     }
+
+    //on page load
+    useEffect(() => {
+        async function fillBoxes(property_id: number) {
+            const fullProperty = await getProperty(property_id);
+            setNewProperty(fullProperty);
+        }
+
+        if (params.id) {
+            fillBoxes(+params.id);
+        }
+    }, [params.id])
 
     //called whenever newPhoto is changed
     //create a preview as a side effect, whenever selected file is changed to use in property card
@@ -87,8 +100,20 @@ const AddProperty = () => {
 
         //store property info to db
         if (newProperty.address) {
-            createProperty({ ...newProperty, image_url: getPropertyPhotoUrl(url ? url : 'default_house.png') }, newRooms ?? "")
-                .catch(err => alert(`error in createProperty: ${err}`));
+            if (params.id) {
+                updateProperty({ ...newProperty, image_url: newProperty.image_url.startsWith("https://ifgorfdgcwortivlypji.supabase.co/storage/") ? newProperty.image_url : getPropertyPhotoUrl(url ? url : 'default_house.png') }, newRooms ?? "")
+                    .catch(err => {
+                        console.log(err);
+                        alert(`error in updateProperty: ${err}`);
+                    });
+            }
+            else {
+                createProperty({ ...newProperty, image_url: getPropertyPhotoUrl(url ? url : 'default_house.png') }, newRooms ?? "")
+                    .catch(err => {
+                        console.log(err);
+                        alert(`error in createProperty: ${err}`);
+                    });
+            }
             navigate("/");
         }
         else {
