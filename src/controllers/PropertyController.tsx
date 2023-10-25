@@ -1,5 +1,6 @@
 import { supabase } from "../supabase/db";
 import { Database } from "../supabase/supabase";
+import { createRooms } from "./RoomController";
 
 export const getAllProperties = async () => {
     const res = await supabase
@@ -103,28 +104,4 @@ export const getPropertyPhotoUrl = (filename: string) => {
         .getPublicUrl(filename);
 
     return data.publicUrl;
-}
-
-export const createRooms = async (input: string, property_id: number) => {
-    //parse comma separated string
-    const names = input.split(',');
-
-    //store new Room entry in database for each name and add room_id of each to returned array
-    let room_ids = await Promise.all(names.map(async name => {
-        if (name) {
-            const { data, error } = await supabase
-                .from('Rooms')
-                .insert({ name: name, property_id: property_id })
-                .select();
-
-            if (error) {
-                throw (error);
-            }
-
-            return data[0].room_id;
-        }
-    }
-    ));
-
-    return room_ids; //return array of room ids of rooms created
 }

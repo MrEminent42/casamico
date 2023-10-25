@@ -4,6 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import uploadIcon from '../assets/upload.png';
 import { createProperty, getProperty, getPropertyPhotoUrl, storePropertyPhoto, updateProperty } from '../controllers/PropertyController';
 import PropertyCardPreview from '../components/properties/PropertyCardPreview';
+import { getRooms } from '../controllers/RoomController';
 
 interface DummyProperty {
     address: string
@@ -57,6 +58,13 @@ const AddProperty = () => {
         async function fillBoxes(property_id: number) {
             const fullProperty = await getProperty(property_id);
             setNewProperty(fullProperty);
+
+            const allRooms = await getRooms(property_id);
+            let roomsString = "";
+            allRooms.forEach(room => roomsString += room.name + ',');
+            roomsString = roomsString.substring(0, roomsString.length - 1);
+            setNewRooms(roomsString);
+
         }
 
         if (params.id) {
