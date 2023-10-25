@@ -85,6 +85,7 @@ const Page2 = () => {
                     <AddButton src={addbuttonsvg} onClick={() => navigate("add")}></AddButton>
                 </FilterandSortContainer>
                 <TaskListContainer>
+                    <TodoLabel>To Do</TodoLabel>
                     {
                         tasks.filter((task) => !task.completed).map((task) => (
                                 <TaskCard
@@ -244,6 +245,14 @@ const TaskListContainer = styled.div`
     margin: 0 10px 10px 0;
 `
 
+const TodoLabel = styled.p`
+    font-size: 20px;
+    font-weight: 400;
+    color: #5F5F5F;
+    margin: 5px 0;
+    padding: 5px;
+`
+
 const CompletedTaskListContainer = styled.div`
     padding: 0;
     display: flex;
@@ -258,6 +267,6 @@ const CompletedLabel = styled.p`
     font-size: 20px;
     font-weight: 400;
     color: #5F5F5F;
-    margin: 10px 0;
+    margin: 5px 0;
     padding: 5px;
 `
