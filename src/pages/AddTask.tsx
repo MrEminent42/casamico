@@ -30,7 +30,7 @@ const AddTask = (props: AddTaskProps) => {
             { color: "#fca5a5", selected: true },
             { color: "#fdba74", selected: false },
             { color: "#fde047", selected: false },
-            { color: "#bef264", selected: false },
+            { color: "#d9f99d", selected: false },
             { color: "#6ee7b7", selected: false },
             { color: "#67e8f9", selected: false },
             { color: "#93c5fd", selected: false },
