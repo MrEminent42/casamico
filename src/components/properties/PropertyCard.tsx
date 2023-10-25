@@ -1,8 +1,10 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { PropertyGridItemPadding } from '../../pages/Home';
 import { Property } from '../../Types';
+import { Task } from '../../Types';
+import { getTasksOfProperty } from '../../controllers/TaskController';
 
 interface PropertyCardProps {
     property: Property;
@@ -24,6 +26,15 @@ const PropertyCard = (props: PropertyCardProps) => {
 const PropertyCardContents = (props: PropertyCardProps) => {
     let { address, image_url, property_id } = props.property;
     let navigate = useNavigate();
+    const [tasks, setTasks] = useState<Task[]>([]);
+
+    useEffect(() => {
+        getTasksOfProperty(property_id).then((tasks) => {
+            setTasks(tasks);
+        }).catch((error) => {
+            alert(JSON.stringify(error));
+        });
+    }, [property_id]);
 
     return (
         <PropertyCardContainer
@@ -36,7 +47,7 @@ const PropertyCardContents = (props: PropertyCardProps) => {
                 {address}
             </CardTitle>
             <CardText>
-                -1 Tasks
+                {tasks.length} tasks
             </CardText>
         </PropertyCardContainer>
     )

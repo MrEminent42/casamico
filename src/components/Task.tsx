@@ -14,7 +14,7 @@ interface TaskProps {
     bg_color: string;
 }
 
-const Task = ({ title, due, bg_color }: TaskProps) => {
+const TaskCard = ({ title, due, bg_color }: TaskProps) => {
     return (
         <TaskBackground title={title} due={due} bg_color={bg_color}>
             <TaskForeground title={title} due={due} bg_color={bg_color}>
@@ -29,7 +29,7 @@ const Task = ({ title, due, bg_color }: TaskProps) => {
     )
 }
 
-export default Task
+export default TaskCard
 
 const TaskBackground = styled.div<TaskProps>`
     display: flex;
