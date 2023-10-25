@@ -7,7 +7,6 @@ import TaskViewButton from '../components/TaskViewButton';
 import { Route, Routes, useNavigate, useParams } from 'react-router';
 import { getTasksOfProperty } from '../controllers/TaskController';
 import { getProperty } from '../controllers/PropertyController';
-import { Property } from '../Types';
 import AddTask from './AddTask';
 import Popup from '../components/Popup';
 import { Database } from "../supabase/supabase";
@@ -17,7 +16,7 @@ const Page2 = () => {
 
     const navigate = useNavigate();
     const [propertyId, setPropertyId] = useState<number>(0);
-    const [property, setProperty] = useState<Property | null>(null);
+    const [property, setProperty] = useState<Database['public']['Tables']['Properties']['Row'] | null>(null);
     const params = useParams();
     const [tasks, setTasks] = useState<Database['public']['Tables']['Tasks']['Row'][]>([]);
     const currentDate = new Date();
