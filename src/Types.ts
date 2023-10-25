@@ -29,4 +29,5 @@ export interface Task {
     property_id: number
     task_id: number
     title: string
+    color: string
 }

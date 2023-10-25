@@ -7,6 +7,7 @@ import AsyncSelect from 'react-select/async';
 import { getRooms } from '../controllers/RoomController';
 import { Database } from '../supabase/supabase';
 import { Link } from 'react-router-dom';
+import ColorPickerCard from '../components/ColorPickerCard';
 import { addTaskWithTags } from '../controllers/TasksWithTagsController';
 
 interface AddTaskProps {
@@ -24,6 +25,31 @@ const AddTask = (props: AddTaskProps) => {
     const [dueDate, setDueDate] = useState("");
     const [done, setDone] = useState(false);
 
+    // const colors = ["ef4444", "f97316", "eab308", "84cc16", "10b981", "06b6d4", "3b82f6", "8b5cf6", "d946ef", "4b5563"]
+    const [colors, setColors] = useState(() => {
+        return [
+            { color: "#fca5a5", selected: true },
+            { color: "#fdba74", selected: false },
+            { color: "#fde047", selected: false },
+            { color: "#bef264", selected: false },
+            { color: "#6ee7b7", selected: false },
+            { color: "#67e8f9", selected: false },
+            { color: "#93c5fd", selected: false },
+            { color: "#c4b5fd", selected: false },
+            { color: "#f0abfc", selected: false },
+            { color: "#94a3b8", selected: false },
+        ];
+    });
+
+    const handleColorClick = (color: string) => {
+        let newColors = colors.map((c) => {
+            if (c.color === color) {
+                return { color: c.color, selected: true };
+            }
+            return { color: c.color, selected: false };
+        });
+        setColors(newColors);
+    }
 
     const updateTagsIfNecessary = async () => {
         // compare selected tasks against existing tags
@@ -74,6 +100,7 @@ const AddTask = (props: AddTaskProps) => {
             done: done,
             property_id: props.property_id,
             room_id: selectedRoom.room_id,
+            color: colors.filter((color) => color.selected)[0].color,
         }
 
         let taskId: Database['public']['Tables']['Tasks']['Row']['task_id'];
@@ -185,11 +212,32 @@ const AddTask = (props: AddTaskProps) => {
             </GridItemCol1Span>
 
             {/* Row 6 */}
+            <GridItemCol1Span>
+                    
+                    Color Picker
+                    <ColorPickerContainer>
+                        {colors.map((color) => {
+                            return (
+                                <ColorPickerCard
+                                    key={color.color}
+                                    color={color.color}
+                                    selected={color.selected}
+                                    handleColorClick={handleColorClick}
+                                />
+                            )
+                        })}
+                    </ColorPickerContainer>
+                    
+            </GridItemCol1Span>
+
+            {/* Row 7 */}
             <SubmitButtonsContainer>
                 <SubmitButton type='submit'>
                     Save
                 </SubmitButton>
             </SubmitButtonsContainer>
+
+
         </AddPropertyForm>
     )
 }
@@ -239,7 +287,7 @@ const AddPropertyForm = styled.form`
     grid-template-rows: 3rem 3rem 5rem 5rem 5rem 9rem;
     gap: 10px 20px;
     width: 700px;
-    height: 80vh;
+    height: 85vh;
 `
 
 const GridItemCol1 = styled.div`
@@ -261,7 +309,7 @@ const SubmitButton = styled.button`
     color: #5f6f67;
     font-weight: bold;
     padding: 10px 30px;
-    margin: 5px 10px;
+    margin: 5px 0px 5px auto;
     grid-column-start: 3;
 
     //border
@@ -279,10 +327,18 @@ const SubmitButton = styled.button`
 
 const SubmitButtonsContainer = styled.div`
     display: flex;
-    align-items: end;
-    justify-content: end;
-    grid-column-start: 2;
+    align-items: center;
+    grid-column-start: 1;
+    grid-column-end: 3;
     margin: 0 0 15px 0;
+`
+
+const ColorPickerContainer = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px 0px;
+
 `
 
 const DropdownStyles = {
