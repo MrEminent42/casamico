@@ -1,5 +1,5 @@
-import { Property, Room } from "../Types";
 import { supabase } from "../supabase/db";
+import { Database } from "../supabase/supabase";
 
 export const getAllProperties = async () => {
     const res = await supabase
@@ -10,7 +10,7 @@ export const getAllProperties = async () => {
         throw (res.error);
     }
 
-    return res.data as Property[];
+    return res.data;
 }
 
 export const getProperty = async (propertyId: number) => {
@@ -24,10 +24,10 @@ export const getProperty = async (propertyId: number) => {
         throw (res.error || `Property id ${propertyId} not found.`);
     }
 
-    return res.data as Property;
+    return res.data;
 }
 
-export const createProperty = async (property: Property, rooms: string) => {
+export const createProperty = async (property: Database['public']['Tables']['Properties']['Insert'], rooms: string) => {
     //create new Property entry in database
     const { data, error } = await supabase
         .from('Properties')
@@ -94,7 +94,7 @@ export const createRooms = async (input: string, property_id: number) => {
         if (name) {
             const { data, error } = await supabase
                 .from('Rooms')
-                .insert({ name: name, property_id: property_id } as Room)
+                .insert({ name: name, property_id: property_id })
                 .select();
 
             if (error) {

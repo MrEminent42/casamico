@@ -1,15 +1,22 @@
 import React, { FormEvent, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { useNavigate } from 'react-router-dom'
-import PropertyCard from '../components/properties/PropertyCard';
 import uploadIcon from '../assets/upload.png';
-import { Property } from '../Types';
 import { createProperty, getPropertyPhotoUrl, storePropertyPhoto } from '../controllers/PropertyController';
+import PropertyCardPreview from '../components/properties/PropertyCardPreview';
+
+interface DummyProperty {
+    address: string
+    city?: string | null
+    country?: string | null
+    image_url: string
+    state_province?: string | null
+}
 
 const AddProperty = () => {
     let navigate = useNavigate();
 
-    const [newProperty, setNewProperty] = useState<Property>({ image_url: getPropertyPhotoUrl('default_house.png') } as Property);
+    const [newProperty, setNewProperty] = useState<DummyProperty>({ image_url: getPropertyPhotoUrl('default_house.png') } as DummyProperty);
     const [newRooms, setNewRooms] = useState<string>();
     const [newPhoto, setNewPhoto] = useState<File>();
     const [preview, setPreview] = useState<string>();
@@ -18,7 +25,7 @@ const AddProperty = () => {
     const handleChange = (event: FormEvent<HTMLInputElement>) => {
         const name = event.currentTarget.name;
         const value = event.currentTarget.value;
-        setNewProperty(values => ({ ...values, [name]: value }) as Property)
+        setNewProperty(values => ({ ...values, [name]: value }) as DummyProperty)
     }
 
     //called from room input
@@ -64,7 +71,7 @@ const AddProperty = () => {
     //change newProperty to use this preview photo
     useEffect(() => {
         if (preview) {
-            setNewProperty(values => ({ ...values, image_url: preview }) as Property);
+            setNewProperty(values => ({ ...values, image_url: preview }) as DummyProperty);
         }
     }, [preview])
 
@@ -80,7 +87,7 @@ const AddProperty = () => {
 
         //store property info to db
         if (newProperty.address) {
-            createProperty(({ ...newProperty, image_url: getPropertyPhotoUrl(url ? url : 'default_house.png') }) as Property, newRooms ?? "")
+            createProperty({ ...newProperty, image_url: getPropertyPhotoUrl(url ? url : 'default_house.png') }, newRooms ?? "")
                 .catch(err => alert(`error in createProperty: ${err}`));
             navigate("/");
         }
@@ -102,9 +109,9 @@ const AddProperty = () => {
                     <h3>Preview</h3>
                     <label style={{ marginTop: 10, marginBottom: 10 }}>Card View</label>
                     <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-                        <PropertyCard
-                            property={newProperty}
-                            noPadding
+                        <PropertyCardPreview
+                            address={newProperty.address}
+                            image_url={newProperty.image_url}
                         />
                     </div>
                 </PreviewContainer>

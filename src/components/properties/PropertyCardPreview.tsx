@@ -1,54 +1,31 @@
-import React, { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { PropertyGridItemPadding } from '../../pages/Home';
-import { Task } from '../../Types';
-import { getTasksOfProperty } from '../../controllers/TaskController';
-import { Database } from '../../supabase/supabase';
 
 interface PropertyCardProps {
-    property: Database['public']['Tables']['Properties']['Row'];
+    address: string
+    image_url: string
 }
 
-const PropertyCard = (props: PropertyCardProps) => {
+const PropertyCardPreview = (props: PropertyCardProps) => {
     return (
-        <PropertyGridItemPadding>
-            <PropertyCardContents {...props} />
-        </PropertyGridItemPadding>
+        <PropertyCardContents {...props} />
     )
 }
 
 const PropertyCardContents = (props: PropertyCardProps) => {
-    let { address, image_url, property_id } = props.property;
-    let navigate = useNavigate();
-    const [tasks, setTasks] = useState<Task[]>([]);
-
-    useEffect(() => {
-        getTasksOfProperty(property_id).then((tasks) => {
-            setTasks(tasks);
-        }).catch((error) => {
-            alert(JSON.stringify(error));
-        });
-    }, [property_id]);
-
     return (
-        <PropertyCardContainer
-            onClick={() => {
-                navigate("/property/" + property_id);
-            }}
-        >
-            <PropertyImage src={image_url} />
+        <PropertyCardContainer>
+            <PropertyImage src={props.image_url} />
             <CardTitle>
-                {address}
+                {!props.address ? "(No Address)" : props.address}
             </CardTitle>
             <CardText>
-                {tasks.length} tasks
+                0 tasks
             </CardText>
         </PropertyCardContainer>
     )
 }
 
-export default PropertyCard
+export default PropertyCardPreview
 
 // to contain the image, title, and text, etc.
 const PropertyCardContainer = styled.div`
