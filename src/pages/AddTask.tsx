@@ -123,7 +123,6 @@ const AddTask = (props: AddTaskProps) => {
         })).catch((err) => {
             console.log(err);
             props.goBack();
-            return;
         })
     }
 
