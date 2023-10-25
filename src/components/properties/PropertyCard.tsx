@@ -31,18 +31,30 @@ const PropertyCardContents = (props: PropertyCardProps) => {
     }, [property_id]);
 
     return (
-        <PropertyCardContainer
-            onClick={() => {
+        <PropertyCardContainer>
+            <PropertyImageWrapper>
+                <PropertyImage src={image_url} onClick={() => {
+                    navigate("/property/" + property_id);
+                }} />
+                <EditButton
+                    onClick={() => {
+                        navigate("/property/edit/" + property_id);
+                    }}
+                >
+                    Edit
+                </EditButton>
+            </PropertyImageWrapper>
+
+            <div onClick={() => {
                 navigate("/property/" + property_id);
-            }}
-        >
-            <PropertyImage src={image_url} />
-            <CardTitle>
-                {address}
-            </CardTitle>
-            <CardText>
-                {tasks.length} tasks
-            </CardText>
+            }}>
+                <CardTitle>
+                    {address}
+                </CardTitle>
+                <CardText>
+                    {tasks.length} tasks
+                </CardText>
+            </div>
         </PropertyCardContainer>
     )
 }
@@ -53,13 +65,22 @@ export default PropertyCard
 const PropertyCardContainer = styled.div`
     display: flex;
     flex-direction: column;
-    
+    position: relative;
 `
 const PropertyImage = styled.img`
     // prevent image from overflowing
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+
+    // add a nice-looking border radius
+    border-radius: 10px;
+`
+
+const PropertyImageWrapper = styled.div`
+    // prevent image from overflowing
     max-width: 100%;
     height: 250px;
-    object-fit: cover;
 
     // extra space so image can grow a bit
     margin-bottom: 10px;
@@ -77,6 +98,12 @@ const PropertyImage = styled.img`
         cursor: pointer;
         box-shadow: 2px 2px 20px rgba(0,0,0,0.2);
     }
+`
+
+const EditButton = styled.button`
+    position: absolute;
+    right: 10px;
+    top: 10px;
 `
 
 const CardTitle = styled.div`

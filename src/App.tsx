@@ -16,6 +16,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/add-property" element={<AddProperty />} />
           <Route path="/property/:id/*" element={<Tasks />} />
+          <Route path="/property/edit/:id/*" element={<AddProperty />} />
         </Routes>
       </MainContainer>
     </FontWrapper>
