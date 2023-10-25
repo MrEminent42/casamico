@@ -28,7 +28,11 @@ const TaskCard = ({ title, due, bg_color, complete, handleClick }: TaskProps) =>
     return (
         <TaskBackground style={{backgroundColor: bg_color}}>
             <TaskForeground style={{backgroundColor: hexToRgb(bg_color, 0.5)}}>
-                <BasicCheckbox checked={complete} onClick={handleCheckboxClick}/>
+                <BasicCheckbox 
+                    checked={complete} 
+                    onClick={handleCheckboxClick}
+                    color='default'
+                />
                 <TaskTitle>
                     {title}
                 </TaskTitle>
@@ -78,5 +82,4 @@ const TaskDue = styled.p`
 const BasicCheckbox = styled(Checkbox)`
     margin: 0;
     padding: 0;
-    color: black;
 `
