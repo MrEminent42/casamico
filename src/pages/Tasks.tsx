@@ -87,6 +87,7 @@ const Page2 = () => {
                     {
                         tasks.map((task) => (
                             <TaskCard
+                                key={task.task_id}
                                 title={task.title}
                                 due={
                                     daysBetween(new Date(task.due_date), currentDate) >= 0 ?
@@ -94,6 +95,8 @@ const Page2 = () => {
                                         "Overdue"
                                 }
                                 bg_color={task.color}
+                                complete={task.completed}
+                                handleClick={() => console.log("Task clicked")}
                             />
                         ))
                     }
