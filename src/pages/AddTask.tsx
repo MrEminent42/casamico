@@ -8,6 +8,7 @@ import { getRooms } from '../controllers/RoomController';
 import { Database } from '../supabase/supabase';
 import { Link } from 'react-router-dom';
 import ColorPickerCard from '../components/ColorPickerCard';
+import { addTaskWithTags } from '../controllers/TasksWithTagsController';
 
 interface AddTaskProps {
     goBack: () => void;
@@ -102,7 +103,29 @@ const AddTask = (props: AddTaskProps) => {
             color: colors.filter((color) => color.selected)[0].color,
         }
 
-        addTask(task).catch((err) => { alert(JSON.stringify(err)) }).then(() => props.goBack());
+        let taskId: Database['public']['Tables']['Tasks']['Row']['task_id'];
+
+        try {
+            taskId = await addTask(task);
+        } catch (err) {
+            console.log(err);
+            alert("Error adding task.")
+            return;
+        } finally {
+            props.goBack();
+        }
+
+        await Promise.all(selectedTags.map(async (tag) => {
+            const taskWithTag: Database['public']['Tables']['TasksWithTags']['Insert'] = {
+                task_id: taskId,
+                tag_name: tag.tag_name,
+            }
+            return await addTaskWithTags(taskWithTag);
+        })).catch((err) => {
+            console.log(err);
+            alert("Error adding tags to task.");
+            props.goBack();
+        })
     }
 
     return (
