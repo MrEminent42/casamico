@@ -5,7 +5,7 @@ import house from "../assets/house.jpg";
 import addbuttonsvg from "../assets/plus-button.svg";
 import TaskViewButton from '../components/TaskViewButton';
 import { Route, Routes, useNavigate, useParams } from 'react-router';
-import { getTasksOfProperty } from '../controllers/TaskController';
+import { getTasksOfProperty, toggleTaskStatus } from '../controllers/TaskController';
 import { getProperty } from '../controllers/PropertyController';
 import AddTask from './AddTask';
 import Popup from '../components/Popup';
@@ -96,7 +96,16 @@ const Page2 = () => {
                                 }
                                 bg_color={task.color}
                                 complete={task.completed}
-                                handleClick={() => console.log("Task clicked")}
+                                handleClick={async () => {
+                                    try {
+                                        const updatedTask = await toggleTaskStatus(task.task_id, task.completed);
+                                        // update the task in the state
+                                        setTasks(tasks.map((t) => (t.task_id === updatedTask.task_id ? updatedTask : t)));
+                                    } catch (error) {
+                                        console.log(JSON.stringify(error));
+                                        alert("Failed to update task status!");
+                                    }
+                                }}
                             />
                         ))
                     }
