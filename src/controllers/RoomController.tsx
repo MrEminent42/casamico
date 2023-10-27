@@ -18,9 +18,15 @@ export const createRooms = async (input: string, property_id: number) => {
     //parse comma separated string
     const names = input.split(',');
 
+    let existingRooms = await getRooms(property_id);
+    let existingNames = new Set<string>();
+    existingRooms.forEach(room => {
+        existingNames.add(room.name);
+    })
+
     //store new Room entry in database for each name and add room_id of each to returned array
     let room_ids = await Promise.all(names.map(async name => {
-        if (name) {
+        if (name && !existingNames.has(name)) {
             const { data, error } = await supabase
                 .from('Rooms')
                 .insert({ name: name, property_id: property_id })

@@ -53,7 +53,7 @@ const AddProperty = () => {
         setNewPhoto(event.currentTarget.files[0]);
     }
 
-    //on page load
+    //on page load - prefill boxes if editing
     useEffect(() => {
         async function fillBoxes(property_id: number) {
             const fullProperty = await getProperty(property_id);
