@@ -61,8 +61,8 @@ const AddProperty = () => {
 
             const allRooms = await getRooms(property_id);
             let roomsString = "";
-            allRooms.forEach(room => roomsString += room.name + ',');
-            roomsString = roomsString.substring(0, roomsString.length - 1);
+            allRooms.forEach(room => roomsString += room.name + ', ');
+            roomsString = roomsString.substring(0, roomsString.length - 2);
             setNewRooms(roomsString);
 
         }

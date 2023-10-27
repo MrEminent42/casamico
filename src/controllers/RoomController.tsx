@@ -28,6 +28,9 @@ export const deleteRoom = async (room_id: number) => {
 export const createRooms = async (input: string, property_id: number) => {
     //parse comma separated string
     const names = input.split(',');
+    for (let i = 0; i < names.length; i++) {
+        names[i] = names[i].trim();
+    }
 
     //get existing room names to avoid making duplicates later
     let existingRooms = await getRooms(property_id);
