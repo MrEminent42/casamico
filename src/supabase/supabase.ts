@@ -88,7 +88,6 @@ export interface Database {
           completed: boolean
           created_at: string
           description: string
-          done: boolean
           due_date: string
           icon_url: string
           property_id: number
@@ -101,7 +100,6 @@ export interface Database {
           completed?: boolean
           created_at?: string
           description?: string
-          done: boolean
           due_date: string
           icon_url?: string
           property_id: number
@@ -114,7 +112,6 @@ export interface Database {
           completed?: boolean
           created_at?: string
           description?: string
-          done?: boolean
           due_date?: string
           icon_url?: string
           property_id?: number

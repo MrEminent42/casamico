@@ -96,7 +96,6 @@ const AddTask = (props: AddTaskProps) => {
             description: description,
             title: title,
             due_date: dueDate,
-            done: done,
             property_id: props.property_id,
             room_id: selectedRoom.room_id,
             color: colors.filter((color) => color.selected)[0].color,
@@ -215,21 +214,21 @@ const AddTask = (props: AddTaskProps) => {
 
             {/* Row 6 */}
             <GridItemCol1Span>
-                    
-                    Color Picker
-                    <ColorPickerContainer>
-                        {colors.map((color) => {
-                            return (
-                                <ColorPickerCard
-                                    key={color.color}
-                                    color={color.color}
-                                    selected={color.selected}
-                                    handleColorClick={handleColorClick}
-                                />
-                            )
-                        })}
-                    </ColorPickerContainer>
-                    
+
+                Color Picker
+                <ColorPickerContainer>
+                    {colors.map((color) => {
+                        return (
+                            <ColorPickerCard
+                                key={color.color}
+                                color={color.color}
+                                selected={color.selected}
+                                handleColorClick={handleColorClick}
+                            />
+                        )
+                    })}
+                </ColorPickerContainer>
+
             </GridItemCol1Span>
 
             {/* Row 7 */}
