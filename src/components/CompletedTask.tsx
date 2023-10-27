@@ -9,15 +9,14 @@ function hexToRgb(hex: string, alpha: number) {
     return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
 
-interface TaskProps {
+interface CompletedTaskProps {
     title: string;
     due: string;
-    bg_color: string;
     complete: boolean;
     handleClick: () => void;
 }
 
-const TaskCard = ({ title, due, bg_color, complete, handleClick }: TaskProps) => {
+const CompletedTaskCard = ({ title, due, complete, handleClick }: CompletedTaskProps) => {
     const [isComplete, setIsComplete] = useState(complete);
 
     const handleCheckboxClick = () => {
@@ -26,8 +25,8 @@ const TaskCard = ({ title, due, bg_color, complete, handleClick }: TaskProps) =>
     }
 
     return (
-        <TaskBackground style={{backgroundColor: hexToRgb(bg_color, 0.5)}}>
-            <TaskForeground style={{backgroundColor: bg_color}}>
+        <TaskBackground style={{backgroundColor: hexToRgb('#94a3b8', 0.5)}}>
+            <TaskForeground style={{backgroundColor: '#94a3b8'}}>
                 <BasicCheckbox 
                     checked={complete} 
                     onClick={handleCheckboxClick}
@@ -44,7 +43,7 @@ const TaskCard = ({ title, due, bg_color, complete, handleClick }: TaskProps) =>
     )
 }
 
-export default TaskCard
+export default CompletedTaskCard
 
 const TaskBackground = styled.div`
     display: flex;

@@ -85,9 +85,9 @@ export interface Database {
       Tasks: {
         Row: {
           color: string
+          completed: boolean
           created_at: string
           description: string
-          done: boolean
           due_date: string
           icon_url: string
           property_id: number
@@ -97,9 +97,9 @@ export interface Database {
         }
         Insert: {
           color?: string
+          completed?: boolean
           created_at?: string
           description?: string
-          done: boolean
           due_date: string
           icon_url?: string
           property_id: number
@@ -109,9 +109,9 @@ export interface Database {
         }
         Update: {
           color?: string
+          completed?: boolean
           created_at?: string
           description?: string
-          done?: boolean
           due_date?: string
           icon_url?: string
           property_id?: number

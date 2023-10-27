@@ -37,3 +37,18 @@ export const addTask = async (task: Database['public']['Tables']['Tasks']['Inser
 export const updateTask = async () => {
     alert("You have asked TaskController to update a task.")
 }
+
+export const toggleTaskStatus = async (task_id: number, status: boolean) => {
+    const res = await supabase
+        .from('Tasks')
+        .update({ completed: !status })
+        .eq('task_id', task_id)
+        .select()
+        .single();
+
+    if (res.error) {
+        throw (res.error);
+    }
+
+    return res.data;
+}

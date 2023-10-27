@@ -24,7 +24,7 @@ const FilterButtonContainer = styled.button`
     height: 40px;
     padding: 10px 0;
     font-size: 16px;
-    margin: 5px 0;
+    margin: 5px 0 0 0;
     cursor: pointer;
     border-radius: 40px;
 `
