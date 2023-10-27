@@ -38,7 +38,7 @@ const PropertyCardContents = (props: PropertyCardProps) => {
                 <PropertyImage src={image_url} onClick={() => {
                     navigate("/property/" + property_id);
                 }} />
-                <EditRoundedIcon htmlColor="#888888" style={{ background: "#ffffff", borderRadius: 5, border: "2px solid #cbcbcb", position: "absolute", right: 10, top: 10 }}
+                <EditRoundedIcon htmlColor="#a8a4a4" style={{ background: "#ffffff", borderRadius: "50%", padding: 7, boxShadow:"2px 2px 4px rgba(0,0,0,0.2)", position: "absolute", right: 10, top: 10 }}
                     onClick={() => {
                         navigate("/property/edit/" + property_id);
                     }}
