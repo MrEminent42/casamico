@@ -4,6 +4,8 @@ import styled from 'styled-components';
 import { PropertyGridItemPadding } from '../../pages/Home';
 import { getTasksOfProperty } from '../../controllers/TaskController';
 import { Database } from '../../supabase/supabase';
+import EditRoundedIcon from '@mui/icons-material/EditRounded';
+
 
 interface PropertyCardProps {
     property: Database['public']['Tables']['Properties']['Row'];
@@ -36,13 +38,11 @@ const PropertyCardContents = (props: PropertyCardProps) => {
                 <PropertyImage src={image_url} onClick={() => {
                     navigate("/property/" + property_id);
                 }} />
-                <EditButton
+                <EditRoundedIcon htmlColor="#888888" style={{ background: "#ffffff", borderRadius: 5, border: "2px solid #cbcbcb", position: "absolute", right: 10, top: 10 }}
                     onClick={() => {
                         navigate("/property/edit/" + property_id);
                     }}
-                >
-                    Edit
-                </EditButton>
+                />
             </PropertyImageWrapper>
 
             <div onClick={() => {
@@ -98,12 +98,6 @@ const PropertyImageWrapper = styled.div`
         cursor: pointer;
         box-shadow: 2px 2px 20px rgba(0,0,0,0.2);
     }
-`
-
-const EditButton = styled.button`
-    position: absolute;
-    right: 10px;
-    top: 10px;
 `
 
 const CardTitle = styled.div`
