@@ -5,12 +5,13 @@ import house from "../assets/house.jpg";
 import addbuttonsvg from "../assets/plus-button.svg";
 import TaskViewButton from '../components/TaskViewButton';
 import { Route, Routes, useNavigate, useParams } from 'react-router';
-import { getTasksOfProperty } from '../controllers/TaskController';
+import { getTasksOfProperty, toggleTaskStatus } from '../controllers/TaskController';
 import { getProperty } from '../controllers/PropertyController';
 import AddTask from './AddTask';
 import Popup from '../components/Popup';
 import { Database } from "../supabase/supabase";
 import TaskCard from '../components/Task';
+import CompletedTaskCard from '../components/CompletedTask';
 
 const Page2 = () => {
 
@@ -84,20 +85,60 @@ const Page2 = () => {
                     <AddButton src={addbuttonsvg} onClick={() => navigate("add")}></AddButton>
                 </FilterandSortContainer>
                 <TaskListContainer>
+                    <TodoLabel>To Do</TodoLabel>
                     {
-                        tasks.map((task) => (
-                            <TaskCard
+                        tasks.filter((task) => !task.completed).map((task) => (
+                                <TaskCard
+                                    key={task.task_id}
+                                    title={task.title}
+                                    due={
+                                        daysBetween(new Date(task.due_date), currentDate) >= 0 ?
+                                            daysBetween(new Date(task.due_date), currentDate) + " days left" :
+                                            "Overdue"
+                                    }
+                                    bg_color={task.color}
+                                    complete={task.completed}
+                                    handleClick={async () => {
+                                        try {
+                                            const updatedTask = await toggleTaskStatus(task.task_id, task.completed);
+                                            // update the task in the state
+                                            setTasks(tasks.map((t) => (t.task_id === updatedTask.task_id ? updatedTask : t)));
+                                        } catch (error) {
+                                            console.log(JSON.stringify(error));
+                                            alert("Failed to update task status!");
+                                        }
+                                    }}
+                                />
+                        ))
+                    }
+                </TaskListContainer>
+                <CompletedTaskListContainer>
+                    <CompletedLabel>Completed</CompletedLabel>
+                    {
+                        tasks.filter((task) => task.completed).map((task) => (
+                            <CompletedTaskCard
+                                key={task.task_id}
                                 title={task.title}
                                 due={
                                     daysBetween(new Date(task.due_date), currentDate) >= 0 ?
                                         daysBetween(new Date(task.due_date), currentDate) + " days left" :
                                         "Overdue"
                                 }
-                                bg_color={task.color}
+                                complete={task.completed}
+                                handleClick={async () => {
+                                    try {
+                                        const updatedTask = await toggleTaskStatus(task.task_id, task.completed);
+                                        // update the task in the state
+                                        setTasks(tasks.map((t) => (t.task_id === updatedTask.task_id ? updatedTask : t)));
+                                    } catch (error) {
+                                        console.log(JSON.stringify(error));
+                                        alert("Failed to update task status!");
+                                    }
+                                }}
                             />
                         ))
                     }
-                </TaskListContainer>
+                </CompletedTaskListContainer>
             </TaskContainer>
             <Routes>
                 <Route path="add" element={
@@ -202,4 +243,30 @@ const TaskListContainer = styled.div`
     gap: 10px;
 
     margin: 0 10px 10px 0;
+`
+
+const TodoLabel = styled.p`
+    font-size: 20px;
+    font-weight: 400;
+    color: #5F5F5F;
+    margin: 5px 0;
+    padding: 5px;
+`
+
+const CompletedTaskListContainer = styled.div`
+    padding: 0;
+    display: flex;
+    align-items: left;
+    flex-direction: column;
+    gap: 10px;
+
+    margin: 0 10px 10px 0;
+`
+
+const CompletedLabel = styled.p`
+    font-size: 20px;
+    font-weight: 400;
+    color: #5F5F5F;
+    margin: 5px 0;
+    padding: 5px;
 `

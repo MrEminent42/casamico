@@ -25,15 +25,16 @@ export default ColorPickerCard
 
 const Color = styled.div<{ selected: boolean, color: string }>`
     background-color: ${props => props.color};
-    // width: 50px;
-    // height: 38px;
+
     border-radius: 12px;
     margin: 10px 0;
-    width: ${props => props.selected ? '80px' : '50px'};
+    width: ${props => props.selected ? '90px' : '60px'};
     height: ${props => props.selected ? '53px' : '38px'};
 
     transition: transform 0.2s ease-in-out;
-    &:hover {
-        transform: scale(1.2);
-    }
+    ${props => !props.selected && `
+        &:hover {
+            transform: scale(1.2);
+        }
+    `}
 `
