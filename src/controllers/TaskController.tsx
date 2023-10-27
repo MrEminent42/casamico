@@ -38,7 +38,7 @@ export const updateTask = async () => {
     alert("You have asked TaskController to update a task.")
 }
 
-export const toggleTaskStatus = async (task_id: number, status: Boolean) => {
+export const toggleTaskStatus = async (task_id: number, status: boolean) => {
     const res = await supabase
         .from('Tasks')
         .update({ completed: !status })
