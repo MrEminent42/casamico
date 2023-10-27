@@ -12,6 +12,9 @@ import Popup from '../components/Popup';
 import { Database } from "../supabase/supabase";
 import TaskCard from '../components/Task';
 import CompletedTaskCard from '../components/CompletedTask';
+import FilterDropdown from '../components/FilterDropdown';
+import SortDropdown from '../components/SortDropdown'
+
 
 const Page2 = () => {
 
@@ -74,13 +77,9 @@ const Page2 = () => {
                     </HouseLabel>
                 </HouseContainer>
                 <FilterandSortContainer>
-                    <TaskViewButton
-                        label="Filter"
-                        onClick={() => console.log("Filter button clicked")}
+                    <FilterDropdown
                     />
-                    <TaskViewButton
-                        label="Sort"
-                        onClick={() => console.log("Sort button clicked")}
+                    <SortDropdown
                     />
                     <AddButton src={addbuttonsvg} onClick={() => navigate("add")}></AddButton>
                 </FilterandSortContainer>
@@ -270,3 +269,24 @@ const CompletedLabel = styled.p`
     margin: 5px 0;
     padding: 5px;
 `
+
+export const DropdownStyling = {
+    '&:hover': {
+        backgroundColor: 'white',
+        border: '1px solid black',
+        boxSizing: ''
+    },
+    '&:active': {
+        backgroundColor: 'black'
+    },
+    backgroundColor: '#D9D9D9',
+    color: '#5F5F5F',
+    width: '100px',
+    height: '40px',
+    padding: '10px 0',
+    fontSize: '14px',
+    margin: '5px 0 0 0',
+    cursor: 'pointer',
+    borderRadius: '40px',
+    textAlign: 'center'
+}
