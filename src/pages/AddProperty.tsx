@@ -103,7 +103,10 @@ const AddProperty = () => {
         let url: string | void = "";
         if (newPhoto) {
             url = await storePropertyPhoto(newPhoto)
-                .catch(err => alert(err));
+                .catch(err => {
+                    console.log(err);
+                    alert(`error in storePropertyPhoto: ${err}`);
+                });
         }
 
         //store property info to db
