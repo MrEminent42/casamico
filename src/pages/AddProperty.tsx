@@ -1,6 +1,6 @@
 import React, { FormEvent, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import uploadIcon from '../assets/upload.png';
 import { createProperty, deletePropertyPhoto, getProperty, getPropertyPhotoUrl, storePropertyPhoto, updateProperty } from '../controllers/PropertyController';
 import PropertyCardPreview from '../components/properties/PropertyCardPreview';
@@ -19,7 +19,6 @@ interface AddPropertyProps {
 }
 
 const AddProperty = (props: AddPropertyProps) => {
-    const navigate = useNavigate();
     const params = useParams();
 
     const [newProperty, setNewProperty] = useState<DummyProperty>({ image_url: getPropertyPhotoUrl('default_house.png') } as DummyProperty);
