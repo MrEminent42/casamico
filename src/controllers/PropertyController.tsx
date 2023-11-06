@@ -96,6 +96,19 @@ export const storePropertyPhoto = async (photo: File) => {
     return data.path; //this is the file path to the stored file in the database
 }
 
+//store given file in the database Property Photos bucket
+export const deletePropertyPhoto = async (name: string) => {
+    const { data, error } = await supabase
+        .storage
+        .from('property-photos')
+        .remove([name])
+
+    if (error) {
+        throw error;
+    }
+    return data;
+}
+
 //get usable public URL for photo given its path in the database bucket
 export const getPropertyPhotoUrl = (filename: string) => {
     const { data } = supabase

@@ -1,8 +1,8 @@
-import React, { FormEvent, useEffect, useState } from 'react'
+import React, { FormEvent, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { useNavigate, useParams } from 'react-router-dom'
 import uploadIcon from '../assets/upload.png';
-import { createProperty, getProperty, getPropertyPhotoUrl, storePropertyPhoto, updateProperty } from '../controllers/PropertyController';
+import { createProperty, deletePropertyPhoto, getProperty, getPropertyPhotoUrl, storePropertyPhoto, updateProperty } from '../controllers/PropertyController';
 import PropertyCardPreview from '../components/properties/PropertyCardPreview';
 import { getRooms } from '../controllers/RoomController';
 
@@ -22,6 +22,8 @@ const AddProperty = () => {
     const [newRooms, setNewRooms] = useState<string>();
     const [newPhoto, setNewPhoto] = useState<File>();
     const [preview, setPreview] = useState<string>();
+
+    let oldPhoto = useRef("");
 
     //called from all form inputs except photo and room
     const handleChange = (event: FormEvent<HTMLInputElement>) => {
@@ -57,6 +59,7 @@ const AddProperty = () => {
     useEffect(() => {
         async function fillBoxes(property_id: number) {
             const fullProperty = await getProperty(property_id);
+            oldPhoto.current = fullProperty.image_url;
             setNewProperty(fullProperty);
 
             const allRooms = await getRooms(property_id);
@@ -107,6 +110,15 @@ const AddProperty = () => {
                     console.log(err);
                     alert(`error in storePropertyPhoto: ${err}`);
                 });
+
+            if (oldPhoto.current && oldPhoto.current !== getPropertyPhotoUrl('default_house.png')) {
+                console.log(oldPhoto.current);
+                await deletePropertyPhoto(oldPhoto.current.substring(oldPhoto.current.lastIndexOf('/')+1))
+                    .catch(err => {
+                        console.log(err);
+                        alert(`error in storePropertyPhoto: ${err}`);
+                    });
+            }
         }
 
         //store property info to db
