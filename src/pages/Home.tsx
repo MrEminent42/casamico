@@ -1,32 +1,50 @@
 import { useEffect, useState } from 'react';
+import { Route, Routes, useNavigate } from 'react-router';
 import PropertyCard from '../components/properties/PropertyCard';
 import NewPropertyCard from '../components/properties/NewPropertyCard'
 import styled from 'styled-components';
 import { getAllProperties } from '../controllers/PropertyController';
 import { Database } from '../supabase/supabase';
+import Popup from '../components/Popup';
+import AddProperty from './AddProperty';
 
 const Home = () => {
     const [properties, setProperties] = useState<Database['public']['Tables']['Properties']['Row'][]>([]);
+    const navigate = useNavigate();
 
     // this runs when a webpage is loaded
     useEffect(() => {
         getAllProperties()
             .then((res) => setProperties(res))
-            .catch(err => alert(err));
+            .catch(err => {
+                console.log(err);
+                alert(err);
+            });
     }, []);
 
     return (
-        <PropertyCardViewContainer>
-            {
-                properties.map((property) => (
-                    <PropertyCard
-                        property={property}
-                        key={property.property_id}
+        <>
+            <PropertyCardViewContainer>
+                {
+                    properties.map((property) => (
+                        <PropertyCard
+                            property={property}
+                            key={property.property_id}
+                        />
+                    ))
+                }
+                <NewPropertyCard />
+            </PropertyCardViewContainer>
+            <Routes>
+                <Route path="add-property" element={
+                    <Popup
+                        onClickOutside={() => navigate("")}
+                        onKeyboardEsc={() => navigate("")}
+                        element={<AddProperty goBack={() => navigate("")} />}
                     />
-                ))
-            }
-            <NewPropertyCard />
-        </PropertyCardViewContainer>
+                } />
+            </Routes>
+        </>
     )
 }
 

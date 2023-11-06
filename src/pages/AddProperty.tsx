@@ -14,7 +14,11 @@ interface DummyProperty {
     state_province?: string | null
 }
 
-const AddProperty = () => {
+interface AddPropertyProps {
+    goBack: () => void;
+}
+
+const AddProperty = (props: AddPropertyProps) => {
     const navigate = useNavigate();
     const params = useParams();
 
@@ -137,7 +141,7 @@ const AddProperty = () => {
                         alert(`error in createProperty: ${err}`);
                     });
             }
-            navigate("/");
+            props.goBack();
         }
         else {
             alert("Property street address is a required field");
@@ -164,7 +168,7 @@ const AddProperty = () => {
                     </div>
                 </PreviewContainer>
                 <SubmitButtonsContainer>
-                    <CancelButton onClick={() => navigate("/")}>Cancel</CancelButton>
+                    <CancelButton onClick={props.goBack}>Cancel</CancelButton>
                     <SubmitButton type="submit">Save</SubmitButton>
                 </SubmitButtonsContainer>
             </PreviewAndSubmitContainer>
