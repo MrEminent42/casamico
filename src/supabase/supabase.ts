@@ -62,6 +62,7 @@ export interface Database {
           {
             foreignKeyName: "Rooms_property_id_fkey"
             columns: ["property_id"]
+            isOneToOne: false
             referencedRelation: "Properties"
             referencedColumns: ["property_id"]
           }
@@ -123,12 +124,14 @@ export interface Database {
           {
             foreignKeyName: "Tasks_property_id_fkey"
             columns: ["property_id"]
+            isOneToOne: false
             referencedRelation: "Properties"
             referencedColumns: ["property_id"]
           },
           {
             foreignKeyName: "Tasks_room_id_fkey"
             columns: ["room_id"]
+            isOneToOne: false
             referencedRelation: "Rooms"
             referencedColumns: ["room_id"]
           }
@@ -151,12 +154,14 @@ export interface Database {
           {
             foreignKeyName: "TasksWithTags_tag_name_fkey"
             columns: ["tag_name"]
+            isOneToOne: false
             referencedRelation: "Tags"
             referencedColumns: ["tag_name"]
           },
           {
             foreignKeyName: "TasksWithTags_task_id_fkey"
             columns: ["task_id"]
+            isOneToOne: false
             referencedRelation: "Tasks"
             referencedColumns: ["task_id"]
           }
