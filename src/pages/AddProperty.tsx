@@ -239,7 +239,7 @@ const FileInputArea = (props: TitleAndInputProps) => {
             <FileInputDiv>
                 <label id="label-file-upload" htmlFor="input-file-upload" style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
                     <img src={uploadIcon} alt="upload icon" style={{ height: 25 }} />
-                    <div style={{ textAlign: "center", margin: 5 }}> Drag & Drop </div>
+                    <div style={{ textAlign: "center", margin: 5 }}> Click to Upload </div>
                 </label>
             </FileInputDiv>
         </div>
