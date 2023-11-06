@@ -43,6 +43,13 @@ const Home = () => {
                         element={<AddProperty goBack={() => navigate("")} />}
                     />
                 } />
+                <Route path="edit-property/:id/*" element={
+                    <Popup
+                        onClickOutside={() => navigate("")}
+                        onKeyboardEsc={() => navigate("")}
+                        element={<AddProperty goBack={() => navigate("")} />}
+                    />
+                } />
             </Routes>
         </>
     )

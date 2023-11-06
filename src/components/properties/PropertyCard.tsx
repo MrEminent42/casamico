@@ -40,7 +40,7 @@ const PropertyCardContents = (props: PropertyCardProps) => {
                 }} />
                 <EditRoundedIcon htmlColor="#a8a4a4" style={{ background: "#ffffff", borderRadius: "50%", padding: 7, boxShadow:"2px 2px 4px rgba(0,0,0,0.2)", position: "absolute", right: 10, top: 10 }}
                     onClick={() => {
-                        navigate("/property/edit/" + property_id);
+                        navigate("/edit-property/" + property_id);
                     }}
                 />
             </PropertyImageWrapper>
