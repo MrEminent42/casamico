@@ -103,12 +103,13 @@ const AddProperty = (props: AddPropertyProps) => {
     }, [preview])
 
     const replacePhoto = async () => {
-        let filename: string | void = "";
+        let filename: string = "";
         if (newPhoto) {
             filename = await storePropertyPhoto(newPhoto)
                 .catch(err => {
                     console.log(err);
                     alert(`error in storePropertyPhoto: ${err}`);
+                    return "";
                 });
 
             if (oldPhoto.current && oldPhoto.current !== getPropertyPhotoUrl('default_house.png')) {
@@ -122,7 +123,9 @@ const AddProperty = (props: AddPropertyProps) => {
         return filename;
     }
 
-    const submitProperty = async (filename: string | void) => {
+    const submitProperty = async (filename: string) => {
+        //if id is defined, we are editing the property with that ID
+        //otherwise we are adding a new property
         if (params.id) {
             updateProperty({ ...newProperty, image_url: newProperty.image_url.startsWith("https://ifgorfdgcwortivlypji.supabase.co/storage/") ? newProperty.image_url : getPropertyPhotoUrl(filename ? filename : 'default_house.png') }, newRooms ?? "")
                 .catch(err => {
