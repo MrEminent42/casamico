@@ -149,15 +149,18 @@ const AddEditProperty = (props: AddEditPropertyProps) => {
         replacePhoto().then(
             (filename) => {
                 //store property info to db
-                if (newProperty.address) {
+                if (newProperty.address && newRooms) {
                     submitProperty(filename).then(
                         () => {
                             props.goBack();
                         }
                     )
                 }
-                else {
+                else if (!newProperty.address) {
                     alert("Property street address is a required field");
+                }
+                else {
+                    alert("Property must have at least one room");
                 }
             }
         );
