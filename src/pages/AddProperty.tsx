@@ -102,10 +102,7 @@ const AddProperty = (props: AddPropertyProps) => {
         }
     }, [preview])
 
-    //called when submit button is pressed
-    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        //store image to db on submit
+    const replacePhoto = async () => {
         let url: string | void = "";
         if (newPhoto) {
             url = await storePropertyPhoto(newPhoto)
@@ -116,13 +113,21 @@ const AddProperty = (props: AddPropertyProps) => {
 
             if (oldPhoto.current && oldPhoto.current !== getPropertyPhotoUrl('default_house.png')) {
                 console.log(oldPhoto.current);
-                await deletePropertyPhoto(oldPhoto.current.substring(oldPhoto.current.lastIndexOf('/')+1))
+                await deletePropertyPhoto(oldPhoto.current.substring(oldPhoto.current.lastIndexOf('/') + 1))
                     .catch(err => {
                         console.log(err);
                         alert(`error in storePropertyPhoto: ${err}`);
                     });
             }
         }
+        return url;
+    }
+
+    //called when submit button is pressed
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        //store image to db on submit
+        let url = await replacePhoto();
 
         //store property info to db
         if (newProperty.address) {
