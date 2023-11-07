@@ -52,6 +52,7 @@ const PropertyCardContents = (props: PropertyCardProps) => {
                 />
             </PropertyImageWrapper>
 
+            {/* Wrapper container for Property Card title and text so that clicking it also links to Tasks page */}
             <div
                 onClick={() => {
                     navigate("/property/" + property_id);
