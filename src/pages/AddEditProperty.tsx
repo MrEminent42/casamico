@@ -209,7 +209,7 @@ const AddEditProperty = (props: AddEditPropertyProps) => {
 export default AddEditProperty
 
 
-const TitleAndText = (props: TitleAndInputProps) => {
+const TitleAndText = (props: { title: string, name: string, value?: string | null, handleChange: (e: FormEvent<HTMLInputElement>) => void }) => {
     return (
         <label>
             {props.title}
@@ -218,20 +218,13 @@ const TitleAndText = (props: TitleAndInputProps) => {
     )
 }
 
-const TitleAndFile = (props: TitleAndInputProps) => {
+const TitleAndFile = (props: { title: string, name: string, handleChange: (e: FormEvent<HTMLInputElement>) => void }) => {
     return (
         <label>
             {props.title}
             <FileInputArea name={props.name} handleChange={props.handleChange} />
         </label>
     )
-}
-
-interface TitleAndInputProps {
-    title: string;
-    name: string;
-    value?: string | null;
-    handleChange: (e: FormEvent<HTMLInputElement>) => void;
 }
 
 const TextInput = styled.input`
