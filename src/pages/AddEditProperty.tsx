@@ -210,28 +210,26 @@ export default AddEditProperty
 
 
 const TitleAndText = (props: TitleAndInputProps) => {
-    const { name, title, value, handleChange } = props;
     return (
         <label>
-            {title}
-            <TextInput name={name!} value={value ?? ""} onChange={handleChange} />
+            {props.title}
+            <TextInput name={props.name} value={props.value ?? ""} onChange={props.handleChange} />
         </label>
     )
 }
 
 const TitleAndFile = (props: TitleAndInputProps) => {
-    const { name, title, handleChange } = props;
     return (
         <label>
-            {title}
-            <FileInputArea title={title} name={name} handleChange={handleChange} />
+            {props.title}
+            <FileInputArea name={props.name} handleChange={props.handleChange} />
         </label>
     )
 }
 
 interface TitleAndInputProps {
-    title: string | null;
-    name: string | null;
+    title: string;
+    name: string;
     value?: string | null;
     handleChange: (e: FormEvent<HTMLInputElement>) => void;
 }
@@ -250,10 +248,10 @@ const TextInput = styled.input`
     font-weight: bold;
 `
 
-const FileInputArea = (props: TitleAndInputProps) => {
+const FileInputArea = (props: { name: string, handleChange: (e: FormEvent<HTMLInputElement>) => void } ) => {
     return (
         <div>
-            <input name={props.name!} type="file" accept="image/*" id="input-file-upload" style={{ display: "none" }} onChange={props.handleChange} />
+            <input name={props.name} type="file" accept="image/*" id="input-file-upload" style={{ display: "none" }} onChange={props.handleChange} />
             <FileInputDiv>
                 <label id="label-file-upload" htmlFor="input-file-upload" style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
                     <img src={uploadIcon} alt="upload icon" style={{ height: 25 }} />
