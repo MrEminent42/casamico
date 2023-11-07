@@ -49,24 +49,23 @@ export const createRooms = async (input: string, property_id: number) => {
     })
 
     //store new Room entry in database for each name and add room_id of each to returned array
-    let room_ids = await Promise.all(names.map(async name => {
-        if (name && !existingNames.has(name)) { //ensure room name isn't empty string or already used
-            const { data, error } = await supabase
-                .from('Rooms')
-                .insert({ name: name, property_id: property_id })
-                .select();
+    //ensure room name isn't empty string or already used
+    let room_ids = await Promise.all(names.filter((name) => (name && !existingNames.has(name))).map(async name => {
+        const { data, error } = await supabase
+            .from('Rooms')
+            .insert({ name: name, property_id: property_id })
+            .select();
 
-            if (error) {
-                throw (error);
-            }
-
-            existingNames.add(data[0].name); //include newly created room names to avoid future duplicates
-
-            return data[0].room_id;
+        if (error) {
+            throw (error);
         }
-        return -1;
+
+        existingNames.add(data[0].name); //include newly created room names to avoid future duplicates
+
+        return data[0].room_id;
     }
     ));
+    console.log(room_ids);
 
-    return room_ids.filter((id) => (id > 0)); //return array of room ids of rooms created (NEW ONES ONLY) with invalid ids (like -1) removed
+    return room_ids; //return array of room ids of rooms created (NEW ONES ONLY) with invalid ids (like -1) removed
 }
