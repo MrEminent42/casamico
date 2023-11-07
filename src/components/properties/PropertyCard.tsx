@@ -35,9 +35,16 @@ const PropertyCardContents = (props: PropertyCardProps) => {
     return (
         <PropertyCardContainer>
             <PropertyImageWrapper>
-                <PropertyImage src={image_url} onClick={() => {
-                    navigate("/property/" + property_id);
-                }} />
+                <PropertyImage src={image_url}
+                    onClick={() => {
+                        navigate("/property/" + property_id);
+                    }}
+                    onKeyDown={(event: React.KeyboardEvent) => {
+                        if (event.key === 'Enter') {
+                            navigate("/property/" + property_id);
+                        }
+                    }}
+                />
                 <EditRoundedIcon htmlColor="#a8a4a4" style={{ background: "#ffffff", borderRadius: "50%", padding: 7, boxShadow:"2px 2px 4px rgba(0,0,0,0.2)", position: "absolute", right: 10, top: 10 }}
                     onClick={() => {
                         navigate("/edit-property/" + property_id);
@@ -45,9 +52,16 @@ const PropertyCardContents = (props: PropertyCardProps) => {
                 />
             </PropertyImageWrapper>
 
-            <div onClick={() => {
-                navigate("/property/" + property_id);
-            }}>
+            <div
+                onClick={() => {
+                    navigate("/property/" + property_id);
+                }}
+                onKeyDown={(event: React.KeyboardEvent) => {
+                    if (event.key === 'Enter') {
+                        navigate("/property/" + property_id);
+                    }
+                }}
+            >
                 <CardTitle>
                     {address}
                 </CardTitle>
