@@ -112,7 +112,6 @@ const AddProperty = (props: AddPropertyProps) => {
                 });
 
             if (oldPhoto.current && oldPhoto.current !== getPropertyPhotoUrl('default_house.png')) {
-                console.log(oldPhoto.current);
                 await deletePropertyPhoto(oldPhoto.current.substring(oldPhoto.current.lastIndexOf('/') + 1))
                     .catch(err => {
                         console.log(err);

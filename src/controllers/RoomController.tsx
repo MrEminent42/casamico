@@ -65,7 +65,6 @@ export const createRooms = async (input: string, property_id: number) => {
         return data[0].room_id;
     }
     ));
-    console.log(room_ids);
 
     return room_ids; //return array of room ids of rooms created (NEW ONES ONLY) with invalid ids (like -1) removed
 }
