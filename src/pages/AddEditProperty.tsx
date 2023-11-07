@@ -120,7 +120,7 @@ const AddEditProperty = (props: AddEditPropertyProps) => {
                     });
             }
         }
-        return filename ? filename : "default_house.png";
+        return filename || "default_house.png";
     }
 
     const submitProperty = async (filename: string) => {
