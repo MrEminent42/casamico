@@ -213,7 +213,7 @@ const TitleAndText = (props: TitleAndInputProps) => {
     return (
         <label>
             {props.title}
-            <TextInput name={props.name!} value={props.value || ""} onChange={props.handleChange} />
+            <TextInput name={props.name!} value={props.value ?? ""} onChange={props.handleChange} />
         </label>
     )
 }
