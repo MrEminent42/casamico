@@ -120,21 +120,21 @@ const AddEditProperty = (props: AddEditPropertyProps) => {
                     });
             }
         }
-        return filename;
+        return filename ? filename : "default_house.png";
     }
 
     const submitProperty = async (filename: string) => {
         //if id is defined, we are editing the property with that ID
         //otherwise we are adding a new property
         if (params.id) {
-            updateProperty({ ...newProperty, image_url: newProperty.image_url.startsWith("https://ifgorfdgcwortivlypji.supabase.co/storage/") ? newProperty.image_url : getPropertyPhotoUrl(filename ? filename : 'default_house.png') }, newRooms ?? "")
+            updateProperty({ ...newProperty, image_url: newProperty.image_url.startsWith("https://ifgorfdgcwortivlypji.supabase.co/storage/") ? newProperty.image_url : getPropertyPhotoUrl(filename) }, newRooms ?? "")
                 .catch(err => {
                     console.log(err);
                     alert(`error in updateProperty: ${err}`);
                 });
         }
         else {
-            createProperty({ ...newProperty, image_url: getPropertyPhotoUrl(filename ? filename : 'default_house.png') }, newRooms ?? "")
+            createProperty({ ...newProperty, image_url: getPropertyPhotoUrl(filename) }, newRooms ?? "")
                 .catch(err => {
                     console.log(err);
                     alert(`error in createProperty: ${err}`);
