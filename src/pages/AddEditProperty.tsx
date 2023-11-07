@@ -212,10 +212,13 @@ export default AddEditProperty
 const TitleAndText = (props: TitleAndInputProps) => {
     const { name, title, value, handleChange } = props;
     return (
-        <label>
-            {title}
+        <>
+            <label>
+                {title}
+            </label>
             <TextInput name={name!} value={value ?? ""} onChange={handleChange} />
-        </label>
+        </>
+        
     )
 }
 
