@@ -103,9 +103,9 @@ const AddProperty = (props: AddPropertyProps) => {
     }, [preview])
 
     const replacePhoto = async () => {
-        let url: string | void = "";
+        let filename: string | void = "";
         if (newPhoto) {
-            url = await storePropertyPhoto(newPhoto)
+            filename = await storePropertyPhoto(newPhoto)
                 .catch(err => {
                     console.log(err);
                     alert(`error in storePropertyPhoto: ${err}`);
@@ -120,36 +120,45 @@ const AddProperty = (props: AddPropertyProps) => {
                     });
             }
         }
-        return url;
+        return filename;
+    }
+
+    const submitProperty = async (filename: string | void) => {
+        if (params.id) {
+            updateProperty({ ...newProperty, image_url: newProperty.image_url.startsWith("https://ifgorfdgcwortivlypji.supabase.co/storage/") ? newProperty.image_url : getPropertyPhotoUrl(filename ? filename : 'default_house.png') }, newRooms ?? "")
+                .catch(err => {
+                    console.log(err);
+                    alert(`error in updateProperty: ${err}`);
+                });
+        }
+        else {
+            createProperty({ ...newProperty, image_url: getPropertyPhotoUrl(filename ? filename : 'default_house.png') }, newRooms ?? "")
+                .catch(err => {
+                    console.log(err);
+                    alert(`error in createProperty: ${err}`);
+                });
+        }
     }
 
     //called when submit button is pressed
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         //store image to db on submit
-        let url = await replacePhoto();
-
-        //store property info to db
-        if (newProperty.address) {
-            if (params.id) {
-                updateProperty({ ...newProperty, image_url: newProperty.image_url.startsWith("https://ifgorfdgcwortivlypji.supabase.co/storage/") ? newProperty.image_url : getPropertyPhotoUrl(url ? url : 'default_house.png') }, newRooms ?? "")
-                    .catch(err => {
-                        console.log(err);
-                        alert(`error in updateProperty: ${err}`);
-                    });
+        replacePhoto().then(
+            (filename) => {
+                //store property info to db
+                if (newProperty.address) {
+                    submitProperty(filename).then(
+                        () => {
+                            props.goBack();
+                        }
+                    )
+                }
+                else {
+                    alert("Property street address is a required field");
+                }
             }
-            else {
-                createProperty({ ...newProperty, image_url: getPropertyPhotoUrl(url ? url : 'default_house.png') }, newRooms ?? "")
-                    .catch(err => {
-                        console.log(err);
-                        alert(`error in createProperty: ${err}`);
-                    });
-            }
-            props.goBack();
-        }
-        else {
-            alert("Property street address is a required field");
-        }
+        );
     }
 
     return (
