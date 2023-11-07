@@ -40,7 +40,7 @@ export const createProperty = async (property: Database['public']['Tables']['Pro
     }
 
     //create new Room entries in database if needed
-    let room_ids: Array<number | undefined>=[];
+    let room_ids: Array<number>=[];
     if (rooms) {
         room_ids=await createRooms(rooms, data[0].property_id)
             .catch(err => { throw (err); });
@@ -62,7 +62,7 @@ export const updateProperty = async (property: Database['public']['Tables']['Pro
         }
 
         //create new Room entries in database if needed
-        let room_ids: Array<number | undefined> = [];
+        let room_ids: Array<number> = [];
         if (rooms) {
             room_ids = await createRooms(rooms, data[0].property_id)
                 .catch(err => { throw (err); });

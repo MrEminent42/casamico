@@ -64,8 +64,9 @@ export const createRooms = async (input: string, property_id: number) => {
 
             return data[0].room_id;
         }
+        return -1;
     }
     ));
 
-    return room_ids; //return array of room ids of rooms created (NEW ONES ONLY)
+    return room_ids.filter((id) => (id > 0)); //return array of room ids of rooms created (NEW ONES ONLY) with invalid ids (like -1) removed
 }
