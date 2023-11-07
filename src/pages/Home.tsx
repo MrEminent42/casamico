@@ -13,6 +13,12 @@ const Home = () => {
     const [refresh, doRefresh] = useState(false); //state variable used to force properties to update twice to refresh cards
     const navigate = useNavigate();
 
+    // used for all possible exits of add/edit property popup so that property cards refresh
+    const homeGoBack = () => {
+        navigate("");
+        doRefresh(true);
+    }
+
     // this runs when a webpage is loaded
     useEffect(() => {
         getAllProperties()
@@ -51,25 +57,19 @@ const Home = () => {
             <Routes>
                 <Route path="add-property" element={
                     <Popup
-                        onClickOutside={() => navigate("")}
-                        onKeyboardEsc={() => navigate("")}
+                        onClickOutside={homeGoBack}
+                        onKeyboardEsc={homeGoBack}
                         element={<AddProperty goBack={
-                            () => {
-                                navigate("");
-                                doRefresh(true);
-                            }
+                            homeGoBack
                         } />}
                     />
                 } />
                 <Route path="edit-property/:id/*" element={
                     <Popup
-                        onClickOutside={() => navigate("")}
-                        onKeyboardEsc={() => navigate("")}
+                        onClickOutside={homeGoBack}
+                        onKeyboardEsc={homeGoBack}
                         element={<AddProperty goBack={
-                            () => {
-                                navigate("");
-                                doRefresh(true);
-                            }
+                            homeGoBack
                         } />}
                     />
                 } />
