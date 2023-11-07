@@ -210,19 +210,21 @@ export default AddEditProperty
 
 
 const TitleAndText = (props: TitleAndInputProps) => {
+    const { name, title, value, handleChange } = props;
     return (
         <label>
-            {props.title}
-            <TextInput name={props.name!} value={props.value ?? ""} onChange={props.handleChange} />
+            {title}
+            <TextInput name={name!} value={value ?? ""} onChange={handleChange} />
         </label>
     )
 }
 
 const TitleAndFile = (props: TitleAndInputProps) => {
+    const { name, title, handleChange } = props;
     return (
         <label>
-            {props.title}
-            <FileInputArea title={props.title} name={props.name} handleChange={props.handleChange} />
+            {title}
+            <FileInputArea title={title} name={name} handleChange={handleChange} />
         </label>
     )
 }
