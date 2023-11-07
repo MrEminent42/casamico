@@ -10,6 +10,7 @@ import AddProperty from './AddProperty';
 
 const Home = () => {
     const [properties, setProperties] = useState<Database['public']['Tables']['Properties']['Row'][]>([]);
+    const [refresh, doRefresh] = useState(false); //state variable used to force properties to update twice to refresh cards
     const navigate = useNavigate();
 
     // this runs when a webpage is loaded
@@ -20,7 +21,19 @@ const Home = () => {
                 console.log(err);
                 alert(err);
             });
-    }, []);
+
+        //refresh starts as false and is set to true when starting refresh
+        //this sets it back to false and does necessary second fetch of properties
+        if (refresh) {
+            getAllProperties()
+                .then((res) => setProperties(res))
+                .catch(err => {
+                    console.log(err);
+                    alert(err);
+                });
+            doRefresh(false);
+        }
+    }, [refresh]);
 
     return (
         <>
@@ -40,14 +53,24 @@ const Home = () => {
                     <Popup
                         onClickOutside={() => navigate("")}
                         onKeyboardEsc={() => navigate("")}
-                        element={<AddProperty goBack={() => navigate("")} />}
+                        element={<AddProperty goBack={
+                            () => {
+                                navigate("");
+                                doRefresh(true);
+                            }
+                        } />}
                     />
                 } />
                 <Route path="edit-property/:id/*" element={
                     <Popup
                         onClickOutside={() => navigate("")}
                         onKeyboardEsc={() => navigate("")}
-                        element={<AddProperty goBack={() => navigate("")} />}
+                        element={<AddProperty goBack={
+                            () => {
+                                navigate("");
+                                doRefresh(true);
+                            }
+                        } />}
                     />
                 } />
             </Routes>
