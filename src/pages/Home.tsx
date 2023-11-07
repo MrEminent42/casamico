@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import { getAllProperties } from '../controllers/PropertyController';
 import { Database } from '../supabase/supabase';
 import Popup from '../components/Popup';
-import AddProperty from './AddProperty';
+import AddProperty from './AddEditProperty';
 
 const Home = () => {
     const [properties, setProperties] = useState<Database['public']['Tables']['Properties']['Row'][]>([]);

@@ -14,11 +14,11 @@ interface DummyProperty {
     state_province?: string | null
 }
 
-interface AddPropertyProps {
+interface AddEditPropertyProps {
     goBack: () => void;
 }
 
-const AddProperty = (props: AddPropertyProps) => {
+const AddEditProperty = (props: AddEditPropertyProps) => {
     const params = useParams();
 
     const [newProperty, setNewProperty] = useState<DummyProperty>({ image_url: getPropertyPhotoUrl('default_house.png') } as DummyProperty);
@@ -164,7 +164,7 @@ const AddProperty = (props: AddPropertyProps) => {
     }
 
     return (
-        <AddPropertyForm onSubmit={handleSubmit}>
+        <AddEditPropertyForm onSubmit={handleSubmit}>
             <GridItemCol12>
                 <h3> Property Information </h3>
             </GridItemCol12>
@@ -202,11 +202,11 @@ const AddProperty = (props: AddPropertyProps) => {
             <GridItemCol12>
                 <TitleAndText title="Rooms" name="rooms" value={newRooms} handleChange={handleRoomsChange} />
             </GridItemCol12>
-        </AddPropertyForm>
+        </AddEditPropertyForm>
     )
 }
 
-export default AddProperty
+export default AddEditProperty
 
 
 const TitleAndText = (props: TitleAndInputProps) => {
@@ -273,7 +273,7 @@ const FileInputDiv = styled.div`
     align-items: center;
 `
 
-const AddPropertyForm = styled.form`
+const AddEditPropertyForm = styled.form`
     color: gray;
     margin: 0px 50px;
     display: grid;
