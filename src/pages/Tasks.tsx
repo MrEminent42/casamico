@@ -13,7 +13,7 @@ import { Database } from "../supabase/supabase";
 import TasksSection from '../components/TasksSection';
 import { displayError } from '../App';
 
-const Page2 = () => {
+const Tasks = () => {
 
     const navigate = useNavigate();
     const [propertyId, setPropertyId] = useState<number>(0);
@@ -107,7 +107,7 @@ const Page2 = () => {
     )
 }
 
-export default Page2
+export default Tasks
 
 const TaskContainer = styled.div`
     display: flex;
