@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { PropertyGridItemPadding } from '../../pages/Home';
 import { getTasksOfProperty } from '../../controllers/TaskController';
 import { Database } from '../../supabase/supabase';
+import { displayError } from '../../App';
 
 interface PropertyCardProps {
     property: Database['public']['Tables']['Properties']['Row'];
@@ -25,9 +26,7 @@ const PropertyCardContents = (props: PropertyCardProps) => {
     useEffect(() => {
         getTasksOfProperty(property_id).then((tasks) => {
             setTasks(tasks);
-        }).catch((error) => {
-            alert(JSON.stringify(error));
-        });
+        }).catch((error) => displayError(error, "fetch # tasks of property"));
     }, [property_id]);
 
     return (

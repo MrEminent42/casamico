@@ -27,6 +27,16 @@ function App() {
 
 export default App;
 
+/**
+ * Handles an error. Displays an alert to the user with the message "Eror while attempting to [whatWasAttempted]".
+ * @param error the error object
+ * @param whatWasAttempted a string like "create property"
+ */
+export const displayError = (error: any, whatWasAttempted: string) => {
+  alert("Error while attempting to " + whatWasAttempted + "." + (error.message ? " " + error.message : ""))
+  console.error(error)
+}
+
 const theme = createTheme({
   palette: {
     primary: {

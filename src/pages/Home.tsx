@@ -4,6 +4,7 @@ import NewPropertyCard from '../components/properties/NewPropertyCard'
 import styled from 'styled-components';
 import { getAllProperties } from '../controllers/PropertyController';
 import { Database } from '../supabase/supabase';
+import { displayError } from '../App';
 
 const Home = () => {
     const [properties, setProperties] = useState<Database['public']['Tables']['Properties']['Row'][]>([]);
@@ -12,7 +13,7 @@ const Home = () => {
     useEffect(() => {
         getAllProperties()
             .then((res) => setProperties(res))
-            .catch(err => alert(err));
+            .catch(err => displayError(err, "fetch all properties"));
     }, []);
 
     return (

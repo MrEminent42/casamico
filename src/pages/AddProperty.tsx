@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import uploadIcon from '../assets/upload.png';
 import { createProperty, getPropertyPhotoUrl, storePropertyPhoto } from '../controllers/PropertyController';
 import PropertyCardPreview from '../components/properties/PropertyCardPreview';
+import { displayError } from '../App';
 
 interface DummyProperty {
     address: string
@@ -38,7 +39,7 @@ const AddProperty = () => {
         //if files list is undef or empty, newPhoto is undef
         if (!event.currentTarget.files || event.currentTarget.files.length === 0) {
             //if already have preview photo, don't want to change anything if no photo is selected after that
-            if (newPhoto!==undefined) {
+            if (newPhoto !== undefined) {
                 return;
             }
 
@@ -82,13 +83,13 @@ const AddProperty = () => {
         let url: string | void = "";
         if (newPhoto) {
             url = await storePropertyPhoto(newPhoto)
-                .catch(err => alert(err));
+                .catch(err => displayError(err, "store property photo"));
         }
 
         //store property info to db
         if (newProperty.address) {
             createProperty({ ...newProperty, image_url: getPropertyPhotoUrl(url ? url : 'default_house.png') }, newRooms ?? "")
-                .catch(err => alert(`error in createProperty: ${err}`));
+                .catch(err => displayError(err, "create property"));
             navigate("/");
         }
         else {
@@ -102,7 +103,7 @@ const AddProperty = () => {
                 <h3> Property Information </h3>
             </GridItemCol12>
             <GridItemCol12>
-                <TitleAndText title="Street Address" name="address" value={newProperty.address} handleChange={handleChange}/>
+                <TitleAndText title="Street Address" name="address" value={newProperty.address} handleChange={handleChange} />
             </GridItemCol12>
             <PreviewAndSubmitContainer>
                 <PreviewContainer>

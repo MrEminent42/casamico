@@ -11,6 +11,7 @@ import AddTask from './AddTask';
 import Popup from '../components/Popup';
 import { Database } from "../supabase/supabase";
 import TasksSection from '../components/TasksSection';
+import { displayError } from '../App';
 
 const Page2 = () => {
 
@@ -27,11 +28,9 @@ const Page2 = () => {
                 setProperty(property);
                 getTasksOfProperty(propertyId).then((tasks) => {
                     setTasks(tasks);
-                }).catch((error) => {
-                    alert(JSON.stringify(error));
-                });
+                }).catch((error) => displayError(error, "get tasks of selected property"));
             }).catch((error) => {
-                alert(JSON.stringify(error));
+                displayError(error, "get selected property");
                 navigate('/');
             });
         }
@@ -53,8 +52,7 @@ const Page2 = () => {
             // update the task in the state
             setTasks(tasks.map((t) => (t.task_id === updatedTask.task_id ? updatedTask : t)));
         } catch (error) {
-            console.log(JSON.stringify(error));
-            alert("Failed to update task status!");
+            displayError(error, "toggle task completion status")
         }
     }
 
