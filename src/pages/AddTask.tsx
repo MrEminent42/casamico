@@ -85,8 +85,7 @@ const AddTask = (props: AddTaskProps) => {
         }
 
         try {
-            let res = await updateTagsIfNecessary();
-            alert(res);
+            alert(await updateTagsIfNecessary());
         } catch (err) {
             alert(JSON.stringify(err));
             return;

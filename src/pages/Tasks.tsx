@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import styled from 'styled-components';
 import backbuttonsvg from '../assets/arrow-left-circle.svg';
 import house from "../assets/house.jpg";
@@ -10,8 +10,7 @@ import { getProperty } from '../controllers/PropertyController';
 import AddTask from './AddTask';
 import Popup from '../components/Popup';
 import { Database } from "../supabase/supabase";
-import TaskCard from '../components/Task';
-import CompletedTaskCard from '../components/CompletedTask';
+import TasksSection from '../components/TasksSection';
 
 const Page2 = () => {
 
@@ -20,7 +19,6 @@ const Page2 = () => {
     const [property, setProperty] = useState<Database['public']['Tables']['Properties']['Row'] | null>(null);
     const params = useParams();
     const [tasks, setTasks] = useState<Database['public']['Tables']['Tasks']['Row'][]>([]);
-    const currentDate = new Date();
 
     // this runs once when a webpage is loaded
     useEffect(() => {
@@ -49,16 +47,17 @@ const Page2 = () => {
         }
     }, [params.id, navigate])
 
-    function daysBetween(date1: Date, date2: Date) {
-        // The number of milliseconds in one day
-        const ONE_DAY = 1000 * 60 * 60 * 24
-    
-        // Calculate the difference in milliseconds
-        const differenceMs = date1.getTime() - date2.getTime()
-    
-        // Convert back to days and return
-        return Math.round(differenceMs / ONE_DAY) + 1
+    const handleToggle = async (task: Database['public']['Tables']['Tasks']['Row']) => {
+        try {
+            const updatedTask = await toggleTaskStatus(task.task_id, task.completed);
+            // update the task in the state
+            setTasks(tasks.map((t) => (t.task_id === updatedTask.task_id ? updatedTask : t)));
+        } catch (error) {
+            console.log(JSON.stringify(error));
+            alert("Failed to update task status!");
+        }
     }
+
 
     return (
         <>
@@ -82,63 +81,20 @@ const Page2 = () => {
                         label="Sort"
                         onClick={() => console.log("Sort button clicked")}
                     />
+                    <div style={{ flexGrow: 1 }} />
+
                     <AddButton src={addbuttonsvg} onClick={() => navigate("add")}></AddButton>
                 </FilterandSortContainer>
-                <TaskListContainer>
-                    <TodoLabel>To Do</TodoLabel>
-                    {
-                        tasks.filter((task) => !task.completed).map((task) => (
-                                <TaskCard
-                                    key={task.task_id}
-                                    title={task.title}
-                                    due={
-                                        daysBetween(new Date(task.due_date), currentDate) >= 0 ?
-                                            daysBetween(new Date(task.due_date), currentDate) + " days left" :
-                                            "Overdue"
-                                    }
-                                    bg_color={task.color}
-                                    complete={task.completed}
-                                    handleClick={async () => {
-                                        try {
-                                            const updatedTask = await toggleTaskStatus(task.task_id, task.completed);
-                                            // update the task in the state
-                                            setTasks(tasks.map((t) => (t.task_id === updatedTask.task_id ? updatedTask : t)));
-                                        } catch (error) {
-                                            console.log(JSON.stringify(error));
-                                            alert("Failed to update task status!");
-                                        }
-                                    }}
-                                />
-                        ))
-                    }
-                </TaskListContainer>
-                <CompletedTaskListContainer>
-                    <CompletedLabel>Completed</CompletedLabel>
-                    {
-                        tasks.filter((task) => task.completed).map((task) => (
-                            <CompletedTaskCard
-                                key={task.task_id}
-                                title={task.title}
-                                due={
-                                    daysBetween(new Date(task.due_date), currentDate) >= 0 ?
-                                        daysBetween(new Date(task.due_date), currentDate) + " days left" :
-                                        "Overdue"
-                                }
-                                complete={task.completed}
-                                handleClick={async () => {
-                                    try {
-                                        const updatedTask = await toggleTaskStatus(task.task_id, task.completed);
-                                        // update the task in the state
-                                        setTasks(tasks.map((t) => (t.task_id === updatedTask.task_id ? updatedTask : t)));
-                                    } catch (error) {
-                                        console.log(JSON.stringify(error));
-                                        alert("Failed to update task status!");
-                                    }
-                                }}
-                            />
-                        ))
-                    }
-                </CompletedTaskListContainer>
+                <TasksSection
+                    sectionLabel='To Do'
+                    tasks={tasks.filter((task) => !task.completed)}
+                    handleClick={handleToggle}
+                />
+                <TasksSection
+                    sectionLabel="Completed"
+                    tasks={tasks.filter((task) => task.completed)}
+                    handleClick={handleToggle}
+                />
             </TaskContainer>
             <Routes>
                 <Route path="add" element={
@@ -233,40 +189,4 @@ const AddButton = styled.img`
     height: 40px;
     cursor: pointer;
     margin-left: auto;
-`
-//container for the task list
-const TaskListContainer = styled.div`
-    padding: 0;
-    display: flex;
-    align-items: left;
-    flex-direction: column;
-    gap: 10px;
-
-    margin: 0 10px 10px 0;
-`
-
-const TodoLabel = styled.p`
-    font-size: 20px;
-    font-weight: 400;
-    color: #5F5F5F;
-    margin: 5px 0;
-    padding: 5px;
-`
-
-const CompletedTaskListContainer = styled.div`
-    padding: 0;
-    display: flex;
-    align-items: left;
-    flex-direction: column;
-    gap: 10px;
-
-    margin: 0 10px 10px 0;
-`
-
-const CompletedLabel = styled.p`
-    font-size: 20px;
-    font-weight: 400;
-    color: #5F5F5F;
-    margin: 5px 0;
-    padding: 5px;
 `
