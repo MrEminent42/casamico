@@ -84,7 +84,8 @@ const Page2 = () => {
                     <AddButton src={addbuttonsvg} onClick={() => navigate("add")}></AddButton>
                 </FilterandSortContainer>
                 <TaskListContainer>
-                    <TodoLabel>To Do</TodoLabel>
+                    <SectionLabel>To Do</SectionLabel>
+                    {tasks.filter((task) => !task.completed).length === 0 && <NoTasks>No Tasks 🎉</NoTasks>}
                     {
                         tasks.filter((task) => !task.completed).map((task) => (
                                 <TaskCard
@@ -112,7 +113,8 @@ const Page2 = () => {
                     }
                 </TaskListContainer>
                 <CompletedTaskListContainer>
-                    <CompletedLabel>Completed</CompletedLabel>
+                    <SectionLabel>Completed</SectionLabel>
+                    {tasks.filter((task) => task.completed).length === 0 && <NoTasks>No Tasks Completed Yet 🏗️</NoTasks>}
                     {
                         tasks.filter((task) => task.completed).map((task) => (
                             <CompletedTaskCard
@@ -243,7 +245,7 @@ const TaskListContainer = styled.div`
     margin: 0 10px 10px 0;
 `
 
-const TodoLabel = styled.p`
+const SectionLabel = styled.p`
     font-size: 20px;
     font-weight: 400;
     color: #5F5F5F;
@@ -261,10 +263,7 @@ const CompletedTaskListContainer = styled.div`
     margin: 0 10px 10px 0;
 `
 
-const CompletedLabel = styled.p`
-    font-size: 20px;
-    font-weight: 400;
-    color: #5F5F5F;
-    margin: 5px 0;
-    padding: 5px;
+const NoTasks = styled.div`
+    width: 80vw;
+    text-align: center;
 `
