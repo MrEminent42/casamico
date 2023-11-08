@@ -41,16 +41,6 @@ const PropertyCardContents = (props: PropertyCardProps) => {
             <PropertyImageWrapper>
                 <PropertyImage src={image_url} />
                 <EditButton
-                    style={{
-                        background: "none",
-                        borderRadius: "50%",
-                        border: "none",
-                        position: "absolute",
-                        right: 10,
-                        top: 10,
-                        zIndex: 1,
-                        padding: 0
-                    }}
                     onClick={(e: React.MouseEvent) => {
                         navigate("/edit-property/" + property_id);
                         e.stopPropagation();
@@ -128,13 +118,14 @@ const PropertyImageWrapper = styled.div`
 
 const EditButton = styled.button`
     background: none;
-    borderRadius: 50%;
+    border-radius: 50%;
     border: none;
     position: absolute;
-    right: 10;
-    top: 10;
-    zIndex: 1;
+    right: 10px;
+    top: 10px;
+    z-index: 1;
     padding: 0;
+    cursor: pointer;
 `
 
 const CardTitle = styled.div`
