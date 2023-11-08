@@ -33,19 +33,18 @@ const PropertyCardContents = (props: PropertyCardProps) => {
     }, [property_id]);
 
     return (
-        <PropertyCardContainer
-            onClick={() => {
-                navigate("/property/" + property_id);
-            }}
-        >
-            <PropertyImageWrapper>
-                <PropertyImage src={image_url} />
-            </PropertyImageWrapper>
+        <div style={{position: "relative"} }>
+            <PropertyCardContainer
+                onClick={() => {
+                    navigate("/property/" + property_id);
+                }}
+            >
+                <PropertyImageWrapper>
+                    <PropertyImage src={image_url} />
+                </PropertyImageWrapper>
 
-            {/* Wrapper container for Property Card title and text and buttons so that clicking it also links to Tasks page */}
-            <div style={{ display: "flex", width: "100%" }}>
-                { /* container for text (address and number of tasks) under property image */ }
-                <div style={{ flexGrow: 1 } }>
+                {/* Wrapper container for Property Card title and text so that clicking it also links to Tasks page */}
+                <div>
                     <CardTitle>
                         {address}
                     </CardTitle>
@@ -53,18 +52,18 @@ const PropertyCardContents = (props: PropertyCardProps) => {
                         {tasks.length} tasks
                     </CardText>
                 </div>
-                <EditButton
-                    onClick={(e: React.MouseEvent) => {
-                        navigate("/edit-property/" + property_id);
-                        e.stopPropagation();
-                    }}
-                >
-                    <EditButtonDiv>
-                        <EditRoundedIcon htmlColor="#5f6f67"/>
-                    </EditButtonDiv>
-                </EditButton>
-            </div>
-        </PropertyCardContainer>
+            </PropertyCardContainer>
+            <EditButton
+                onClick={(e: React.MouseEvent) => {
+                    navigate("/edit-property/" + property_id);
+                    e.stopPropagation();
+                }}
+            >
+                <EditButtonDiv>
+                    <EditRoundedIcon htmlColor="#5f6f67"/>
+                </EditButtonDiv>
+            </EditButton>
+        </div>
     )
 }
 
@@ -116,10 +115,13 @@ const EditButton = styled.button`
     background: none;
     border-radius: 5px;
     border: none;
-    right: 10px;
-    top: 10px;
+    padding: 0px;
+
+    // layer edit button over the property card wrapper in parent div to avoid nesting buttons
+    position: absolute;
+    top: 85%;
     z-index: 1;
-    padding: 0;
+    right: 10px;
 
     // cursor should change to a pointer to indicate clickable
     cursor: pointer;
@@ -137,8 +139,6 @@ const EditButtonDiv = styled.div`
     transition: 0.3s ease-in-out;
 
     &:hover {
-        cursor: pointer;
-        transform: scale(1.04);
         background: #d0e4cc;
     }
 `
