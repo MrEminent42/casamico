@@ -26,7 +26,6 @@ const AddTask = (props: AddTaskProps) => {
     const [dueDate, setDueDate] = useState("");
     const [done, setDone] = useState(false);
 
-    // const colors = ["ef4444", "f97316", "eab308", "84cc16", "10b981", "06b6d4", "3b82f6", "8b5cf6", "d946ef", "4b5563"]
     const [colors, setColors] = useState(() => {
         return [
             { color: "#fca5a5", selected: true },
@@ -82,6 +81,11 @@ const AddTask = (props: AddTaskProps) => {
 
         if (!selectedRoom) {
             alert("You must select a room.");
+            return;
+        }
+
+        if (!dueDate) {
+            alert("You must select a due date.");
             return;
         }
 
