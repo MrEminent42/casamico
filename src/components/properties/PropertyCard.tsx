@@ -40,31 +40,29 @@ const PropertyCardContents = (props: PropertyCardProps) => {
         >
             <PropertyImageWrapper>
                 <PropertyImage src={image_url} />
+            </PropertyImageWrapper>
+
+            {/* Wrapper container for Property Card title and text and buttons so that clicking it also links to Tasks page */}
+            <div style={{ display: "flex", width: "100%" }}>
+                { /* container for text (address and number of tasks) under property image */ }
+                <div style={{ flexGrow: 1 } }>
+                    <CardTitle>
+                        {address}
+                    </CardTitle>
+                    <CardText>
+                        {tasks.length} tasks
+                    </CardText>
+                </div>
                 <EditButton
                     onClick={(e: React.MouseEvent) => {
                         navigate("/edit-property/" + property_id);
                         e.stopPropagation();
                     }}
                 >
-                    <EditRoundedIcon htmlColor="#a8a4a4"
-                        style={{
-                            background: "#ffffff",
-                            borderRadius: "50%",
-                            padding: 7,
-                            boxShadow: "2px 2px 4px rgba(0,0,0,0.2)"
-                        }}
-                    />
+                    <EditButtonDiv>
+                        <EditRoundedIcon htmlColor="#5f6f67"/>
+                    </EditButtonDiv>
                 </EditButton>
-            </PropertyImageWrapper>
-
-            {/* Wrapper container for Property Card title and text so that clicking it also links to Tasks page */}
-            <div>
-                <CardTitle>
-                    {address}
-                </CardTitle>
-                <CardText>
-                    {tasks.length} tasks
-                </CardText>
             </div>
         </PropertyCardContainer>
     )
@@ -76,10 +74,12 @@ export default PropertyCard
 const PropertyCardContainer = styled.button`
     display: flex;
     flex-direction: column;
-    position: relative;
     width:100%;
     background: inherit;
     border: none;
+
+    // cursor should change to a pointer to indicate clickable
+    cursor: pointer;
 `
 const PropertyImage = styled.img`
     // prevent image from overflowing
@@ -89,8 +89,6 @@ const PropertyImage = styled.img`
 `
 
 const PropertyImageWrapper = styled.div`
-    position: relative;
-
     // prevent image from overflowing
     width: 100%;
     height: 250px;
@@ -108,24 +106,41 @@ const PropertyImageWrapper = styled.div`
 
     // on hover, "raise" it by scaling the image up a bit, 
     // and making more shadow.
-    // also, cursor should change to a pointer to indicate clickable
     &:hover {
         transform: scale(1.03);
-        cursor: pointer;
         box-shadow: 2px 2px 20px rgba(0,0,0,0.2);
     }
 `
 
 const EditButton = styled.button`
     background: none;
-    border-radius: 50%;
+    border-radius: 5px;
     border: none;
-    position: absolute;
     right: 10px;
     top: 10px;
     z-index: 1;
     padding: 0;
+
+    // cursor should change to a pointer to indicate clickable
     cursor: pointer;
+`
+
+const EditButtonDiv = styled.div`
+    background: #e0f4dc;
+    border-radius: 7px;
+    box-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    width: 100%;
+    padding: 2px;
+    padding-bottom: 0px;
+    padding-right: 1px;
+
+    transition: 0.3s ease-in-out;
+
+    &:hover {
+        cursor: pointer;
+        transform: scale(1.04);
+        background: #d0e4cc;
+    }
 `
 
 const CardTitle = styled.div`
