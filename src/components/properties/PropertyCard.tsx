@@ -33,36 +33,42 @@ const PropertyCardContents = (props: PropertyCardProps) => {
     }, [property_id]);
 
     return (
-        <PropertyCardContainer>
+        <PropertyCardContainer
+            onClick={() => {
+                navigate("/property/" + property_id);
+            }}
+        >
             <PropertyImageWrapper>
-                <PropertyImage src={image_url}
-                    onClick={() => {
-                        navigate("/property/" + property_id);
+                <PropertyImage src={image_url} />
+                <EditButton
+                    style={{
+                        background: "none",
+                        borderRadius: "50%",
+                        border: "none",
+                        position: "absolute",
+                        right: 10,
+                        top: 10,
+                        zIndex: 1,
+                        padding: 0
                     }}
-                    onKeyDown={(event: React.KeyboardEvent) => {
-                        if (event.key === 'Enter') {
-                            navigate("/property/" + property_id);
-                        }
-                    }}
-                />
-                <EditRoundedIcon htmlColor="#a8a4a4" style={{ background: "#ffffff", borderRadius: "50%", padding: 7, boxShadow:"2px 2px 4px rgba(0,0,0,0.2)", position: "absolute", right: 10, top: 10 }}
-                    onClick={() => {
+                    onClick={(e: React.MouseEvent) => {
                         navigate("/edit-property/" + property_id);
+                        e.stopPropagation();
                     }}
-                />
+                >
+                    <EditRoundedIcon htmlColor="#a8a4a4"
+                        style={{
+                            background: "#ffffff",
+                            borderRadius: "50%",
+                            padding: 7,
+                            boxShadow: "2px 2px 4px rgba(0,0,0,0.2)"
+                        }}
+                    />
+                </EditButton>
             </PropertyImageWrapper>
 
             {/* Wrapper container for Property Card title and text so that clicking it also links to Tasks page */}
-            <div
-                onClick={() => {
-                    navigate("/property/" + property_id);
-                }}
-                onKeyDown={(event: React.KeyboardEvent) => {
-                    if (event.key === 'Enter') {
-                        navigate("/property/" + property_id);
-                    }
-                }}
-            >
+            <div>
                 <CardTitle>
                     {address}
                 </CardTitle>
@@ -77,24 +83,26 @@ const PropertyCardContents = (props: PropertyCardProps) => {
 export default PropertyCard
 
 // to contain the image, title, and text, etc.
-const PropertyCardContainer = styled.div`
+const PropertyCardContainer = styled.button`
     display: flex;
     flex-direction: column;
     position: relative;
+    width:100%;
+    background: inherit;
+    border: none;
 `
 const PropertyImage = styled.img`
     // prevent image from overflowing
     width: 100%;
     height: 100%;
     object-fit: cover;
-
-    // add a nice-looking border radius
-    border-radius: 10px;
 `
 
 const PropertyImageWrapper = styled.div`
+    position: relative;
+
     // prevent image from overflowing
-    max-width: 100%;
+    width: 100%;
     height: 250px;
 
     // extra space so image can grow a bit
@@ -104,6 +112,9 @@ const PropertyImageWrapper = styled.div`
     border-radius: 10px;
     box-shadow: 2px 2px 10px rgba(0,0,0,0.1); 
     transition: 0.3s ease-in-out;
+
+    // prevent overflow
+    overflow: hidden;
 
     // on hover, "raise" it by scaling the image up a bit, 
     // and making more shadow.
@@ -115,11 +126,23 @@ const PropertyImageWrapper = styled.div`
     }
 `
 
+const EditButton = styled.button`
+    background: none;
+    borderRadius: 50%;
+    border: none;
+    position: absolute;
+    right: 10;
+    top: 10;
+    zIndex: 1;
+    padding: 0;
+`
+
 const CardTitle = styled.div`
     font-size: 20px;
     font-weight: 600;
     margin: 5px 0px;
     color: #4c4c4c;
+    text-align: left;
 `
 
 const CardText = styled.div`
@@ -127,4 +150,5 @@ const CardText = styled.div`
     font-weight: 500;
     margin: 5px 0px;
     color: grey;
+    text-align: left;
 `

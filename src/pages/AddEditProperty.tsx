@@ -174,6 +174,21 @@ const AddEditProperty = (props: AddEditPropertyProps) => {
             <GridItemCol12>
                 <TitleAndText title="Street Address" name="address" value={newProperty.address} handleChange={handleChange}/>
             </GridItemCol12>
+            <GridItemCol1>
+                <TitleAndText title="City" name="city" value={newProperty.city} handleChange={handleChange} />
+            </GridItemCol1>
+            <GridItemCol2>
+                <TitleAndText title="State/Province" name="state_province" value={newProperty.state_province} handleChange={handleChange} />
+            </GridItemCol2>
+            <GridItemCol12>
+                <TitleAndText title="Country" name="country" value={newProperty.country} handleChange={handleChange} />
+            </GridItemCol12>
+            <GridItemCol12>
+                <TitleAndFile title="Upload Photo" name="photo" handleChange={uploadFile} />
+            </GridItemCol12>
+            <GridItemCol12>
+                <TitleAndText title="Rooms" name="rooms" value={newRooms} handleChange={handleRoomsChange} />
+            </GridItemCol12>
             <PreviewAndSubmitContainer>
                 <PreviewContainer>
                     <h3>Preview</h3>
@@ -190,21 +205,6 @@ const AddEditProperty = (props: AddEditPropertyProps) => {
                     <SubmitButton type="submit">Save</SubmitButton>
                 </SubmitButtonsContainer>
             </PreviewAndSubmitContainer>
-            <GridItemCol1>
-                <TitleAndText title="City" name="city" value={newProperty.city} handleChange={handleChange} />
-            </GridItemCol1>
-            <GridItemCol2>
-                <TitleAndText title="State/Province" name="state_province" value={newProperty.state_province} handleChange={handleChange} />
-            </GridItemCol2>
-            <GridItemCol12>
-                <TitleAndText title="Country" name="country" value={newProperty.country} handleChange={handleChange} />
-            </GridItemCol12>
-            <GridItemCol12>
-                <TitleAndFile title="Upload Photo" name="photo" handleChange={uploadFile} />
-            </GridItemCol12>
-            <GridItemCol12>
-                <TitleAndText title="Rooms" name="rooms" value={newRooms} handleChange={handleRoomsChange} />
-            </GridItemCol12>
         </AddEditPropertyForm>
     )
 }
