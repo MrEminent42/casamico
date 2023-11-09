@@ -11,13 +11,13 @@ import AddProperty from './AddEditProperty';
 
 const Home = () => {
     const [properties, setProperties] = useState<Database['public']['Tables']['Properties']['Row'][]>([]);
-    const [refresh, setRefresh] = useState(false); //state variable used to force properties to update twice to refresh cards
+    const [refresh, setRefresh] = useState(true); //state variable used to force properties to update twice to refresh cards
     const navigate = useNavigate();
 
     // used for all possible exits of add/edit property popup so that property cards refresh
     const homeGoBack = () => {
-        navigate("");
         setRefresh(true);
+        navigate("");
     }
 
     // this runs when a webpage is loaded

@@ -124,11 +124,12 @@ const AddEditProperty = (props: AddEditPropertyProps) => {
         //if id is defined, we are editing the property with that ID
         //otherwise we are adding a new property
         if (params.id) {
-            updateProperty({ ...newProperty, image_url: newProperty.image_url.startsWith("https://ifgorfdgcwortivlypji.supabase.co/storage/") ? newProperty.image_url : getPropertyPhotoUrl(filename) }, newRooms ?? "")
+            await updateProperty({ ...newProperty, image_url: newProperty.image_url.startsWith("https://ifgorfdgcwortivlypji.supabase.co/storage/") ? newProperty.image_url : getPropertyPhotoUrl(filename) }, newRooms ?? "")
                 .catch(err => displayError(err, "update property"));
+
         }
         else {
-            createProperty({ ...newProperty, image_url: getPropertyPhotoUrl(filename) }, newRooms ?? "")
+            await createProperty({ ...newProperty, image_url: getPropertyPhotoUrl(filename) }, newRooms ?? "")
                 .catch(err => displayError(err, "create property"));
         }
     }
@@ -137,24 +138,22 @@ const AddEditProperty = (props: AddEditPropertyProps) => {
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         //store image to db on submit
-        replacePhoto().then(
-            (filename) => {
-                //store property info to db
-                if (newProperty.address && newRooms) {
-                    submitProperty(filename).then(
-                        () => {
-                            props.goBack();
-                        }
-                    )
+        const filename = await replacePhoto();
+        //store property info to db
+        if (newProperty.address && newRooms) {
+            await submitProperty(filename).then(
+                () => {
+                    props.goBack();
                 }
-                else if (!newProperty.address) {
-                    alert("Property street address is a required field");
-                }
-                else {
-                    alert("Property must have at least one room");
-                }
-            }
-        );
+            )
+        }
+        else if (!newProperty.address) {
+            alert("Property street address is a required field");
+        }
+        else {
+            alert("Property must have at least one room");
+        }
+
     }
 
     return (
