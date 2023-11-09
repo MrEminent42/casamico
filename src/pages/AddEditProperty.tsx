@@ -1,10 +1,11 @@
-import React, { FormEvent, useEffect, useState } from 'react'
+import React, { FormEvent, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
-import { useNavigate } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import uploadIcon from '../assets/upload.png';
-import { createProperty, getPropertyPhotoUrl, storePropertyPhoto } from '../controllers/PropertyController';
+import { createProperty, deletePropertyPhoto, getProperty, getPropertyPhotoUrl, storePropertyPhoto, updateProperty } from '../controllers/PropertyController';
 import PropertyCardPreview from '../components/properties/PropertyCardPreview';
 import { displayError } from '../App';
+import { getRooms } from '../controllers/RoomController';
 
 interface DummyProperty {
     address: string
@@ -14,13 +15,19 @@ interface DummyProperty {
     state_province?: string | null
 }
 
-const AddProperty = () => {
-    let navigate = useNavigate();
+interface AddEditPropertyProps {
+    goBack: () => void;
+}
+
+const AddEditProperty = (props: AddEditPropertyProps) => {
+    const params = useParams();
 
     const [newProperty, setNewProperty] = useState<DummyProperty>({ image_url: getPropertyPhotoUrl('default_house.png') } as DummyProperty);
     const [newRooms, setNewRooms] = useState<string>();
     const [newPhoto, setNewPhoto] = useState<File>();
     const [preview, setPreview] = useState<string>();
+
+    let oldPhoto = useRef("");
 
     //called from all form inputs except photo and room
     const handleChange = (event: FormEvent<HTMLInputElement>) => {
@@ -52,6 +59,26 @@ const AddProperty = () => {
         setNewPhoto(event.currentTarget.files[0]);
     }
 
+    //on page load - prefill boxes if editing
+    useEffect(() => {
+        async function fillBoxes(property_id: number) {
+            const fullProperty = await getProperty(property_id);
+            oldPhoto.current = fullProperty.image_url;
+            setNewProperty(fullProperty);
+
+            const allRooms = await getRooms(property_id);
+            let roomsString = "";
+            allRooms.forEach(room => roomsString += room.name + ', ');
+            roomsString = roomsString.substring(0, roomsString.length - 2);
+            setNewRooms(roomsString);
+
+        }
+
+        if (params.id) {
+            fillBoxes(+params.id);
+        }
+    }, [params.id])
+
     //called whenever newPhoto is changed
     //create a preview as a side effect, whenever selected file is changed to use in property card
     //must store photo and change newProperty image_url to url of stored photo later
@@ -76,51 +103,68 @@ const AddProperty = () => {
         }
     }, [preview])
 
+    const replacePhoto = async () => {
+        let filename: string = "";
+        if (newPhoto) {
+            filename = await storePropertyPhoto(newPhoto)
+                .catch(err => {
+                    displayError(err, "store property photo")
+                    return "";
+                });
+
+            if (oldPhoto.current && oldPhoto.current !== getPropertyPhotoUrl('default_house.png')) {
+                await deletePropertyPhoto(oldPhoto.current.substring(oldPhoto.current.lastIndexOf('/') + 1))
+                    .catch(err => displayError(err, "delete old property photo"));
+            }
+        }
+        return filename || "default_house.png";
+    }
+
+    const submitProperty = async (filename: string) => {
+        //if id is defined, we are editing the property with that ID
+        //otherwise we are adding a new property
+        if (params.id) {
+            updateProperty({ ...newProperty, image_url: newProperty.image_url.startsWith("https://ifgorfdgcwortivlypji.supabase.co/storage/") ? newProperty.image_url : getPropertyPhotoUrl(filename) }, newRooms ?? "")
+                .catch(err => displayError(err, "update property"));
+        }
+        else {
+            createProperty({ ...newProperty, image_url: getPropertyPhotoUrl(filename) }, newRooms ?? "")
+                .catch(err => displayError(err, "create property"));
+        }
+    }
+
     //called when submit button is pressed
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         //store image to db on submit
-        let url: string | void = "";
-        if (newPhoto) {
-            url = await storePropertyPhoto(newPhoto)
-                .catch(err => displayError(err, "store property photo"));
-        }
-
-        //store property info to db
-        if (newProperty.address) {
-            createProperty({ ...newProperty, image_url: getPropertyPhotoUrl(url ? url : 'default_house.png') }, newRooms ?? "")
-                .catch(err => displayError(err, "create property"));
-            navigate("/");
-        }
-        else {
-            alert("Property street address is a required field");
-        }
+        replacePhoto().then(
+            (filename) => {
+                //store property info to db
+                if (newProperty.address && newRooms) {
+                    submitProperty(filename).then(
+                        () => {
+                            props.goBack();
+                        }
+                    )
+                }
+                else if (!newProperty.address) {
+                    alert("Property street address is a required field");
+                }
+                else {
+                    alert("Property must have at least one room");
+                }
+            }
+        );
     }
 
     return (
-        <AddPropertyForm onSubmit={handleSubmit}>
+        <AddEditPropertyForm onSubmit={handleSubmit}>
             <GridItemCol12>
                 <h3> Property Information </h3>
             </GridItemCol12>
             <GridItemCol12>
                 <TitleAndText title="Street Address" name="address" value={newProperty.address} handleChange={handleChange} />
             </GridItemCol12>
-            <PreviewAndSubmitContainer>
-                <PreviewContainer>
-                    <h3>Preview</h3>
-                    <label style={{ marginTop: 10, marginBottom: 10 }}>Card View</label>
-                    <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-                        <PropertyCardPreview
-                            address={newProperty.address}
-                            image_url={newProperty.image_url}
-                        />
-                    </div>
-                </PreviewContainer>
-                <SubmitButtonsContainer>
-                    <CancelButton onClick={() => navigate("/")}>Cancel</CancelButton>
-                    <SubmitButton type="submit">Save</SubmitButton>
-                </SubmitButtonsContainer>
-            </PreviewAndSubmitContainer>
             <GridItemCol1>
                 <TitleAndText title="City" name="city" value={newProperty.city} handleChange={handleChange} />
             </GridItemCol1>
@@ -136,36 +180,45 @@ const AddProperty = () => {
             <GridItemCol12>
                 <TitleAndText title="Rooms" name="rooms" value={newRooms} handleChange={handleRoomsChange} />
             </GridItemCol12>
-        </AddPropertyForm>
+            <PreviewAndSubmitContainer>
+                <PreviewContainer>
+                    <h3>Preview</h3>
+                    <label style={{ marginTop: 10, marginBottom: 10 }}>Card View</label>
+                    <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                        <PropertyCardPreview
+                            address={newProperty.address}
+                            image_url={newProperty.image_url}
+                        />
+                    </div>
+                </PreviewContainer>
+                <SubmitButtonsContainer>
+                    <CancelButton onClick={props.goBack}>Cancel</CancelButton>
+                    <SubmitButton type="submit">Save</SubmitButton>
+                </SubmitButtonsContainer>
+            </PreviewAndSubmitContainer>
+        </AddEditPropertyForm>
     )
 }
 
-export default AddProperty
+export default AddEditProperty
 
 
-const TitleAndText = (props: TitleAndInputProps) => {
+const TitleAndText = (props: { title: string, name: string, value?: string | null, handleChange: (e: FormEvent<HTMLInputElement>) => void }) => {
     return (
         <label>
             {props.title}
-            <TextInput name={props.name!} value={props.value || ""} onChange={props.handleChange} />
+            <TextInput name={props.name} value={props.value ?? ""} onChange={props.handleChange} />
         </label>
     )
 }
 
-const TitleAndFile = (props: TitleAndInputProps) => {
+const TitleAndFile = (props: { title: string, name: string, handleChange: (e: FormEvent<HTMLInputElement>) => void }) => {
     return (
         <label>
             {props.title}
-            <FileInputArea title={props.title} name={props.name} handleChange={props.handleChange} />
+            <FileInputArea name={props.name} handleChange={props.handleChange} />
         </label>
     )
-}
-
-interface TitleAndInputProps {
-    title: string | null;
-    name: string | null;
-    value?: string | null;
-    handleChange: (e: FormEvent<HTMLInputElement>) => void;
 }
 
 const TextInput = styled.input`
@@ -182,14 +235,14 @@ const TextInput = styled.input`
     font-weight: bold;
 `
 
-const FileInputArea = (props: TitleAndInputProps) => {
+const FileInputArea = (props: { name: string, handleChange: (e: FormEvent<HTMLInputElement>) => void }) => {
     return (
         <div>
-            <input name={props.name!} type="file" accept="image/*" id="input-file-upload" style={{ display: "none" }} onChange={props.handleChange} />
+            <input name={props.name} type="file" accept="image/*" id="input-file-upload" style={{ display: "none" }} onChange={props.handleChange} />
             <FileInputDiv>
                 <label id="label-file-upload" htmlFor="input-file-upload" style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
                     <img src={uploadIcon} alt="upload icon" style={{ height: 25 }} />
-                    <div style={{ textAlign: "center", margin: 5 }}> Drag & Drop </div>
+                    <div style={{ textAlign: "center", margin: 5 }}> Click to Upload </div>
                 </label>
             </FileInputDiv>
         </div>
@@ -207,7 +260,7 @@ const FileInputDiv = styled.div`
     align-items: center;
 `
 
-const AddPropertyForm = styled.form`
+const AddEditPropertyForm = styled.form`
     color: gray;
     margin: 0px 50px;
     display: grid;
