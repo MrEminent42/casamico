@@ -7,12 +7,6 @@ interface PropertyCardProps {
 
 const PropertyCardPreview = (props: PropertyCardProps) => {
     return (
-        <PropertyCardContents {...props} />
-    )
-}
-
-const PropertyCardContents = (props: PropertyCardProps) => {
-    return (
         <PropertyCardContainer>
             <PropertyImage src={props.image_url} />
             <CardTitle>
@@ -31,11 +25,11 @@ export default PropertyCardPreview
 const PropertyCardContainer = styled.div`
     display: flex;
     flex-direction: column;
-    
+    width: 100%;
 `
 const PropertyImage = styled.img`
     // prevent image from overflowing
-    max-width: 100%;
+    width: 100%;
     height: 250px;
     object-fit: cover;
 

@@ -267,6 +267,7 @@ const AddEditPropertyForm = styled.form`
     grid-template-rows: 0.5fr 0.5fr 0.5fr 0.5fr 1.5fr 1fr;
     gap: 10px;
     //border: 1px dotted black;
+    width: 70vw;
 `
 
 const GridItemCol1 = styled.div`
@@ -297,7 +298,7 @@ const PreviewContainer = styled.div`
     grid-row-start: 1;
     grid-row-end: 6;
     pointer-events: none;
-    //border: 1px dotted black;
+    width: 100%;
 `
 
 const PreviewAndSubmitContainer = styled.div`
