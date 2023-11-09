@@ -4,6 +4,8 @@ import styled from 'styled-components';
 import { PropertyGridItemPadding } from '../../pages/Home';
 import { getTasksOfProperty } from '../../controllers/TaskController';
 import { Database } from '../../supabase/supabase';
+import EditRoundedIcon from '@mui/icons-material/EditRounded';
+
 
 interface PropertyCardProps {
     property: Database['public']['Tables']['Properties']['Row'];
@@ -31,35 +33,64 @@ const PropertyCardContents = (props: PropertyCardProps) => {
     }, [property_id]);
 
     return (
-        <PropertyCardContainer
-            onClick={() => {
-                navigate("/property/" + property_id);
-            }}
-        >
-            <PropertyImage src={image_url} />
-            <CardTitle>
-                {address}
-            </CardTitle>
-            <CardText>
-                {tasks.length} tasks
-            </CardText>
-        </PropertyCardContainer>
+        <div style={{position: "relative"} }>
+            <PropertyCardContainer
+                onClick={() => {
+                    navigate("/property/" + property_id);
+                }}
+            >
+                <PropertyImageWrapper>
+                    <PropertyImage src={image_url} />
+                </PropertyImageWrapper>
+
+                {/* Wrapper container for Property Card title and text so that clicking it also links to Tasks page */}
+                <div>
+                    <CardTitle>
+                        {address}
+                    </CardTitle>
+                    <CardText>
+                        {tasks.length} tasks
+                    </CardText>
+                </div>
+            </PropertyCardContainer>
+            <EditButton
+                onClick={(e: React.MouseEvent) => {
+                    navigate("/edit-property/" + property_id);
+                    e.stopPropagation();
+                }}
+            >
+                <EditButtonDiv>
+                    <EditRoundedIcon htmlColor="#5f6f67"/>
+                </EditButtonDiv>
+            </EditButton>
+        </div>
     )
 }
 
 export default PropertyCard
 
 // to contain the image, title, and text, etc.
-const PropertyCardContainer = styled.div`
+const PropertyCardContainer = styled.button`
     display: flex;
     flex-direction: column;
-    
+    width:100%;
+    background: inherit;
+    border: none;
+
+    // cursor should change to a pointer to indicate clickable
+    cursor: pointer;
 `
 const PropertyImage = styled.img`
     // prevent image from overflowing
-    max-width: 100%;
-    height: 250px;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
+`
+
+const PropertyImageWrapper = styled.div`
+    // prevent image from overflowing
+    width: 100%;
+    height: 250px;
 
     // extra space so image can grow a bit
     margin-bottom: 10px;
@@ -69,13 +100,46 @@ const PropertyImage = styled.img`
     box-shadow: 2px 2px 10px rgba(0,0,0,0.1); 
     transition: 0.3s ease-in-out;
 
+    // prevent overflow
+    overflow: hidden;
+
     // on hover, "raise" it by scaling the image up a bit, 
     // and making more shadow.
-    // also, cursor should change to a pointer to indicate clickable
     &:hover {
         transform: scale(1.03);
-        cursor: pointer;
         box-shadow: 2px 2px 20px rgba(0,0,0,0.2);
+    }
+`
+
+const EditButton = styled.button`
+    background: none;
+    border-radius: 5px;
+    border: none;
+    padding: 0px;
+
+    // layer edit button over the property card wrapper in parent div to avoid nesting buttons
+    position: absolute;
+    top: 85%;
+    z-index: 1;
+    right: 10px;
+
+    // cursor should change to a pointer to indicate clickable
+    cursor: pointer;
+`
+
+const EditButtonDiv = styled.div`
+    background: #e0f4dc;
+    border-radius: 7px;
+    box-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    width: 100%;
+    padding: 2px;
+    padding-bottom: 0px;
+    padding-right: 1px;
+
+    transition: 0.3s ease-in-out;
+
+    &:hover {
+        background: #d0e4cc;
     }
 `
 
@@ -84,6 +148,7 @@ const CardTitle = styled.div`
     font-weight: 600;
     margin: 5px 0px;
     color: #4c4c4c;
+    text-align: left;
 `
 
 const CardText = styled.div`
@@ -91,4 +156,5 @@ const CardText = styled.div`
     font-weight: 500;
     margin: 5px 0px;
     color: grey;
+    text-align: left;
 `

@@ -1,5 +1,6 @@
 import { supabase } from "../supabase/db";
 import { Database } from "../supabase/supabase";
+import { createRooms } from "./RoomController";
 
 export const getAllProperties = async () => {
     const res = await supabase
@@ -39,7 +40,7 @@ export const createProperty = async (property: Database['public']['Tables']['Pro
     }
 
     //create new Room entries in database if needed
-    let room_ids: Array<number | undefined>=[];
+    let room_ids: Array<number>=[];
     if (rooms) {
         room_ids=await createRooms(rooms, data[0].property_id)
             .catch(err => { throw (err); });
@@ -48,8 +49,28 @@ export const createProperty = async (property: Database['public']['Tables']['Pro
     return { property_id: data[0].property_id, room_ids: room_ids }; //return object containing property id and room ids
 }
 
-export const updateProperty = () => {
-    alert("You have asked PropertyController to update a property.");
+export const updateProperty = async (property: Database['public']['Tables']['Properties']['Update'], rooms: string) => {
+    //create new Property entry in database
+    if (property.property_id) {
+        const { data, error } = await supabase
+            .from('Properties')
+            .update(property)
+            .eq('property_id', property.property_id)
+            .select();
+        if (error) {
+            throw error;
+        }
+
+        //create new Room entries in database if needed
+        let room_ids: Array<number> = [];
+        if (rooms) {
+            room_ids = await createRooms(rooms, data[0].property_id)
+                .catch(err => { throw (err); });
+        }
+
+        return { property_id: data[0].property_id, room_ids: room_ids }; //return object containing property id and room ids
+    }
+    throw new Error("No property id was given");
 }
 
 export const deleteProperty = () => {
@@ -75,6 +96,20 @@ export const storePropertyPhoto = async (photo: File) => {
     return data.path; //this is the file path to the stored file in the database
 }
 
+//delete given file in the database Property Photos bucket
+export const deletePropertyPhoto = async (name: string) => {
+    const { data, error } = await supabase
+        .storage
+        .from('property-photos')
+        .remove([name])
+
+    if (error) {
+        throw error;
+    }
+
+    return data; //array of FileObjects, each object has info on the file that was deleted
+}
+
 //get usable public URL for photo given its path in the database bucket
 export const getPropertyPhotoUrl = (filename: string) => {
     const { data } = supabase
@@ -83,28 +118,4 @@ export const getPropertyPhotoUrl = (filename: string) => {
         .getPublicUrl(filename);
 
     return data.publicUrl;
-}
-
-export const createRooms = async (input: string, property_id: number) => {
-    //parse comma separated string
-    const names = input.split(',');
-
-    //store new Room entry in database for each name and add room_id of each to returned array
-    let room_ids = await Promise.all(names.map(async name => {
-        if (name) {
-            const { data, error } = await supabase
-                .from('Rooms')
-                .insert({ name: name, property_id: property_id })
-                .select();
-
-            if (error) {
-                throw (error);
-            }
-
-            return data[0].room_id;
-        }
-    }
-    ));
-
-    return room_ids; //return array of room ids of rooms created
 }

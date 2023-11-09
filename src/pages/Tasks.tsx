@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components';
 import backbuttonsvg from '../assets/arrow-left-circle.svg';
-import house from "../assets/house.jpg";
 import addbuttonsvg from "../assets/plus-button.svg";
 import TaskViewButton from '../components/TaskViewButton';
 import { Route, Routes, useNavigate, useParams } from 'react-router';
@@ -190,7 +189,6 @@ const HouseContainer = styled.div`
     position: relative;
     border-radius: 12px;
 
-    /* background-image: url(${house}); */
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;

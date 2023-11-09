@@ -1,32 +1,80 @@
 import { useEffect, useState } from 'react';
+import { Route, Routes, useNavigate } from 'react-router';
 import PropertyCard from '../components/properties/PropertyCard';
 import NewPropertyCard from '../components/properties/NewPropertyCard'
 import styled from 'styled-components';
 import { getAllProperties } from '../controllers/PropertyController';
 import { Database } from '../supabase/supabase';
+import Popup from '../components/Popup';
+import AddProperty from './AddEditProperty';
 
 const Home = () => {
     const [properties, setProperties] = useState<Database['public']['Tables']['Properties']['Row'][]>([]);
+    const [refresh, setRefresh] = useState(false); //state variable used to force properties to update twice to refresh cards
+    const navigate = useNavigate();
+
+    // used for all possible exits of add/edit property popup so that property cards refresh
+    const homeGoBack = () => {
+        navigate("");
+        setRefresh(true);
+    }
 
     // this runs when a webpage is loaded
     useEffect(() => {
         getAllProperties()
             .then((res) => setProperties(res))
-            .catch(err => alert(err));
-    }, []);
+            .catch(err => {
+                console.log(err);
+                alert(err);
+            });
+
+        //refresh starts as false and is set to true when starting refresh
+        //this sets it back to false and does necessary second fetch of properties
+        if (refresh) {
+            getAllProperties()
+                .then((res) => setProperties(res))
+                .catch(err => {
+                    console.log(err);
+                    alert(err);
+                });
+            setRefresh(false);
+        }
+    }, [refresh]);
 
     return (
-        <PropertyCardViewContainer>
-            {
-                properties.map((property) => (
-                    <PropertyCard
-                        property={property}
-                        key={property.property_id}
+        <>
+            <PropertyCardViewContainer>
+                {
+                    properties.map((property) => (
+                        <PropertyCard
+                            property={property}
+                            key={property.property_id}
+                        />
+                    ))
+                }
+                <NewPropertyCard />
+            </PropertyCardViewContainer>
+            <Routes>
+                <Route path="add-property" element={
+                    <Popup
+                        onClickOutside={homeGoBack}
+                        onKeyboardEsc={homeGoBack}
+                        element={<AddProperty goBack={
+                            homeGoBack
+                        } />}
                     />
-                ))
-            }
-            <NewPropertyCard />
-        </PropertyCardViewContainer>
+                } />
+                <Route path="edit-property/:id/*" element={
+                    <Popup
+                        onClickOutside={homeGoBack}
+                        onKeyboardEsc={homeGoBack}
+                        element={<AddProperty goBack={
+                            homeGoBack
+                        } />}
+                    />
+                } />
+            </Routes>
+        </>
     )
 }
 
