@@ -20,7 +20,7 @@ const Page2 = () => {
     const params = useParams();
     const [tasks, setTasks] = useState<Database['public']['Tables']['Tasks']['Row'][]>([]);
 
-    // this runs once when a webpage is loaded
+    // this when propertyId is changed (when the page changes)
     useEffect(() => {
         if (propertyId) {
             getProperty(propertyId).then((property) => {

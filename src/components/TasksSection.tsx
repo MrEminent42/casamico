@@ -11,7 +11,7 @@ const TasksSection = (props: {
         <TaskListSectionContainer>
             <SectionLabel>{props.sectionLabel}</SectionLabel>
             {
-                props.tasks.filter((task) => !task.completed).map((task) => (
+                props.tasks.map((task) => (
                     <TaskCard
                         key={task.task_id}
                         task={task}
