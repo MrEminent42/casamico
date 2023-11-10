@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { PropertyGridItemPadding } from '../../pages/Home';
 import { getTasksOfProperty } from '../../controllers/TaskController';
 import { Database } from '../../supabase/supabase';
+import { displayError } from '../../App';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
 
 
@@ -27,13 +28,11 @@ const PropertyCardContents = (props: PropertyCardProps) => {
     useEffect(() => {
         getTasksOfProperty(property_id).then((tasks) => {
             setTasks(tasks);
-        }).catch((error) => {
-            alert(JSON.stringify(error));
-        });
+        }).catch((error) => displayError(error, "fetch # tasks of property"));
     }, [property_id]);
 
     return (
-        <div style={{position: "relative"} }>
+        <div style={{ position: "relative" }}>
             <PropertyCardContainer
                 onClick={() => {
                     navigate("/property/" + property_id);
@@ -60,7 +59,7 @@ const PropertyCardContents = (props: PropertyCardProps) => {
                 }}
             >
                 <EditButtonDiv>
-                    <EditRoundedIcon htmlColor="#5f6f67"/>
+                    <EditRoundedIcon htmlColor="#5f6f67" />
                 </EditButtonDiv>
             </EditButton>
         </div>

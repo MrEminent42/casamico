@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom'
 import uploadIcon from '../assets/upload.png';
 import { createProperty, deletePropertyPhoto, getProperty, getPropertyPhotoUrl, storePropertyPhoto, updateProperty } from '../controllers/PropertyController';
 import PropertyCardPreview from '../components/properties/PropertyCardPreview';
+import { displayError } from '../App';
 import { getRooms } from '../controllers/RoomController';
 
 interface DummyProperty {
@@ -45,7 +46,7 @@ const AddEditProperty = (props: AddEditPropertyProps) => {
         //if files list is undef or empty, newPhoto is undef
         if (!event.currentTarget.files || event.currentTarget.files.length === 0) {
             //if already have preview photo, don't want to change anything if no photo is selected after that
-            if (newPhoto!==undefined) {
+            if (newPhoto !== undefined) {
                 return;
             }
 
@@ -107,17 +108,13 @@ const AddEditProperty = (props: AddEditPropertyProps) => {
         if (newPhoto) {
             filename = await storePropertyPhoto(newPhoto)
                 .catch(err => {
-                    console.log(err);
-                    alert(`error in storePropertyPhoto: ${err}`);
+                    displayError(err, "store property photo")
                     return "";
                 });
 
             if (oldPhoto.current && oldPhoto.current !== getPropertyPhotoUrl('default_house.png')) {
                 await deletePropertyPhoto(oldPhoto.current.substring(oldPhoto.current.lastIndexOf('/') + 1))
-                    .catch(err => {
-                        console.log(err);
-                        alert(`error in storePropertyPhoto: ${err}`);
-                    });
+                    .catch(err => displayError(err, "delete old property photo"));
             }
         }
         return filename || "default_house.png";
@@ -127,18 +124,13 @@ const AddEditProperty = (props: AddEditPropertyProps) => {
         //if id is defined, we are editing the property with that ID
         //otherwise we are adding a new property
         if (params.id) {
-            updateProperty({ ...newProperty, image_url: newProperty.image_url.startsWith("https://ifgorfdgcwortivlypji.supabase.co/storage/") ? newProperty.image_url : getPropertyPhotoUrl(filename) }, newRooms ?? "")
-                .catch(err => {
-                    console.log(err);
-                    alert(`error in updateProperty: ${err}`);
-                });
+            await updateProperty({ ...newProperty, image_url: newProperty.image_url.startsWith("https://ifgorfdgcwortivlypji.supabase.co/storage/") ? newProperty.image_url : getPropertyPhotoUrl(filename) }, newRooms ?? "")
+                .catch(err => displayError(err, "update property"));
+
         }
         else {
-            createProperty({ ...newProperty, image_url: getPropertyPhotoUrl(filename) }, newRooms ?? "")
-                .catch(err => {
-                    console.log(err);
-                    alert(`error in createProperty: ${err}`);
-                });
+            await createProperty({ ...newProperty, image_url: getPropertyPhotoUrl(filename) }, newRooms ?? "")
+                .catch(err => displayError(err, "create property"));
         }
     }
 
@@ -146,24 +138,22 @@ const AddEditProperty = (props: AddEditPropertyProps) => {
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         //store image to db on submit
-        replacePhoto().then(
-            (filename) => {
-                //store property info to db
-                if (newProperty.address && newRooms) {
-                    submitProperty(filename).then(
-                        () => {
-                            props.goBack();
-                        }
-                    )
+        const filename = await replacePhoto();
+        //store property info to db
+        if (newProperty.address && newRooms) {
+            await submitProperty(filename).then(
+                () => {
+                    props.goBack();
                 }
-                else if (!newProperty.address) {
-                    alert("Property street address is a required field");
-                }
-                else {
-                    alert("Property must have at least one room");
-                }
-            }
-        );
+            )
+        }
+        else if (!newProperty.address) {
+            alert("Property street address is a required field");
+        }
+        else {
+            alert("Property must have at least one room");
+        }
+
     }
 
     return (
@@ -172,7 +162,7 @@ const AddEditProperty = (props: AddEditPropertyProps) => {
                 <h3> Property Information </h3>
             </GridItemCol12>
             <GridItemCol12>
-                <TitleAndText title="Street Address" name="address" value={newProperty.address} handleChange={handleChange}/>
+                <TitleAndText title="Street Address" name="address" value={newProperty.address} handleChange={handleChange} />
             </GridItemCol12>
             <GridItemCol1>
                 <TitleAndText title="City" name="city" value={newProperty.city} handleChange={handleChange} />
@@ -244,7 +234,7 @@ const TextInput = styled.input`
     font-weight: bold;
 `
 
-const FileInputArea = (props: { name: string, handleChange: (e: FormEvent<HTMLInputElement>) => void } ) => {
+const FileInputArea = (props: { name: string, handleChange: (e: FormEvent<HTMLInputElement>) => void }) => {
     return (
         <div>
             <input name={props.name} type="file" accept="image/*" id="input-file-upload" style={{ display: "none" }} onChange={props.handleChange} />
@@ -277,6 +267,7 @@ const AddEditPropertyForm = styled.form`
     grid-template-rows: 0.5fr 0.5fr 0.5fr 0.5fr 1.5fr 1fr;
     gap: 10px;
     //border: 1px dotted black;
+    width: 70vw;
 `
 
 const GridItemCol1 = styled.div`
@@ -307,7 +298,7 @@ const PreviewContainer = styled.div`
     grid-row-start: 1;
     grid-row-end: 6;
     pointer-events: none;
-    //border: 1px dotted black;
+    width: 100%;
 `
 
 const PreviewAndSubmitContainer = styled.div`

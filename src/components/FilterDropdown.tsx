@@ -21,7 +21,7 @@ const StyledMenu = styled((props: MenuProps) => (
     {...props}
   />
 ))(({ theme }) => ({
-    //edits textbox dropdown styling
+  //edits textbox dropdown styling
   '& .MuiPaper-root': {
     borderRadius: 6,
     marginTop: theme.spacing(1),
@@ -72,7 +72,7 @@ export default function CustomizedMenus() {
         endIcon={<KeyboardArrowDownIcon />}
         //styling at the bottom of the Tasks.tsx page
         sx={
-            DropdownStyling
+          DropdownStyling
         }
       >
         Filter
