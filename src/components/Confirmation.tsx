@@ -25,11 +25,12 @@ const Confirmation = ({confirmationText, goBack, doConfirmed} : ConfirmationProp
                 </CancelButton>
                 <SubmitButton
                     onClick={() => {
-                        if (params.id)
-                            doConfirmed(+params.id);
-                        else
-                            alert("No id provided");
-                            goBack();
+                            if (params.id)
+                                doConfirmed(+params.id);
+                            else {
+                                alert("No id provided");
+                                goBack();
+                            }
                         }
                     }>
                     Yes

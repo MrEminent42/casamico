@@ -11,8 +11,6 @@ import DeleteForeverRoundedIcon from '@mui/icons-material/DeleteForeverRounded';
 
 interface PropertyCardProps {
     property: Database['public']['Tables']['Properties']['Row'];
-    refresh: boolean;
-    setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const PropertyCard = (props: PropertyCardProps) => {
