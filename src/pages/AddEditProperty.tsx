@@ -323,8 +323,7 @@ const SubmitButton = styled.button`
     box-shadow: 2px 2px 10px rgba(0,0,0,0.1); 
     transition: 0.3s ease-in-out;
 
-    // on hover, "raise" it by scaling the image up a bit, 
-    // and making more shadow.
+    // on hover, darken color
     // also, cursor should change to a pointer to indicate clickable
     &:hover {
         cursor: pointer;
@@ -345,8 +344,7 @@ const CancelButton = styled.button`
     box-shadow: 2px 2px 10px rgba(0,0,0,0.1); 
     transition: 0.3s ease-in-out;
 
-    // on hover, "raise" it by scaling the image up a bit, 
-    // and making more shadow.
+    // on hover, darken color
     // also, cursor should change to a pointer to indicate clickable
     &:hover {
         cursor: pointer;
