@@ -6,6 +6,7 @@ import { getTasksOfProperty } from '../../controllers/TaskController';
 import { Database } from '../../supabase/supabase';
 import { displayError } from '../../App';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
+import DeleteForeverRoundedIcon from '@mui/icons-material/DeleteForeverRounded';
 
 
 interface PropertyCardProps {
@@ -52,16 +53,28 @@ const PropertyCardContents = (props: PropertyCardProps) => {
                     </CardText>
                 </div>
             </PropertyCardContainer>
-            <EditButton
-                onClick={(e: React.MouseEvent) => {
-                    navigate("/edit-property/" + property_id);
-                    e.stopPropagation();
-                }}
-            >
-                <EditButtonDiv>
-                    <EditRoundedIcon htmlColor="#5f6f67" />
-                </EditButtonDiv>
-            </EditButton>
+            <ButtonsContainer>
+                <EditButton
+                    onClick={(e: React.MouseEvent) => {
+                        navigate("/edit-property/" + property_id);
+                        e.stopPropagation();
+                    }}
+                >
+                    <EditButtonDiv>
+                        <EditRoundedIcon htmlColor="#5f6f67" />
+                    </EditButtonDiv>
+                </EditButton>
+                <DeleteButton
+                    onClick={(e: React.MouseEvent) => {
+                        navigate("/edit-property/" + property_id);
+                        e.stopPropagation();
+                    }}
+                >
+                    <DeleteButtonDiv>
+                        <DeleteForeverRoundedIcon htmlColor="#6f5f5f" />
+                    </DeleteButtonDiv>
+                </DeleteButton>
+            </ButtonsContainer>
         </div>
     )
 }
@@ -110,11 +123,10 @@ const PropertyImageWrapper = styled.div`
     }
 `
 
-const EditButton = styled.button`
-    background: none;
-    border-radius: 5px;
-    border: none;
-    padding: 0px;
+const ButtonsContainer = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: right;
 
     // layer edit button over the property card wrapper in parent div to avoid nesting buttons
     position: absolute;
@@ -124,6 +136,14 @@ const EditButton = styled.button`
 
     // cursor should change to a pointer to indicate clickable
     cursor: pointer;
+`
+
+const EditButton = styled.button`
+    background: none;
+    border-radius: 5px;
+    border: none;
+    padding: 0px;
+    margin-right: 10px;
 `
 
 const EditButtonDiv = styled.div`
@@ -139,6 +159,30 @@ const EditButtonDiv = styled.div`
 
     &:hover {
         background: #d0e4cc;
+    }
+`
+
+const DeleteButton = styled.button`
+    background: none;
+    border-radius: 5px;
+    border: none;
+    padding: 0px;
+    margin-left: 10px;
+`
+
+const DeleteButtonDiv = styled.div`
+    background: #f4e0e0;
+    border-radius: 7px;
+    box-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    width: 100%;
+    padding: 2px;
+    padding-bottom: 0px;
+    padding-right: 1px;
+
+    transition: 0.3s ease-in-out;
+
+    &:hover {
+        background: #e4d0d0;
     }
 `
 
