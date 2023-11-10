@@ -12,6 +12,7 @@ import TaskCard from '../components/Task';
 import CompletedTaskCard from '../components/CompletedTask';
 import FilterDropdown from '../components/FilterDropdown';
 import SortDropdown from '../components/SortDropdown'
+import OptionsDropdown from '../components/OptionsDropdown';
 
 import TasksSection from '../components/TasksSection';
 import { displayError } from '../App';
@@ -78,8 +79,17 @@ const Page2 = () => {
                     />
                     <SortDropdown
                     />
-                    <div style={{ flexGrow: 1 }} />
 
+                    <OptionsDropdown
+                        label="Third"
+                        options={[
+                            {
+                                id: 0,
+                                label: "Due date",
+                                onClick: () => { }
+                            }
+                        ]}
+                    />
                     <AddButton src={addbuttonsvg} onClick={() => navigate("add")}></AddButton>
                 </FilterandSortContainer>
                 <TasksSection
