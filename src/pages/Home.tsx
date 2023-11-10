@@ -40,6 +40,8 @@ const Home = () => {
                         <PropertyCard
                             property={property}
                             key={property.property_id}
+                            refresh={refresh}
+                            setRefresh={setRefresh }
                         />
                     ))
                 }

@@ -12,6 +12,8 @@ import { deleteProperty } from '../../controllers/PropertyController';
 
 interface PropertyCardProps {
     property: Database['public']['Tables']['Properties']['Row'];
+    refresh: boolean;
+    setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const PropertyCard = (props: PropertyCardProps) => {
@@ -70,6 +72,7 @@ const PropertyCardContents = (props: PropertyCardProps) => {
                         await deleteProperty(props.property.property_id, props.property.image_url)
                             .catch((error) => displayError(error, "delete property"));
                         e.stopPropagation();
+                        props.setRefresh(true);
                     }}
                 >
                     <DeleteButtonDiv>
