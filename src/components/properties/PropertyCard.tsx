@@ -136,9 +136,6 @@ const ButtonsContainer = styled.div`
     top: 85%;
     z-index: 1;
     right: 10px;
-
-    // cursor should change to a pointer to indicate clickable
-    cursor: pointer;
 `
 
 const EditButton = styled.button`
@@ -147,6 +144,9 @@ const EditButton = styled.button`
     border: none;
     padding: 0px;
     margin-right: 10px;
+
+    // cursor should change to a pointer to indicate clickable
+    cursor: pointer;
 `
 
 const EditButtonDiv = styled.div`
@@ -171,6 +171,9 @@ const DeleteButton = styled.button`
     border: none;
     padding: 0px;
     margin-left: 10px;
+
+    // cursor should change to a pointer to indicate clickable
+    cursor: pointer;
 `
 
 const DeleteButtonDiv = styled.div`
