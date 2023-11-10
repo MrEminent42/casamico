@@ -124,8 +124,7 @@ const AddTask = (props: AddTaskProps) => {
             }
             return await addTaskWithTags(taskWithTag);
         })).catch((err) => {
-            console.log(err);
-            alert("Error adding tags to task.");
+            displayError(err, "set tags for task")
             props.goBack();
         })
     }
