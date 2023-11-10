@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components';
 import backbuttonsvg from '../assets/arrow-left-circle.svg';
-import house from "../assets/house.jpg";
 import addbuttonsvg from "../assets/plus-button.svg";
 import { Route, Routes, useNavigate, useParams } from 'react-router';
 import { getTasksOfProperty, toggleTaskStatus } from '../controllers/TaskController';
@@ -54,10 +53,10 @@ const Page2 = () => {
     function daysBetween(date1: Date, date2: Date) {
         // The number of milliseconds in one day
         const ONE_DAY = 1000 * 60 * 60 * 24
-    
+
         // Calculate the difference in milliseconds
         const differenceMs = date1.getTime() - date2.getTime()
-    
+
         // Convert back to days and return
         return Math.round(differenceMs / ONE_DAY) + 1
     }
@@ -83,35 +82,37 @@ const Page2 = () => {
                     <AddButton src={addbuttonsvg} onClick={() => navigate("add")}></AddButton>
                 </FilterandSortContainer>
                 <TaskListContainer>
-                    <TodoLabel>To Do</TodoLabel>
+                    <SectionLabel>To Do</SectionLabel>
+                    {tasks.filter((task) => !task.completed).length === 0 && <NoTasks>No Tasks 🎉</NoTasks>}
                     {
                         tasks.filter((task) => !task.completed).map((task) => (
-                                <TaskCard
-                                    key={task.task_id}
-                                    title={task.title}
-                                    due={
-                                        daysBetween(new Date(task.due_date), currentDate) >= 0 ?
-                                            daysBetween(new Date(task.due_date), currentDate) + " days left" :
-                                            "Overdue"
+                            <TaskCard
+                                key={task.task_id}
+                                title={task.title}
+                                due={
+                                    daysBetween(new Date(task.due_date), currentDate) >= 0 ?
+                                        daysBetween(new Date(task.due_date), currentDate) + " days left" :
+                                        "Overdue"
+                                }
+                                bg_color={task.color}
+                                complete={task.completed}
+                                handleClick={async () => {
+                                    try {
+                                        const updatedTask = await toggleTaskStatus(task.task_id, task.completed);
+                                        // update the task in the state
+                                        setTasks(tasks.map((t) => (t.task_id === updatedTask.task_id ? updatedTask : t)));
+                                    } catch (error) {
+                                        console.log(JSON.stringify(error));
+                                        alert("Failed to update task status!");
                                     }
-                                    bg_color={task.color}
-                                    complete={task.completed}
-                                    handleClick={async () => {
-                                        try {
-                                            const updatedTask = await toggleTaskStatus(task.task_id, task.completed);
-                                            // update the task in the state
-                                            setTasks(tasks.map((t) => (t.task_id === updatedTask.task_id ? updatedTask : t)));
-                                        } catch (error) {
-                                            console.log(JSON.stringify(error));
-                                            alert("Failed to update task status!");
-                                        }
-                                    }}
-                                />
+                                }}
+                            />
                         ))
                     }
                 </TaskListContainer>
                 <CompletedTaskListContainer>
-                    <CompletedLabel>Completed</CompletedLabel>
+                    <SectionLabel>Completed</SectionLabel>
+                    {tasks.filter((task) => task.completed).length === 0 && <NoTasks>No Tasks Completed Yet 🏗️</NoTasks>}
                     {
                         tasks.filter((task) => task.completed).map((task) => (
                             <CompletedTaskCard
@@ -186,7 +187,6 @@ const HouseContainer = styled.div`
     position: relative;
     border-radius: 12px;
 
-    /* background-image: url(${house}); */
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
@@ -243,7 +243,7 @@ const TaskListContainer = styled.div`
     margin: 0 10px 10px 0;
 `
 
-const TodoLabel = styled.p`
+const SectionLabel = styled.p`
     font-size: 20px;
     font-weight: 400;
     color: #5F5F5F;
@@ -289,3 +289,7 @@ export const DropdownStyling = {
     borderRadius: '40px',
     textAlign: 'center'
 }
+const NoTasks = styled.div`
+    width: 80vw;
+    text-align: center;
+`

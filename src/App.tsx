@@ -2,7 +2,6 @@ import { Routes, Route } from 'react-router-dom';
 import styled from 'styled-components';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
-import AddProperty from './pages/AddProperty';
 import Tasks from './pages/Tasks';
 
 
@@ -13,8 +12,7 @@ function App() {
       <Navbar />
       <MainContainer>
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/add-property" element={<AddProperty />} />
+          <Route path="*" element={<Home />} />
           <Route path="/property/:id/*" element={<Tasks />} />
         </Routes>
       </MainContainer>
