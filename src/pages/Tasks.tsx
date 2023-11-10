@@ -81,12 +81,17 @@ const Page2 = () => {
                     />
 
                     <OptionsDropdown
-                        label="Third"
+                        label="Sort"
                         options={[
                             {
                                 id: 0,
-                                label: "Due date",
-                                onClick: () => { }
+                                label: 'Due date',
+                                onClick: () => { console.log(tasks); setTasks(tasks.sort((a, b) => (Date.parse(a.due_date) > Date.parse(b.due_date)) ? 1 : -1)) }
+                            },
+                            {
+                                id: 1,
+                                label: 'Title',
+                                onClick: () => { console.log(tasks); setTasks(tasks.sort((a, b) => a.title.localeCompare(b.title))) }
                             }
                         ]}
                     />
