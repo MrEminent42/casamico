@@ -7,6 +7,7 @@ import { Database } from '../../supabase/supabase';
 import { displayError } from '../../App';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import DeleteForeverRoundedIcon from '@mui/icons-material/DeleteForeverRounded';
+import { deleteProperty } from '../../controllers/PropertyController';
 
 
 interface PropertyCardProps {
@@ -65,8 +66,9 @@ const PropertyCardContents = (props: PropertyCardProps) => {
                     </EditButtonDiv>
                 </EditButton>
                 <DeleteButton
-                    onClick={(e: React.MouseEvent) => {
-                        navigate("/edit-property/" + property_id);
+                    onClick={async (e: React.MouseEvent) => {
+                        await deleteProperty(props.property.property_id, props.property.image_url)
+                            .catch((error) => displayError(error, "delete property"));
                         e.stopPropagation();
                     }}
                 >
