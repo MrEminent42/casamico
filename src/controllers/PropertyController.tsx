@@ -40,9 +40,9 @@ export const createProperty = async (property: Database['public']['Tables']['Pro
     }
 
     //create new Room entries in database if needed
-    let room_ids: Array<number>=[];
+    let room_ids: Array<number> = [];
     if (rooms) {
-        room_ids=await createRooms(rooms, data[0].property_id)
+        room_ids = await createRooms(rooms, data[0].property_id)
             .catch(err => { throw (err); });
     }
 
@@ -84,7 +84,7 @@ export const storePropertyPhoto = async (photo: File) => {
     const { data, error } = await supabase
         .storage
         .from('property-photos')
-        .upload(crypto.randomUUID()+ext, photo, {
+        .upload(crypto.randomUUID() + ext, photo, {
             cacheControl: '3600',
             upsert: false
         })

@@ -5,38 +5,29 @@ import NewPropertyCard from '../components/properties/NewPropertyCard'
 import styled from 'styled-components';
 import { getAllProperties } from '../controllers/PropertyController';
 import { Database } from '../supabase/supabase';
+import { displayError } from '../App';
 import Popup from '../components/Popup';
 import AddProperty from './AddEditProperty';
 
 const Home = () => {
     const [properties, setProperties] = useState<Database['public']['Tables']['Properties']['Row'][]>([]);
-    const [refresh, setRefresh] = useState(false); //state variable used to force properties to update twice to refresh cards
+    const [refresh, setRefresh] = useState(true); //state variable used to force properties to update twice to refresh cards
     const navigate = useNavigate();
 
     // used for all possible exits of add/edit property popup so that property cards refresh
     const homeGoBack = () => {
-        navigate("");
         setRefresh(true);
+        navigate("");
     }
 
     // this runs when a webpage is loaded
     useEffect(() => {
-        getAllProperties()
-            .then((res) => setProperties(res))
-            .catch(err => {
-                console.log(err);
-                alert(err);
-            });
-
-        //refresh starts as false and is set to true when starting refresh
-        //this sets it back to false and does necessary second fetch of properties
+        //setting `refresh` to true will trigger this useEffect to re-fetch properties
+        //after attempting a refresh, the `refresh` variable is set back to false
         if (refresh) {
             getAllProperties()
                 .then((res) => setProperties(res))
-                .catch(err => {
-                    console.log(err);
-                    alert(err);
-                });
+                .catch(err => displayError(err, "fetch properties"));
             setRefresh(false);
         }
     }, [refresh]);

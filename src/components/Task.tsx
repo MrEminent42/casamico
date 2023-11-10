@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
 import Checkbox from '@mui/material/Checkbox';
+import { Database } from '../supabase/supabase';
 
 function hexToRgb(hex: string, alpha: number) {
     const r = parseInt(hex.substring(1, 3), 16);
@@ -10,37 +11,48 @@ function hexToRgb(hex: string, alpha: number) {
 }
 
 interface TaskProps {
-    title: string;
-    due: string;
-    bg_color: string;
-    complete: boolean;
-    handleClick: () => void;
+    task: Database['public']['Tables']['Tasks']['Row'];
+    handleClick: (task: Database['public']['Tables']['Tasks']['Row']) => void;
 }
 
-const TaskCard = ({ title, due, bg_color, complete, handleClick }: TaskProps) => {
-    const [isComplete, setIsComplete] = useState(complete);
+const TaskCard = ({ task, handleClick }: TaskProps) => {
+    const [isComplete, setIsComplete] = useState(task.completed);
+    const currentDate = new Date();
 
     const handleCheckboxClick = () => {
         setIsComplete(!isComplete);
-        handleClick();
+        handleClick(task);
+    }
+
+    function daysBetween(date1: Date, date2: Date) {
+        // The number of milliseconds in one day
+        const ONE_DAY = 1000 * 60 * 60 * 24
+
+        // Calculate the difference in milliseconds
+        const differenceMs = date1.getTime() - date2.getTime()
+
+        // Convert back to days and return
+        return Math.round(differenceMs / ONE_DAY) + 1
     }
 
     return (
-        <TaskBackground style={{backgroundColor: hexToRgb(bg_color, 0.5)}}>
-            <TaskForeground style={{backgroundColor: bg_color}}>
-                <BasicCheckbox 
-                    checked={complete} 
+        <TaskBackground style={{ backgroundColor: task.completed ? hexToRgb('#94a3b8', 0.5) : hexToRgb(task.color, 0.5) }}>
+            <TaskForeground style={{ backgroundColor: task.completed ? '#94a3b8' : task.color }}>
+                <BasicCheckbox
+                    checked={task.completed}
                     onClick={handleCheckboxClick}
                     color='default'
                 />
                 <TaskTitle>
-                    {title}
+                    {task.title}
                 </TaskTitle>
             </TaskForeground>
             <TaskDue>
-                {due}
+                {daysBetween(new Date(task.due_date), currentDate) >= 0 ?
+                    daysBetween(new Date(task.due_date), currentDate) + " days left" :
+                    "Overdue"}
             </TaskDue>
-        </TaskBackground>
+        </TaskBackground >
     )
 }
 

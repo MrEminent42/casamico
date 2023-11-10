@@ -9,6 +9,7 @@ import { Database } from '../supabase/supabase';
 import { Link } from 'react-router-dom';
 import ColorPickerCard from '../components/ColorPickerCard';
 import { addTaskWithTags } from '../controllers/TasksWithTagsController';
+import { displayError } from '../App';
 
 interface AddTaskProps {
     goBack: () => void;
@@ -89,10 +90,9 @@ const AddTask = (props: AddTaskProps) => {
         }
 
         try {
-            let res = await updateTagsIfNecessary();
-            alert(res);
+            await updateTagsIfNecessary();
         } catch (err) {
-            alert(JSON.stringify(err));
+            displayError(err, "create/update tags");
             return;
         }
 
@@ -111,8 +111,7 @@ const AddTask = (props: AddTaskProps) => {
         try {
             taskId = await addTask(task);
         } catch (err) {
-            console.log(err);
-            alert("Error adding task.")
+            displayError(err, "add task")
             return;
         } finally {
             props.goBack();
@@ -125,8 +124,7 @@ const AddTask = (props: AddTaskProps) => {
             }
             return await addTaskWithTags(taskWithTag);
         })).catch((err) => {
-            console.log(err);
-            alert("Error adding tags to task.");
+            displayError(err, "set tags for task")
             props.goBack();
         })
     }
