@@ -19,10 +19,11 @@ const NewPropertyCard = () => {
 
 export default NewPropertyCard
 
-const AddPropertyCard = styled.div`
+const AddPropertyCard = styled.button`
     border: 3px solid #cbcbcb;
     border-radius: 10px;
-    height: 100%;
+    background: inherit;
+    width: 100%;
     height: 250px;
     display: flex;
     align-items: center;
