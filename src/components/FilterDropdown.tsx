@@ -8,10 +8,13 @@ import { getTags } from '../controllers/TagController';
 import { displayError } from '../App';
 import { Database } from '../supabase/supabase';
 import { getRooms } from '../controllers/RoomController';
+import { getTasksAndTagsOfProperty } from '../controllers/TaskController';
 
 
 interface FiltersProps {
-  propertyId: number
+  propertyId: number,
+  allTasks: Database['public']['Tables']['Tasks']['Row'][],
+  setFilteredTasks: (tasks: Database['public']['Tables']['Tasks']['Row'][]) => void,
 }
 
 export default function Filters(props: FiltersProps) {
@@ -21,13 +24,34 @@ export default function Filters(props: FiltersProps) {
   const [allTags, setAllTags] = useState<Database['public']['Tables']['Tags']['Row'][]>([]);
   const [allRooms, setAllRooms] = useState<Database['public']['Tables']['Rooms']['Row'][]>([]);
   const [selectedTags, setSelectedTags] = useState<Database['public']['Tables']['Tags']['Row'][]>([]);
-  const [selectedDueDate, setSelectedDueDate] = useState<Date>(new Date());
+  // const [selectedDueDate, setSelectedDueDate] = useState<Date | null>();
   const [selectedRooms, setSelectedRooms] = useState<Database['public']['Tables']['Rooms']['Row'][]>([]);
 
   useEffect(() => {
     getTags().then(setAllTags).catch((err) => displayError(err, "fetching tags"));
     getRooms(props.propertyId).then(setAllRooms).catch((err) => displayError(err, "fetching tags"));
   }, [props.propertyId])
+
+  const doFiltering = async () => {
+    let tasksWithTags;
+    try {
+      tasksWithTags = await getTasksAndTagsOfProperty(props.propertyId);
+    } catch (err) {
+      displayError(err, "fetch tasks and their corresponding tags");
+      return;
+    }
+
+    props.setFilteredTasks(tasksWithTags.filter((task) => {
+      let passes = true;
+      if (selectedTags.length > 0) {
+        passes = passes && selectedTags.some((tag) => task.TasksWithTags.some((taskTag) => taskTag.tag_name === tag.tag_name));
+      }
+      if (selectedRooms.length > 0) {
+        passes = passes && selectedRooms.some((room) => task.room_id === room.room_id);
+      }
+      return passes;
+    }))
+  }
 
   return (
     <div>
@@ -42,7 +66,10 @@ export default function Filters(props: FiltersProps) {
       </Button>
       <Dialog
         open={dialogOpen}
-        onClose={() => setDialogOpen(false)}
+        onClose={async () => {
+          await doFiltering();
+          setDialogOpen(false)
+        }}
         maxWidth='md'
       >
         <DialogTitle>Filter</DialogTitle>
@@ -52,7 +79,9 @@ export default function Filters(props: FiltersProps) {
               <Col>
                 <Typography><b>Tags</b></Typography>
                 {allTags.map((tag) => <FormControlLabel
-                  control={<Checkbox />}
+                  control={<Checkbox
+                    checked={selectedTags.some((t) => t.tag_name === tag.tag_name)}
+                  />}
                   label={tag.tag_name}
                   key={tag.tag_name}
                   onChange={(event) => {
@@ -76,7 +105,9 @@ export default function Filters(props: FiltersProps) {
               <Col>
                 <Typography><b>Rooms</b></Typography>
                 {allRooms.map((room) => <FormControlLabel
-                  control={<Checkbox />}
+                  control={<Checkbox
+                    checked={selectedRooms.some((r) => r.room_id === room.room_id)}
+                  />}
                   label={room.name}
                   key={room.room_id}
                   onChange={(event) => {

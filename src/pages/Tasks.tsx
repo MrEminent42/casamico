@@ -91,6 +91,8 @@ const Page2 = () => {
                 <FilterandSortContainer>
                     <FilterDropdown
                         propertyId={propertyId}
+                        allTasks={allTasks}
+                        setFilteredTasks={setFilteredTasks}
                     />
 
                     <OptionsDropdown
