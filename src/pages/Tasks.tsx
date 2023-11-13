@@ -8,8 +8,6 @@ import { getProperty } from '../controllers/PropertyController';
 import AddTask from './AddTask';
 import Popup from '../components/Popup';
 import { Database } from "../supabase/supabase";
-import TaskCard from '../components/Task';
-import CompletedTaskCard from '../components/CompletedTask';
 import FilterDropdown from '../components/FilterDropdown';
 import SortDropdown from '../components/SortDropdown'
 import OptionsDropdown from '../components/OptionsDropdown';
