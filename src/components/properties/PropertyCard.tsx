@@ -196,6 +196,9 @@ const CardTitle = styled.div`
     margin: 5px 0px;
     color: #4c4c4c;
     text-align: left;
+    -ms-word-break: break-word;
+    word-break: break-word;
+    white-space: pre-wrap;
 `
 
 const CardText = styled.div`
