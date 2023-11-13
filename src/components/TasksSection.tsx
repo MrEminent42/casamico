@@ -10,7 +10,7 @@ const TasksSection = (props: {
 }) => {
     return (
         <TaskListSectionContainer>
-            <SectionLabel>{props.sectionLabel}</SectionLabel>
+            <SectionLabel>{props.sectionLabel} ({props.tasks.length})</SectionLabel>
             {props.tasks.length === 0 && <NoTasks>{props.noTaskMsg}</NoTasks>}
             {
                 props.tasks.map((task) => (
