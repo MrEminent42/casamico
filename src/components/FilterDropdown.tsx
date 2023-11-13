@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useState, useEffect } from 'react';
 import { styled, alpha } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import Menu, { MenuProps } from '@mui/material/Menu';
@@ -6,103 +6,69 @@ import MenuItem from '@mui/material/MenuItem';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import Checkbox from '@mui/material/Checkbox';
 import { DropdownStyling } from '../pages/Tasks';
+import ChevronRight from '@mui/icons-material/ChevronRight';
+import { ButtonGroup, Dialog, DialogContent, DialogContentText, DialogTitle, FormControl, FormControlLabel, FormGroup, FormLabel, Typography } from '@mui/material';
+import { getTags } from '../controllers/TagController';
+import { displayError } from '../App';
+import { Database } from '../supabase/supabase';
+import { getRooms } from '../controllers/RoomController';
 
-const StyledMenu = styled((props: MenuProps) => (
-  <Menu
-    elevation={0}
-    anchorOrigin={{
-      vertical: 'bottom',
-      horizontal: 'left',
-    }}
-    transformOrigin={{
-      vertical: 'top',
-      horizontal: 'right',
-    }}
-    {...props}
-  />
-))(({ theme }) => ({
-  //edits textbox dropdown styling
-  '& .MuiPaper-root': {
-    // borderRadius: 6,
-    // marginTop: theme.spacing(1),
-    // minWidth: 180,
-    // color: '#5F5F5F',
-    // boxShadow:
-    //   'rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px',
-    // '& .MuiMenu-list': {
-    //   padding: '4px 0',
-    // },
-    // //edits styling for the boxes
-    // '& .MuiMenuItem-root': {
-    //   '& .MuiSvgIcon-root': {
-    //     fontSize: 18,
-    //     color: 'theme.palette.text.secondary',
-    //     marginRight: theme.spacing(1.5),
-    //   },
-    //   '&:active': {
-    //     backgroundColor: alpha(
-    //       theme.palette.primary.main,
-    //       theme.palette.action.selectedOpacity,
-    //     ),
-    //   },
-    // },
-  },
-}));
 
-export default function CustomizedMenus() {
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+interface FiltersProps {
+  propertyId: number
+}
+
+export default function Filters(props: FiltersProps) {
+
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  const [allTags, setAllTags] = useState<Database['public']['Tables']['Tags']['Row'][]>([]);
+  const [allRooms, setAllRooms] = useState<Database['public']['Tables']['Rooms']['Row'][]>([]);
+  const [selectedTags, setSelectedTags] = useState<String[]>([]);
+  const [selectedDueDate, setSelectedDueDate] = useState<Date>(new Date());
+
+  useEffect(() => {
+    getTags().then(setAllTags).catch((err) => displayError(err, "fetching tags"));
+    getRooms(props.propertyId).then(setAllRooms).catch((err) => displayError(err, "fetching tags"));
+  }, [])
 
   return (
     <div>
       <Button
-        // id="demo-customized-button"
-        aria-controls={open ? 'demo-customized-menu' : undefined}
-        aria-haspopup="true"
-        aria-expanded={open ? 'true' : undefined}
-        variant="contained"
+        variant='contained'
         disableElevation
-        onClick={handleClick}
-        endIcon={<KeyboardArrowDownIcon />}
-        //styling at the bottom of the Tasks.tsx page
-        sx={
-          DropdownStyling
-        }
+        color='secondary'
+        onClick={() => setDialogOpen(true)}
       >
         Filter
+        <ChevronRight />
       </Button>
-      <StyledMenu
-        id="demo-customized-menu"
-        MenuListProps={{
-          'aria-labelledby': 'demo-customized-button',
-        }}
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleClose}
+      <Dialog
+        open={dialogOpen}
+        onClose={() => setDialogOpen(false)}
+        maxWidth='md'
       >
-        <MenuItem onClick={handleClose} disableRipple>
-          <BasicCheckbox />
-          Completed
-        </MenuItem>
-        <MenuItem onClick={handleClose} disableRipple>
-          <BasicCheckbox />
-          Due in 1 week
-        </MenuItem>
-        <MenuItem onClick={handleClose} disableRipple>
-          <BasicCheckbox />
-          Overdue
-        </MenuItem>
-        <MenuItem onClick={handleClose} disableRipple>
-          <BasicCheckbox />
-          Tag
-        </MenuItem>
-      </StyledMenu>
+        <DialogTitle>Filter</DialogTitle>
+        <DialogContent>
+          <FormGroup>
+            <DialogColumns>
+              <Col>
+                <Typography><b>Tags</b></Typography>
+                {allTags.map((tag) => <FormControlLabel control={<Checkbox />} label={tag.tag_name} key={tag.tag_name} />)}
+
+              </Col>
+              <Col>
+                <Typography><b>Due Date</b></Typography>
+              </Col>
+              <Col>
+                <Typography><b>Rooms</b></Typography>
+                {allRooms.map((room) => <FormControlLabel control={<Checkbox />} label={room.name} key={room.room_id} />)}
+              </Col>
+            </DialogColumns>
+          </FormGroup>
+
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
@@ -110,4 +76,17 @@ export default function CustomizedMenus() {
 const BasicCheckbox = styled(Checkbox)`
     margin: 0;
     padding: 0;
+`
+
+const DialogColumns = styled('div')`
+  // 3 columns
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: auto;
+  gap: 10px;
+`
+
+const Col = styled('div')`
+  display: flex;
+  flex-direction: column;
 `

@@ -9,11 +9,11 @@ import AddTask from './AddTask';
 import Popup from '../components/Popup';
 import { Database } from "../supabase/supabase";
 import FilterDropdown from '../components/FilterDropdown';
-import SortDropdown from '../components/SortDropdown'
 import OptionsDropdown from '../components/OptionsDropdown';
 
 import TasksSection from '../components/TasksSection';
 import { displayError } from '../App';
+import { getTags } from '../controllers/TagController';
 
 const Page2 = () => {
 
@@ -21,7 +21,10 @@ const Page2 = () => {
     const [propertyId, setPropertyId] = useState<number>(0);
     const [property, setProperty] = useState<Database['public']['Tables']['Properties']['Row'] | null>(null);
     const params = useParams();
-    const [tasks, setTasks] = useState<Database['public']['Tables']['Tasks']['Row'][]>([]);
+    const [allTasks, setAllTasks] = useState<Database['public']['Tables']['Tasks']['Row'][]>([]);
+    const [filteredTasks, setFilteredTasks] = useState<Database['public']['Tables']['Tasks']['Row'][]>([]);
+
+    const [filters, setFilters] = useState<((task: Database['public']['Tables']['Tasks']['Row']) => boolean)[]>([]);
 
     // this when propertyId is changed (when the page changes)
     useEffect(() => {
@@ -38,13 +41,17 @@ const Page2 = () => {
         }
     }, [params.id, navigate])
 
+    useEffect(() => {
+        reFilter(() => true);
+    }, [allTasks])
+
     const fetchTasks = async () => {
         if (propertyId) {
             try {
                 // fetch property and tasks in parallel
                 let [property, tasks] = await Promise.all([getProperty(propertyId), getTasksOfProperty(propertyId)]);
                 setProperty(property);
-                setTasks(tasks);
+                setAllTasks(tasks);
             } catch (err) {
                 displayError(err, "loading property info & tasks");
                 navigate('/');
@@ -57,12 +64,17 @@ const Page2 = () => {
         try {
             const updatedTask = await toggleTaskStatus(task.task_id, task.completed);
             // update the task in the state
-            setTasks(tasks.map((t) => (t.task_id === updatedTask.task_id ? updatedTask : t)));
+            setFilteredTasks(filteredTasks.map((t) => (t.task_id === updatedTask.task_id ? updatedTask : t)));
         } catch (error) {
             displayError(error, "toggle task completion status")
         }
     }
 
+    const reFilter = (
+        filterPredicate: (option: Database['public']['Tables']['Tasks']['Row']) => boolean
+    ) => {
+        setFilteredTasks(allTasks.filter(filterPredicate));
+    }
 
     return (
         <>
@@ -79,8 +91,7 @@ const Page2 = () => {
                 </HouseContainer>
                 <FilterandSortContainer>
                     <FilterDropdown
-                    />
-                    <SortDropdown
+                        propertyId={propertyId}
                     />
 
                     <OptionsDropdown
@@ -91,7 +102,7 @@ const Page2 = () => {
                                 label: 'Due date',
                                 onClick: (selected) => {
                                     if (selected) {
-                                        setTasks(tasks.concat().sort((a, b) => (Date.parse(a.due_date) > Date.parse(b.due_date)) ? 1 : -1))
+                                        setFilteredTasks(filteredTasks.concat().sort((a, b) => (Date.parse(a.due_date) > Date.parse(b.due_date)) ? 1 : -1))
                                     }
                                 }
                             },
@@ -100,7 +111,7 @@ const Page2 = () => {
                                 label: 'Title',
                                 onClick: (selected) => {
                                     if (selected) {
-                                        setTasks(tasks.concat().sort((a, b) => a.title.localeCompare(b.title)))
+                                        setFilteredTasks(filteredTasks.concat().sort((a, b) => a.title.localeCompare(b.title)))
                                     }
                                 }
                             }
@@ -110,13 +121,13 @@ const Page2 = () => {
                 </FilterandSortContainer>
                 <TasksSection
                     sectionLabel='To Do'
-                    tasks={tasks.filter((task) => !task.completed)}
+                    tasks={filteredTasks.filter((task) => !task.completed)}
                     handleClick={handleToggle}
                     noTaskMsg="No Tasks 🎉"
                 />
                 <TasksSection
                     sectionLabel="Completed"
-                    tasks={tasks.filter((task) => task.completed)}
+                    tasks={filteredTasks.filter((task) => task.completed)}
                     handleClick={handleToggle}
                     noTaskMsg="No Tasks Completed Yet 🏗️"
                 />
