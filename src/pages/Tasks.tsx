@@ -13,7 +13,6 @@ import OptionsDropdown from '../components/OptionsDropdown';
 
 import TasksSection from '../components/TasksSection';
 import { displayError } from '../App';
-import { getTags } from '../controllers/TagController';
 
 const Page2 = () => {
 

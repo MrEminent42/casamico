@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { styled, alpha } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import ChevronRight from '@mui/icons-material/ChevronRight';
@@ -27,7 +27,7 @@ export default function Filters(props: FiltersProps) {
   useEffect(() => {
     getTags().then(setAllTags).catch((err) => displayError(err, "fetching tags"));
     getRooms(props.propertyId).then(setAllRooms).catch((err) => displayError(err, "fetching tags"));
-  }, [])
+  }, [props.propertyId])
 
   return (
     <div>
@@ -89,7 +89,7 @@ export default function Filters(props: FiltersProps) {
                     if (event.target.checked) {
                       setSelectedRooms([...selectedRooms, room]);
                     } else {
-                      setSelectedRooms(selectedRooms.filter((r) => r.room_id !== r.room_id));
+                      setSelectedRooms(selectedRooms.filter((r) => r.room_id !== room.room_id));
                     }
                   }}
                 />)}
@@ -102,11 +102,6 @@ export default function Filters(props: FiltersProps) {
     </div>
   );
 }
-
-const BasicCheckbox = styled(Checkbox)`
-    margin: 0;
-    padding: 0;
-`
 
 const DialogColumns = styled('div')`
   // 3 columns
