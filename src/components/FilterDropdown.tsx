@@ -1,13 +1,9 @@
 import { useState, useEffect } from 'react';
 import { styled, alpha } from '@mui/material/styles';
 import Button from '@mui/material/Button';
-import Menu, { MenuProps } from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import Checkbox from '@mui/material/Checkbox';
-import { DropdownStyling } from '../pages/Tasks';
 import ChevronRight from '@mui/icons-material/ChevronRight';
-import { ButtonGroup, Dialog, DialogContent, DialogContentText, DialogTitle, FormControl, FormControlLabel, FormGroup, FormLabel, Typography } from '@mui/material';
+import { Dialog, DialogContent, DialogTitle, FormControlLabel, FormGroup, Typography } from '@mui/material';
 import { getTags } from '../controllers/TagController';
 import { displayError } from '../App';
 import { Database } from '../supabase/supabase';
@@ -24,8 +20,9 @@ export default function Filters(props: FiltersProps) {
 
   const [allTags, setAllTags] = useState<Database['public']['Tables']['Tags']['Row'][]>([]);
   const [allRooms, setAllRooms] = useState<Database['public']['Tables']['Rooms']['Row'][]>([]);
-  const [selectedTags, setSelectedTags] = useState<String[]>([]);
+  const [selectedTags, setSelectedTags] = useState<Database['public']['Tables']['Tags']['Row'][]>([]);
   const [selectedDueDate, setSelectedDueDate] = useState<Date>(new Date());
+  const [selectedRooms, setSelectedRooms] = useState<Database['public']['Tables']['Rooms']['Row'][]>([]);
 
   useEffect(() => {
     getTags().then(setAllTags).catch((err) => displayError(err, "fetching tags"));
@@ -54,15 +51,48 @@ export default function Filters(props: FiltersProps) {
             <DialogColumns>
               <Col>
                 <Typography><b>Tags</b></Typography>
-                {allTags.map((tag) => <FormControlLabel control={<Checkbox />} label={tag.tag_name} key={tag.tag_name} />)}
-
+                {allTags.map((tag) => <FormControlLabel
+                  control={<Checkbox />}
+                  label={tag.tag_name}
+                  key={tag.tag_name}
+                  onChange={(event) => {
+                    /*
+                    There's a bug in MUI here where `event.target.checked` doesn't
+                    exist in the Types, so VS Code and the compiler thinks this is
+                    an error. It's not, so we use @ts-ignore to ignore the error.
+                    */
+                    // @ts-ignore
+                    if (event.target.checked) {
+                      setSelectedTags([...selectedTags, tag]);
+                    } else {
+                      setSelectedTags(selectedTags.filter((t) => t.tag_name !== tag.tag_name));
+                    }
+                  }}
+                />)}
               </Col>
               <Col>
                 <Typography><b>Due Date</b></Typography>
               </Col>
               <Col>
                 <Typography><b>Rooms</b></Typography>
-                {allRooms.map((room) => <FormControlLabel control={<Checkbox />} label={room.name} key={room.room_id} />)}
+                {allRooms.map((room) => <FormControlLabel
+                  control={<Checkbox />}
+                  label={room.name}
+                  key={room.room_id}
+                  onChange={(event) => {
+                    /*
+                    There's a bug in MUI here where `event.target.checked` doesn't
+                    exist in the Types, so VS Code and the compiler thinks this is
+                    an error. It's not, so we use @ts-ignore to ignore the error.
+                    */
+                    // @ts-ignore
+                    if (event.target.checked) {
+                      setSelectedRooms([...selectedRooms, room]);
+                    } else {
+                      setSelectedRooms(selectedRooms.filter((r) => r.room_id !== r.room_id));
+                    }
+                  }}
+                />)}
               </Col>
             </DialogColumns>
           </FormGroup>
