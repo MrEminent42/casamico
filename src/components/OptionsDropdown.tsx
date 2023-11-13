@@ -29,14 +29,17 @@ const OptionsDropdown = (props: {
     };
 
     const handleOptionClick = (option: DropdownOption) => {
-        option.onClick(selected.includes(option));
+        let currentlySelected = selected.some((other) => option.id === other.id);
+        let futureSelected = !currentlySelected;
+
+        option.onClick(futureSelected);
         if (props.multiple) {
             // if the option is already selected, remove it from the list of selected options
-            setSelected(selected.includes(option) ? selected.filter((item) => !(item === option)) : [...selected, option]);
+            setSelected(currentlySelected ? selected.filter((item) => !(item === option)) : [...selected, option]);
         } else {
             // in the case that this is not a multi-select dropdown, 
             // we only want to allow one option to be selected at a time
-            setSelected(selected.includes(option) ? [] : [option]);
+            setSelected(currentlySelected ? [] : [option]);
         }
     }
 
@@ -63,7 +66,7 @@ const OptionsDropdown = (props: {
                         onClick={() => handleOptionClick(option)}
                         key={option.id}
                     >
-                        <BasicCheckbox checked={selected.includes(option)} />
+                        <BasicCheckbox checked={selected.some((item) => item.id === option.id)} />
                         {option.label}
                     </MenuItem>
                 )}
