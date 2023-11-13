@@ -23,8 +23,6 @@ const Page2 = () => {
     const [allTasks, setAllTasks] = useState<Database['public']['Tables']['Tasks']['Row'][]>([]);
     const [filteredTasks, setFilteredTasks] = useState<Database['public']['Tables']['Tasks']['Row'][]>([]);
 
-    const [filters, setFilters] = useState<((task: Database['public']['Tables']['Tasks']['Row']) => boolean)[]>([]);
-
     // this when propertyId is changed (when the page changes)
     useEffect(() => {
         fetchTasks();
@@ -39,10 +37,6 @@ const Page2 = () => {
             setPropertyId(+params.id);
         }
     }, [params.id, navigate])
-
-    useEffect(() => {
-        reFilter(() => true);
-    }, [allTasks])
 
     const fetchTasks = async () => {
         if (propertyId) {
@@ -67,12 +61,6 @@ const Page2 = () => {
         } catch (error) {
             displayError(error, "toggle task completion status")
         }
-    }
-
-    const reFilter = (
-        filterPredicate: (option: Database['public']['Tables']['Tasks']['Row']) => boolean
-    ) => {
-        setFilteredTasks(allTasks.filter(filterPredicate));
     }
 
     return (
