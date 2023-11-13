@@ -25,17 +25,7 @@ const Page2 = () => {
 
     // this when propertyId is changed (when the page changes)
     useEffect(() => {
-        if (propertyId) {
-            getProperty(propertyId).then((property) => {
-                setProperty(property);
-                getTasksOfProperty(propertyId).then((tasks) => {
-                    setTasks(tasks);
-                }).catch((error) => displayError(error, "get tasks of selected property"));
-            }).catch((error) => {
-                displayError(error, "get selected property");
-                navigate('/');
-            });
-        }
+        fetchTasks();
     }, [propertyId, navigate]);
 
     // this runs whenever params.id or navigate changes
@@ -47,6 +37,21 @@ const Page2 = () => {
             setPropertyId(+params.id);
         }
     }, [params.id, navigate])
+
+    const fetchTasks = async () => {
+        if (propertyId) {
+            try {
+                // fetch property and tasks in parallel
+                let [property, tasks] = await Promise.all([getProperty(propertyId), getTasksOfProperty(propertyId)]);
+                setProperty(property);
+                setTasks(tasks);
+            } catch (err) {
+                displayError(err, "loading property info & tasks");
+                navigate('/');
+                return;
+            }
+        }
+    }
 
     const handleToggle = async (task: Database['public']['Tables']['Tasks']['Row']) => {
         try {
