@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
@@ -34,13 +34,9 @@ export default function Filters(props: FiltersProps) {
     }
   }, [props.propertyId])
 
-  // any time the list of tasks changes, we need to re-filter
-  // (also, display all tasks upon loading the page for the first time)
-  useEffect(() => {
-    doFiltering();
-  }, [props.allTasks]);
 
-  const doFiltering = async () => {
+
+  const doFiltering = useCallback(async () => {
     let tasksWithTags;
     try {
       tasksWithTags = await getTasksAndTagsOfProperty(props.propertyId);
@@ -59,8 +55,14 @@ export default function Filters(props: FiltersProps) {
       }
       return passes;
     }))
-  }
+  }, [props, selectedRooms, selectedTags]);
 
+
+  // any time the list of tasks changes, we need to re-filter
+  // (also, display all tasks upon loading the page for the first time)
+  useEffect(() => {
+    doFiltering();
+  }, [props.allTasks, doFiltering]);
   return (
     <div>
       <Button

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import styled from 'styled-components';
 import backbuttonsvg from '../assets/arrow-left-circle.svg';
 import addbuttonsvg from "../assets/plus-button.svg";
@@ -25,11 +25,6 @@ const Page2 = () => {
     // FilterDropdown is responsible for filtering allTasks into the filteredTasks state, which are displayed.
     const [filteredTasks, setFilteredTasks] = useState<Database['public']['Tables']['Tasks']['Row'][]>([]);
 
-    // fetch info when propertyId is changed (when the page is first loaded, or when the user navigates to a different property)
-    useEffect(() => {
-        fetchTasksAndProperty();
-    }, [propertyId, navigate]);
-
     // this runs whenever params.id or navigate changes
     useEffect(() => {
         if (!params.id) {
@@ -40,7 +35,7 @@ const Page2 = () => {
         }
     }, [params.id, navigate])
 
-    const fetchTasksAndProperty = async () => {
+    const fetchTasksAndProperty = useCallback(async () => {
         if (propertyId) {
             try {
                 // fetch property and tasks in parallel
@@ -53,7 +48,12 @@ const Page2 = () => {
                 return;
             }
         }
-    }
+    }, [navigate, propertyId]);
+
+    // fetch info when propertyId is changed (when the page is first loaded, or when the user navigates to a different property)
+    useEffect(() => {
+        fetchTasksAndProperty();
+    }, [propertyId, navigate, fetchTasksAndProperty]);
 
     const handleToggleTask = async (task: Database['public']['Tables']['Tasks']['Row']) => {
         try {
