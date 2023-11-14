@@ -24,7 +24,7 @@ export default function FiltersPopup(props: Readonly<FiltersProps>) {
   const [allTags, setAllTags] = useState<Database['public']['Tables']['Tags']['Row'][]>([]);
   const [allRooms, setAllRooms] = useState<Database['public']['Tables']['Rooms']['Row'][]>([]);
   const [selectedTags, setSelectedTags] = useState<Database['public']['Tables']['Tags']['Row'][]>([]);
-  // const [selectedDueDate, setSelectedDueDate] = useState<Date | null>();
+  const [selectedDueBefore, setSelectedDueBefore] = useState<string>(new Date().toISOString());
   const [selectedRooms, setSelectedRooms] = useState<Database['public']['Tables']['Rooms']['Row'][]>([]);
 
   useEffect(() => {
@@ -32,9 +32,7 @@ export default function FiltersPopup(props: Readonly<FiltersProps>) {
       getTags().then(setAllTags).catch((err) => displayError(err, "fetching tags"));
       getRooms(props.propertyId).then(setAllRooms).catch((err) => displayError(err, "fetching tags"));
     }
-  }, [props.propertyId])
-
-
+  }, [props.propertyId]);
 
   const doFiltering = useCallback(async () => {
     let tasksWithTags;
@@ -53,6 +51,13 @@ export default function FiltersPopup(props: Readonly<FiltersProps>) {
       if (selectedRooms.length > 0) {
         passes = passes && selectedRooms.some((room) => task.room_id === room.room_id);
       }
+
+      if (selectedDueBefore.length > 0) {
+        const taskDue = new Date(task.due_date);
+        const selectedDueBeforeDate = new Date(selectedDueBefore);
+        passes = passes && taskDue < selectedDueBeforeDate;
+      }
+
       return passes;
     }))
   }, [props, selectedRooms, selectedTags]);
@@ -110,7 +115,11 @@ export default function FiltersPopup(props: Readonly<FiltersProps>) {
                 />)}
               </Col>
               <Col>
-                <Typography><b>Due Date</b></Typography>
+                <Typography><b>Due Before</b></Typography>
+                <input
+                  type='date'
+                  onChange={(e) => setSelectedDueBefore(e.target.value)}
+                />
               </Col>
               <Col>
                 <Typography><b>Rooms</b></Typography>
@@ -149,7 +158,7 @@ const DialogColumns = styled('div')`
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: auto;
-  gap: 10px;
+  gap: 30px;
 `
 
 const Col = styled('div')`
