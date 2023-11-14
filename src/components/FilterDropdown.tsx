@@ -17,7 +17,7 @@ interface FiltersProps {
   setFilteredTasks: (tasks: Database['public']['Tables']['Tasks']['Row'][]) => void,
 }
 
-export default function Filters(props: FiltersProps) {
+export default function Filters(props: Readonly<FiltersProps>) {
 
   const [dialogOpen, setDialogOpen] = useState(false);
 

@@ -35,7 +35,7 @@ const OptionsDropdown = (props: {
         option.onClick(futureSelected);
         if (props.multiple) {
             // if the option is already selected, remove it from the list of selected options
-            setSelected(currentlySelected ? selected.filter((item) => !(item === option)) : [...selected, option]);
+            setSelected(currentlySelected ? selected.filter((item) => item !== option) : [...selected, option]);
         } else {
             // in the case that this is not a multi-select dropdown, 
             // we only want to allow one option to be selected at a time
