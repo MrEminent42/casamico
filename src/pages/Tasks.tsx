@@ -8,7 +8,7 @@ import { getProperty } from '../controllers/PropertyController';
 import AddTask from './AddTask';
 import Popup from '../components/Popup';
 import { Database } from "../supabase/supabase";
-import FilterDropdown from '../components/FiltersPopup';
+import FiltersPopup from '../components/FiltersPopup';
 import SortDropdown from '../components/SortDropdown';
 
 import TasksSection from '../components/TasksSection';
@@ -79,12 +79,6 @@ const Page2 = () => {
                     </HouseLabel>
                 </HouseContainer>
                 <FilterandSortContainer>
-                    <FilterDropdown
-                        propertyId={propertyId}
-                        allTasks={allTasks}
-                        setFilteredTasks={setFilteredTasks}
-                    />
-
                     <SortDropdown
                         label="Sort"
                         options={[
@@ -108,6 +102,14 @@ const Page2 = () => {
                             }
                         ]}
                     />
+
+                    <FiltersPopup
+                        propertyId={propertyId}
+                        allTasks={allTasks}
+                        setFilteredTasks={setFilteredTasks}
+                    />
+
+
                     <AddButton src={addbuttonsvg} onClick={() => navigate("add")}></AddButton>
                 </FilterandSortContainer>
                 <TasksSection
