@@ -20,12 +20,14 @@ const Page2 = () => {
     const [propertyId, setPropertyId] = useState<number>(0);
     const [property, setProperty] = useState<Database['public']['Tables']['Properties']['Row'] | null>(null);
     const params = useParams();
+    // holds all tasks. these aren't displayed. 
     const [allTasks, setAllTasks] = useState<Database['public']['Tables']['Tasks']['Row'][]>([]);
+    // FilterDropdown is responsible for filtering allTasks into the filteredTasks state, which are displayed.
     const [filteredTasks, setFilteredTasks] = useState<Database['public']['Tables']['Tasks']['Row'][]>([]);
 
-    // this when propertyId is changed (when the page changes)
+    // fetch info when propertyId is changed (when the page is first loaded, or when the user navigates to a different property)
     useEffect(() => {
-        fetchTasks();
+        fetchTasksAndProperty();
     }, [propertyId, navigate]);
 
     // this runs whenever params.id or navigate changes
@@ -38,7 +40,7 @@ const Page2 = () => {
         }
     }, [params.id, navigate])
 
-    const fetchTasks = async () => {
+    const fetchTasksAndProperty = async () => {
         if (propertyId) {
             try {
                 // fetch property and tasks in parallel
@@ -53,7 +55,7 @@ const Page2 = () => {
         }
     }
 
-    const handleToggle = async (task: Database['public']['Tables']['Tasks']['Row']) => {
+    const handleToggleTask = async (task: Database['public']['Tables']['Tasks']['Row']) => {
         try {
             const updatedTask = await toggleTaskStatus(task.task_id, task.completed);
             // update the task in the state
@@ -111,13 +113,13 @@ const Page2 = () => {
                 <TasksSection
                     sectionLabel='To Do'
                     tasks={filteredTasks.filter((task) => !task.completed)}
-                    handleClick={handleToggle}
+                    handleClick={handleToggleTask}
                     noTaskMsg="No Tasks 🎉"
                 />
                 <TasksSection
                     sectionLabel="Completed"
                     tasks={filteredTasks.filter((task) => task.completed)}
-                    handleClick={handleToggle}
+                    handleClick={handleToggleTask}
                     noTaskMsg="No Tasks Completed Yet 🏗️"
                 />
             </TaskContainer>

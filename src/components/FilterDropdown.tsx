@@ -28,9 +28,17 @@ export default function Filters(props: FiltersProps) {
   const [selectedRooms, setSelectedRooms] = useState<Database['public']['Tables']['Rooms']['Row'][]>([]);
 
   useEffect(() => {
-    getTags().then(setAllTags).catch((err) => displayError(err, "fetching tags"));
-    getRooms(props.propertyId).then(setAllRooms).catch((err) => displayError(err, "fetching tags"));
+    if (props.propertyId) {
+      getTags().then(setAllTags).catch((err) => displayError(err, "fetching tags"));
+      getRooms(props.propertyId).then(setAllRooms).catch((err) => displayError(err, "fetching tags"));
+    }
   }, [props.propertyId])
+
+  // any time the list of tasks changes, we need to re-filter
+  // (also, display all tasks upon loading the page for the first time)
+  useEffect(() => {
+    doFiltering();
+  }, [props.allTasks]);
 
   const doFiltering = async () => {
     let tasksWithTags;
