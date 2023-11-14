@@ -8,8 +8,8 @@ import { getProperty } from '../controllers/PropertyController';
 import AddTask from './AddTask';
 import Popup from '../components/Popup';
 import { Database } from "../supabase/supabase";
-import FilterDropdown from '../components/FilterDropdown';
-import OptionsDropdown from '../components/OptionsDropdown';
+import FilterDropdown from '../components/FiltersPopup';
+import SortDropdown from '../components/SortDropdown';
 
 import TasksSection from '../components/TasksSection';
 import { displayError } from '../App';
@@ -85,7 +85,7 @@ const Page2 = () => {
                         setFilteredTasks={setFilteredTasks}
                     />
 
-                    <OptionsDropdown
+                    <SortDropdown
                         label="Sort"
                         options={[
                             {

@@ -11,7 +11,7 @@ interface DropdownOption {
     onClick: (newState: boolean) => void
 }
 
-const OptionsDropdown = (props: {
+const SortDropdown = (props: {
     label: string,
     options: DropdownOption[],
     multiple?: boolean,
@@ -75,7 +75,7 @@ const OptionsDropdown = (props: {
     )
 }
 
-export default OptionsDropdown
+export default SortDropdown
 
 
 const BasicCheckbox = styled(Checkbox)`
