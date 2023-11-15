@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { addTask, getTask } from '../controllers/TaskController';
-import { createTag, getTags } from '../controllers/TagController';
+import { createTag, getTags, getTag } from '../controllers/TagController';
 import AsyncCreateableSelect from 'react-select/async-creatable';
 import AsyncSelect from 'react-select/async';
-import { getRooms } from '../controllers/RoomController';
+import { getRooms, getRoom } from '../controllers/RoomController';
 import { Database } from '../supabase/supabase';
 import { Link, useParams } from 'react-router-dom';
 import ColorPickerCard from '../components/ColorPickerCard';
-import { addTaskWithTags } from '../controllers/TasksWithTagsController';
+import { addTaskWithTags, getTagsOfTask } from '../controllers/TasksWithTagsController';
 import { displayError } from '../App';
 
 
@@ -48,12 +48,32 @@ const AddTask = (props: AddTaskProps) => {
         async function fillBoxes(task_id: number) {
             const task = await getTask(task_id);
             setTitle(task.title);
+            setDueDate(task.due_date);
+            setDescription(task.description);
+            setDone(task.completed);
+            setColors(colors.map((color) => {
+                if (color.color === task.color) {
+                    return { color: color.color, selected: true };
+                }
+                return { color: color.color, selected: false };
+            }));
+            
+            const room = await getRoom(task.room_id);
+            console.log(room)
+            setSelectedRoom(room);
+
+            const tags_of_task = await getTagsOfTask(task_id);
+            const tags = await Promise.all(tags_of_task.map(async (tag_of_task) => {
+                return await getTag(tag_of_task.tag_name);
+            }));
+            setSelectedTags(tags);
         }
 
-        if (params.id) {
-            getTask(+params.id);
+        if (params.taskid) {
+            fillBoxes(+params.taskid);
         }
-    }, [params.id]);
+
+    }, [params.id])
 
 
     const handleColorClick = (color: string) => {
@@ -177,6 +197,7 @@ const AddTask = (props: AddTaskProps) => {
                 <label>
                     Room
                     <AsyncSelect
+                        value={selectedRoom}
                         cacheOptions
                         defaultOptions
                         loadOptions={() => getRooms(props.property_id)}
@@ -201,6 +222,7 @@ const AddTask = (props: AddTaskProps) => {
 
                 Tag
                 <AsyncCreateableSelect
+                    value={selectedTags}
                     isMulti
                     cacheOptions
                     createOptionPosition='first'

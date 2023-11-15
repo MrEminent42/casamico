@@ -107,7 +107,7 @@ const Page2 = () => {
                         element={<AddTask goBack={() => navigate("")} property_id={propertyId} />}
                     />
                 } />
-                <Route path="edit-task/:id/*" element={
+                <Route path="edit-task/:taskid/*" element={
                     <Popup
                         onClickOutside={() => navigate("")}
                         onKeyboardEsc={() => navigate("")}
