@@ -22,25 +22,31 @@ const AddTask = (props: AddTaskProps) => {
 
     const [selectedTags, setSelectedTags] = useState<readonly Database['public']['Tables']['Tags']['Row'][]>([]);
     const [selectedRoom, setSelectedRoom] = useState<Database['public']['Tables']['Rooms']['Row'] | null>();
+    const [selectedColor, setSelectedColor] = useState<string>("#fca5a5");
 
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [dueDate, setDueDate] = useState("");
     const [done, setDone] = useState(false);
+    const [taskId, setTaskId] = useState<number | null>(null);
 
-    const [colors, setColors] = useState(() => {
-        return [
-            { color: "#fca5a5", selected: true },
-            { color: "#fdba74", selected: false },
-            { color: "#fde047", selected: false },
-            { color: "#d9f99d", selected: false },
-            { color: "#6ee7b7", selected: false },
-            { color: "#67e8f9", selected: false },
-            { color: "#93c5fd", selected: false },
-            { color: "#c4b5fd", selected: false },
-            { color: "#f0abfc", selected: false },
-        ];
-    });
+    const colors = [
+        { hex: "#fca5a5" },
+        { hex: "#fdba74" },
+        { hex: "#fde047" },
+        { hex: "#d9f99d" },
+        { hex: "#6ee7b7" },
+        { hex: "#67e8f9" },
+        { hex: "#93c5fd" },
+        { hex: "#c4b5fd" },
+        { hex: "#f0abfc" },
+    ];
+
+    useEffect(() => {
+        if (params.taskid) {
+            setTaskId(+params.taskid);
+        }
+    }, [params])
 
     // if the task already exists, populate the fields
     useEffect(() => {
@@ -50,15 +56,9 @@ const AddTask = (props: AddTaskProps) => {
             setDueDate(task.due_date);
             setDescription(task.description);
             setDone(task.completed);
-            setColors(colors.map((color) => {
-                if (color.color === task.color) {
-                    return { color: color.color, selected: true };
-                }
-                return { color: color.color, selected: false };
-            }));
-            
+            setSelectedColor(task.color)
+
             const room = await getRoom(task.room_id);
-            console.log(room)
             setSelectedRoom(room);
 
             const tags_of_task = await getTagsOfTask(task_id);
@@ -68,22 +68,15 @@ const AddTask = (props: AddTaskProps) => {
             setSelectedTags(tags);
         }
 
-        if (params.taskid) {
-            fillBoxes(+params.taskid);
+        if (taskId) {
+            fillBoxes(taskId);
         }
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, [taskId])
 
 
     const handleColorClick = (color: string) => {
-        let newColors = colors.map((c) => {
-            if (c.color === color) {
-                return { color: c.color, selected: true };
-            }
-            return { color: c.color, selected: false };
-        });
-        setColors(newColors);
+        setSelectedColor(color);
     }
 
     const updateTagsIfNecessary = async () => {
@@ -138,7 +131,7 @@ const AddTask = (props: AddTaskProps) => {
             due_date: dueDate,
             property_id: props.property_id,
             room_id: selectedRoom.room_id,
-            color: colors.filter((color) => color.selected)[0].color,
+            color: selectedColor,
             completed: done,
         }
 
@@ -178,6 +171,10 @@ const AddTask = (props: AddTaskProps) => {
         })
     }
 
+    const renderNoRooms = () => {
+        return <div>No rooms found. <Link to={"/"}>Create a new room first.</Link></div>
+    }
+
     return (
         <AddPropertyForm onSubmit={handleSubmit}>
             {/* Row 0 */}
@@ -214,7 +211,7 @@ const AddTask = (props: AddTaskProps) => {
                         cacheOptions
                         defaultOptions
                         loadOptions={() => getRooms(props.property_id)}
-                        noOptionsMessage={() => <div>No rooms found. <Link to={"/"}>Create a new room first.</Link></div>}
+                        noOptionsMessage={renderNoRooms}
                         onChange={(selected) => setSelectedRoom(selected)}
                         getOptionLabel={(option) => option.name}
                         getOptionValue={(option) => option.name}
@@ -273,9 +270,9 @@ const AddTask = (props: AddTaskProps) => {
                     {colors.map((color) => {
                         return (
                             <ColorPickerCard
-                                key={color.color}
-                                color={color.color}
-                                selected={color.selected}
+                                key={color.hex}
+                                color={color.hex}
+                                selected={selectedColor === color.hex}
                                 handleColorClick={handleColorClick}
                             />
                         )
