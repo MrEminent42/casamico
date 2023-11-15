@@ -53,6 +53,21 @@ export default function SortFilterPopup(props: Readonly<SortFilterProps>) {
     setDialogOpen(false)
   }
 
+  const renderResetButton = () => {
+    return (
+      <IconButton
+        onClick={() => {
+          setSelectedDueBefore("");
+          setSelectedRooms([]);
+          setSelectedTags([]);
+          setSelectedSort(null);
+        }}
+        sx={{ m: '0 5px' }}>
+        <RotateLeftIcon />
+      </IconButton>
+    )
+  }
+
   return (
     <div>
       <Button
@@ -64,16 +79,7 @@ export default function SortFilterPopup(props: Readonly<SortFilterProps>) {
         Sort & Filter
         <ChevronRight />
       </Button>
-      <IconButton
-        onClick={() => {
-          setSelectedDueBefore("");
-          setSelectedRooms([]);
-          setSelectedTags([]);
-          setSelectedSort(null);
-        }}
-        sx={{ ml: '5px' }}>
-        <RotateLeftIcon />
-      </IconButton>
+      {renderResetButton()}
       <Dialog
         open={dialogOpen}
         onClose={handleClose}
@@ -166,7 +172,9 @@ export default function SortFilterPopup(props: Readonly<SortFilterProps>) {
             variant='contained'
             sx={{ alignSelf: 'flex-end' }}
             onClick={handleClose}
+            disableElevation
           >Done</Button>
+          {renderResetButton()}
         </DialogContent>
       </Dialog>
     </div>
