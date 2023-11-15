@@ -77,3 +77,16 @@ export const toggleTaskStatus = async (task_id: number, status: boolean) => {
 
     return res.data;
 }
+
+export const getTasksAndTagsOfProperty = async (propertyId: number) => {
+    const res = await supabase
+        .from('Tasks')
+        .select('*, TasksWithTags!left(task_id, tag_name)')
+        .eq('property_id', propertyId)
+
+    if (res.error) {
+        throw (res.error);
+    }
+
+    return res.data;
+}
