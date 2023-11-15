@@ -83,9 +83,14 @@ export const deleteProperty = async (property_id: number, image_url: string) => 
         throw (error);
     }
 
-    await deletePropertyPhoto(image_url.substring(image_url.lastIndexOf('/') + 1))
-        .catch(error => { throw (error) });
+    //delete property photo ONLY IF it is not the default
+    image_url = image_url.substring(image_url.lastIndexOf('/') + 1);
+    if (image_url !== "default_house.png") {
+        await deletePropertyPhoto(image_url)
+            .catch(error => { throw (error) });
+    }
 }
+    
 
 //store given file in the database Property Photos bucket
 export const storePropertyPhoto = async (photo: File) => {
