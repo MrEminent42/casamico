@@ -2,7 +2,6 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import Checkbox from '@mui/material/Checkbox';
 import { Database } from '../supabase/supabase';
-import { useNavigate } from 'react-router-dom';
 
 function hexToRgb(hex: string, alpha: number) {
     const r = parseInt(hex.substring(1, 3), 16);
@@ -20,7 +19,6 @@ interface TaskProps {
 const TaskCard = ({ task, handleClick, handleBoxClick }: TaskProps) => {
     const [isComplete, setIsComplete] = useState(task.completed);
     const currentDate = new Date();
-    let navigate = useNavigate();
 
     const handleCheckboxClick = () => {
         setIsComplete(!isComplete);

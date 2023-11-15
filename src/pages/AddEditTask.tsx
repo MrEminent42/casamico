@@ -72,8 +72,9 @@ const AddTask = (props: AddTaskProps) => {
         if (params.taskid) {
             fillBoxes(+params.taskid);
         }
-
-    }, [params.id])
+        
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
 
     const handleColorClick = (color: string) => {
