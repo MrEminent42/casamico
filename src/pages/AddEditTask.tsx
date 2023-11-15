@@ -44,7 +44,6 @@ const AddTask = (props: AddTaskProps) => {
 
     // if the task already exists, populate the fields
     useEffect(() => {
-        console.log(params)
         async function fillBoxes(task_id: number) {
             const task = await getTask(task_id);
             setTitle(task.title);
