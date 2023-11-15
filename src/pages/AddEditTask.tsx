@@ -1,15 +1,16 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { addTask } from '../controllers/TaskController';
+import { addTask, getTask } from '../controllers/TaskController';
 import { createTag, getTags } from '../controllers/TagController';
 import AsyncCreateableSelect from 'react-select/async-creatable';
 import AsyncSelect from 'react-select/async';
 import { getRooms } from '../controllers/RoomController';
 import { Database } from '../supabase/supabase';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import ColorPickerCard from '../components/ColorPickerCard';
 import { addTaskWithTags } from '../controllers/TasksWithTagsController';
 import { displayError } from '../App';
+
 
 interface AddTaskProps {
     goBack: () => void;
@@ -17,6 +18,7 @@ interface AddTaskProps {
 }
 
 const AddTask = (props: AddTaskProps) => {
+    const params = useParams();
 
     const [selectedTags, setSelectedTags] = useState<readonly Database['public']['Tables']['Tags']['Row'][]>([]);
     const [selectedRoom, setSelectedRoom] = useState<Database['public']['Tables']['Rooms']['Row'] | null>();
@@ -39,6 +41,20 @@ const AddTask = (props: AddTaskProps) => {
             { color: "#f0abfc", selected: false },
         ];
     });
+
+    // if the task already exists, populate the fields
+    useEffect(() => {
+        console.log(params)
+        async function fillBoxes(task_id: number) {
+            const task = await getTask(task_id);
+            setTitle(task.title);
+        }
+
+        if (params.id) {
+            getTask(+params.id);
+        }
+    }, [params.id]);
+
 
     const handleColorClick = (color: string) => {
         let newColors = colors.map((c) => {

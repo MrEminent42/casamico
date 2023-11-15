@@ -6,7 +6,7 @@ import TaskViewButton from '../components/TaskViewButton';
 import { Route, Routes, useNavigate, useParams } from 'react-router';
 import { getTasksOfProperty, toggleTaskStatus } from '../controllers/TaskController';
 import { getProperty } from '../controllers/PropertyController';
-import AddTask from './AddTask';
+import AddTask from './AddEditTask';
 import Popup from '../components/Popup';
 import { Database } from "../supabase/supabase";
 import TasksSection from '../components/TasksSection';
@@ -85,18 +85,29 @@ const Page2 = () => {
                 <TasksSection
                     sectionLabel='To Do'
                     tasks={tasks.filter((task) => !task.completed)}
-                    handleClick={handleToggle}
+                    handleClick={
+                        (task) => navigate("edit-task/" + task.task_id)
+                    }
                     handleBoxClick={handleToggle}
                 />
                 <TasksSection
                     sectionLabel="Completed"
                     tasks={tasks.filter((task) => task.completed)}
-                    handleClick={handleToggle}
+                    handleClick={
+                        (task) => navigate("edit-task/" + task.task_id)
+                    }
                     handleBoxClick={handleToggle}
                 />
             </TaskContainer>
             <Routes>
                 <Route path="add" element={
+                    <Popup
+                        onClickOutside={() => navigate("")}
+                        onKeyboardEsc={() => navigate("")}
+                        element={<AddTask goBack={() => navigate("")} property_id={propertyId} />}
+                    />
+                } />
+                <Route path="edit-task/:id/*" element={
                     <Popup
                         onClickOutside={() => navigate("")}
                         onKeyboardEsc={() => navigate("")}
