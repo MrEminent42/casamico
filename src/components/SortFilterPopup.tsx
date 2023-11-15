@@ -5,12 +5,13 @@ import Checkbox from '@mui/material/Checkbox';
 import ChevronRight from '@mui/icons-material/ChevronRight';
 import {
   Dialog, DialogContent, DialogTitle, FormControlLabel,
-  FormGroup, RadioGroup, Radio, FormLabel
+  FormGroup, RadioGroup, Radio, FormLabel, IconButton
 } from '@mui/material';
 import { getTags } from '../controllers/TagController';
 import { displayError } from '../App';
 import { Database } from '../supabase/supabase';
 import { getRooms } from '../controllers/RoomController';
+import RotateLeftIcon from '@mui/icons-material/RotateLeft';
 
 interface SortFilterProps {
   propertyId: number,
@@ -63,6 +64,16 @@ export default function SortFilterPopup(props: Readonly<SortFilterProps>) {
         Sort & Filter
         <ChevronRight />
       </Button>
+      <IconButton
+        onClick={() => {
+          setSelectedDueBefore("");
+          setSelectedRooms([]);
+          setSelectedTags([]);
+          setSelectedSort(null);
+        }}
+        sx={{ ml: '5px' }}>
+        <RotateLeftIcon />
+      </IconButton>
       <Dialog
         open={dialogOpen}
         onClose={handleClose}
