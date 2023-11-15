@@ -12,10 +12,8 @@ import { displayError } from '../App';
 import { Database } from '../supabase/supabase';
 import { getRooms } from '../controllers/RoomController';
 
-
 interface SortFilterProps {
   propertyId: number,
-  // allTasks: Database['public']['Tables']['Tasks']['Row'][],
 
   selectedTags: Database['public']['Tables']['Tags']['Row'][],
   setSelectedTags: React.Dispatch<React.SetStateAction<Database['public']['Tables']['Tags']['Row'][]>>,
@@ -31,10 +29,8 @@ interface SortFilterProps {
 
 export default function SortFilterPopup(props: Readonly<SortFilterProps>) {
   const {
-    // propertyId,
-    // allTasks,
+    propertyId,
     selectedTags, setSelectedTags,
-    // selectedDueBefore, 
     setSelectedDueBefore,
     selectedRooms, setSelectedRooms,
     selectedSort, setSelectedSort,
@@ -46,11 +42,11 @@ export default function SortFilterPopup(props: Readonly<SortFilterProps>) {
   const [allRooms, setAllRooms] = useState<Database['public']['Tables']['Rooms']['Row'][]>([]);
 
   useEffect(() => {
-    if (props.propertyId) {
+    if (propertyId) {
       getTags().then(setAllTags).catch((err) => displayError(err, "fetching tags"));
-      getRooms(props.propertyId).then(setAllRooms).catch((err) => displayError(err, "fetching tags"));
+      getRooms(propertyId).then(setAllRooms).catch((err) => displayError(err, "fetching tags"));
     }
-  }, [props.propertyId]);
+  }, [propertyId]);
 
   const handleClose = async () => {
     setDialogOpen(false)

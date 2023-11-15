@@ -125,33 +125,8 @@ const Page2 = () => {
                     </HouseLabel>
                 </HouseContainer>
                 <FilterandSortContainer>
-                    {/* <SortDropdown
-                        label="Sort"
-                        options={[
-                            {
-                                id: 0,
-                                label: 'Due date',
-                                onClick: (selected) => {
-                                    if (selected) {
-                                        setAllTasks(allTasks.concat().sort((a, b) => (Date.parse(a.due_date) > Date.parse(b.due_date)) ? 1 : -1))
-                                    }
-                                }
-                            },
-                            {
-                                id: 1,
-                                label: 'Title',
-                                onClick: (selected) => {
-                                    if (selected) {
-                                        setAllTasks(allTasks.concat().sort((a, b) => a.title.localeCompare(b.title)))
-                                    }
-                                }
-                            }
-                        ]}
-                    /> */}
-
                     <SortFilterPopup
                         propertyId={propertyId}
-                        // allTasks={allTasks}
                         sortOptions={Array.from(sortOptions.keys())}
 
                         selectedTags={selectedTags}
