@@ -12,6 +12,7 @@ import SortFilterPopup from '../components/SortFilterPopup';
 
 import TasksSection from '../components/TasksSection';
 import { displayError } from '../App';
+import TripsButtons from '../components/TripsButtons';
 
 
 const Page2 = () => {
@@ -138,6 +139,11 @@ const Page2 = () => {
                         setSelectedDueBefore={setSelectedDueBefore}
                         selectedSort={selectedSort}
                         setSelectedSort={setSelectedSort}
+                    />
+                    <div style={{ flexGrow: 1 }}></div>
+                    <TripsButtons
+                        propertyId={propertyId}
+                        setSelectedDueBefore={setSelectedDueBefore}
                     />
 
                     <AddButton src={addbuttonsvg} onClick={() => navigate("add")}></AddButton>
