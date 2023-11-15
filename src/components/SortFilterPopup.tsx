@@ -81,7 +81,7 @@ export default function SortFilterPopup(props: Readonly<SortFilterProps>) {
       >
         <DialogTitle>Sort by</DialogTitle>
         <DialogContent>
-          <RadioGroup row value={selectedSort || undefined} onChange={(event) => setSelectedSort(event.target.value)}>
+          <RadioGroup row value={selectedSort ?? undefined} onChange={(event) => setSelectedSort(event.target.value)}>
             {
               sortOptions.map((option) =>
                 <FormControlLabel value={option} control={<Radio />} label={option} key={option} />
