@@ -25,9 +25,7 @@ const TaskCard = ({ task, handleClick, handleBoxClick }: TaskProps) => {
         handleBoxClick(task);
     }
 
-    // change this to edit task
     const handleTaskClick = () => {
-        setIsComplete(!isComplete);
         handleClick(task);
     }
 
