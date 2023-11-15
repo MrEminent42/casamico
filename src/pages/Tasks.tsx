@@ -20,21 +20,18 @@ const Page2 = () => {
     const [propertyId, setPropertyId] = useState<number>(0);
     const [property, setProperty] = useState<Database['public']['Tables']['Properties']['Row'] | null>(null);
     const params = useParams();
-    // holds all tasks. these aren't displayed. 
+    // holds all tasks. these aren't displayed
     const [allTasks, setAllTasks] = useState<Database['public']['Tables']['Tasks']['Row'][]>([]);
-    // FilterDropdown is responsible for filtering allTasks into the filteredTasks state, which are displayed.
-    const [filteredTasks, setFilteredTasks] = useState<Database['public']['Tables']['Tasks']['Row'][]>([]);
+    // holds filtered & sorted tasks
+    const [aggregatedTasks, setAggregatedTasks] = useState<Database['public']['Tables']['Tasks']['Row'][]>([]);
 
-
-
+    // aggregation options
     const [selectedTags, setSelectedTags] = useState<Database['public']['Tables']['Tags']['Row'][]>([]);
     const [selectedDueBefore, setSelectedDueBefore] = useState<string>("");
     const [selectedRooms, setSelectedRooms] = useState<Database['public']['Tables']['Rooms']['Row'][]>([]);
-
     const [selectedSort, setSelectedSort] = useState<string | null>(null);
 
-
-    // this runs whenever params.id or navigate changes
+    // whenever params.id or navigate changes, verify that a valid property id is selected
     useEffect(() => {
         if (!params.id) {
             alert("No property id provided!");
@@ -44,13 +41,15 @@ const Page2 = () => {
         }
     }, [params.id, navigate])
 
+    // fetches and property info and task list and puts them in their corresponding states
     const fetchTasksAndProperty = useCallback(async () => {
         if (propertyId) {
             try {
-                // fetch property and tasks in parallel
-                let [property, tasks] = await Promise.all([getProperty(propertyId), getTasksOfProperty(propertyId)]);
-                setProperty(property);
-                setAllTasks(tasks);
+                // fetch & set property and tasks in parallel
+                await Promise.all([
+                    getProperty(propertyId).then((property) => setProperty(property)),
+                    getTasksOfProperty(propertyId).then((tasks) => setAllTasks(tasks))
+                ]);
             } catch (err) {
                 displayError(err, "loading property info & tasks");
                 navigate('/');
@@ -59,23 +58,25 @@ const Page2 = () => {
         }
     }, [navigate, propertyId]);
 
-    // fetch info when propertyId is changed (when the page is first loaded, or when the user navigates to a different property)
+    // fetch info when propertyId is changed (when the page is first loaded, 
+    // or when the user navigates to a different property)
     useEffect(() => {
         fetchTasksAndProperty();
     }, [propertyId, navigate, fetchTasksAndProperty]);
 
+    // mark task as completed or not should be done locally and in DB
     const handleToggleTask = async (task: Database['public']['Tables']['Tasks']['Row']) => {
         try {
             const updatedTask = await toggleTaskStatus(task.task_id, task.completed);
-            // update the task in the state
-            setFilteredTasks(filteredTasks.map((t) => (t.task_id === updatedTask.task_id ? updatedTask : t)));
+            // update all tasks. another useEffect should automatically update 
+            // aggregated tasks, which is what is shown to the user
+            setAllTasks(allTasks.map((t) => (t.task_id === updatedTask.task_id ? updatedTask : t)));
         } catch (error) {
             displayError(error, "toggle task completion status")
         }
     };
 
     const doFiltering = useCallback(async () => {
-        console.log("filtering with propertyId " + propertyId)
         getTasksAndTagsOfProperty(propertyId)
             .then((tasksWithTags) => {
 
@@ -100,7 +101,7 @@ const Page2 = () => {
                 if (selectedSort && sortOptions.has(selectedSort)) {
                     filtered.sort(sortOptions.get(selectedSort));
                 }
-                setFilteredTasks(filtered);
+                setAggregatedTasks(filtered);
             })
             .catch((err) => displayError(err, "fetch tasks and their corresponding tags"));
     }, [propertyId, selectedSort, selectedRooms, selectedTags, selectedDueBefore]);
@@ -143,13 +144,13 @@ const Page2 = () => {
                 </FilterandSortContainer>
                 <TasksSection
                     sectionLabel='To Do'
-                    tasks={filteredTasks.filter((task) => !task.completed)}
+                    tasks={aggregatedTasks.filter((task) => !task.completed)}
                     handleClick={handleToggleTask}
                     noTaskMsg="No Tasks 🎉"
                 />
                 <TasksSection
                     sectionLabel="Completed"
-                    tasks={filteredTasks.filter((task) => task.completed)}
+                    tasks={aggregatedTasks.filter((task) => task.completed)}
                     handleClick={handleToggleTask}
                     noTaskMsg="No Tasks Completed Yet 🏗️"
                 />
