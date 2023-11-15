@@ -3,16 +3,16 @@ import styled from 'styled-components';
 import backbuttonsvg from '../assets/arrow-left-circle.svg';
 import addbuttonsvg from "../assets/plus-button.svg";
 import { Route, Routes, useNavigate, useParams } from 'react-router';
-import { getTasksOfProperty, toggleTaskStatus } from '../controllers/TaskController';
+import { getTasksAndTagsOfProperty, getTasksOfProperty, toggleTaskStatus } from '../controllers/TaskController';
 import { getProperty } from '../controllers/PropertyController';
 import AddTask from './AddTask';
 import Popup from '../components/Popup';
 import { Database } from "../supabase/supabase";
-import FiltersPopup from '../components/FiltersPopup';
-import SortDropdown from '../components/SortDropdown';
+import SortFilterPopup from '../components/SortFilterPopup';
 
 import TasksSection from '../components/TasksSection';
 import { displayError } from '../App';
+
 
 const Page2 = () => {
 
@@ -24,6 +24,15 @@ const Page2 = () => {
     const [allTasks, setAllTasks] = useState<Database['public']['Tables']['Tasks']['Row'][]>([]);
     // FilterDropdown is responsible for filtering allTasks into the filteredTasks state, which are displayed.
     const [filteredTasks, setFilteredTasks] = useState<Database['public']['Tables']['Tasks']['Row'][]>([]);
+
+
+
+    const [selectedTags, setSelectedTags] = useState<Database['public']['Tables']['Tags']['Row'][]>([]);
+    const [selectedDueBefore, setSelectedDueBefore] = useState<string>("");
+    const [selectedRooms, setSelectedRooms] = useState<Database['public']['Tables']['Rooms']['Row'][]>([]);
+
+    const [selectedSort, setSelectedSort] = useState<string | null>(null);
+
 
     // this runs whenever params.id or navigate changes
     useEffect(() => {
@@ -63,7 +72,44 @@ const Page2 = () => {
         } catch (error) {
             displayError(error, "toggle task completion status")
         }
-    }
+    };
+
+    const doFiltering = useCallback(async () => {
+        console.log("filtering with propertyId " + propertyId)
+        getTasksAndTagsOfProperty(propertyId)
+            .then((tasksWithTags) => {
+
+                // filter the tasks the appropriate tasks
+                let filtered = tasksWithTags.filter((task) => {
+                    let passes = true;
+                    if (selectedTags.length > 0) {
+                        passes = passes && selectedTags.some((tag) => task.TasksWithTags.some((taskTag) => taskTag.tag_name === tag.tag_name));
+                    }
+                    if (selectedRooms.length > 0) {
+                        passes = passes && selectedRooms.some((room) => task.room_id === room.room_id);
+                    }
+
+                    if (selectedDueBefore.length > 0) {
+                        const taskDue = new Date(task.due_date);
+                        const selectedDueBeforeDate = new Date(selectedDueBefore);
+                        passes = passes && taskDue < selectedDueBeforeDate;
+                    }
+
+                    return passes;
+                })
+                if (selectedSort && sortOptions.has(selectedSort)) {
+                    filtered.sort(sortOptions.get(selectedSort));
+                }
+                setFilteredTasks(filtered);
+            })
+            .catch((err) => displayError(err, "fetch tasks and their corresponding tags"));
+    }, [propertyId, selectedSort, selectedRooms, selectedTags, selectedDueBefore]);
+
+    // any time the list of tasks changes, we need to re-filter
+    // (also, display all tasks upon loading the page for the first time)
+    useEffect(() => {
+        doFiltering();
+    }, [propertyId, allTasks, doFiltering])
 
     return (
         <>
@@ -79,7 +125,7 @@ const Page2 = () => {
                     </HouseLabel>
                 </HouseContainer>
                 <FilterandSortContainer>
-                    <SortDropdown
+                    {/* <SortDropdown
                         label="Sort"
                         options={[
                             {
@@ -87,7 +133,7 @@ const Page2 = () => {
                                 label: 'Due date',
                                 onClick: (selected) => {
                                     if (selected) {
-                                        setFilteredTasks(filteredTasks.concat().sort((a, b) => (Date.parse(a.due_date) > Date.parse(b.due_date)) ? 1 : -1))
+                                        setAllTasks(allTasks.concat().sort((a, b) => (Date.parse(a.due_date) > Date.parse(b.due_date)) ? 1 : -1))
                                     }
                                 }
                             },
@@ -96,19 +142,27 @@ const Page2 = () => {
                                 label: 'Title',
                                 onClick: (selected) => {
                                     if (selected) {
-                                        setFilteredTasks(filteredTasks.concat().sort((a, b) => a.title.localeCompare(b.title)))
+                                        setAllTasks(allTasks.concat().sort((a, b) => a.title.localeCompare(b.title)))
                                     }
                                 }
                             }
                         ]}
-                    />
+                    /> */}
 
-                    <FiltersPopup
+                    <SortFilterPopup
                         propertyId={propertyId}
-                        allTasks={allTasks}
-                        setFilteredTasks={setFilteredTasks}
-                    />
+                        // allTasks={allTasks}
+                        sortOptions={Array.from(sortOptions.keys())}
 
+                        selectedTags={selectedTags}
+                        setSelectedTags={setSelectedTags}
+                        selectedRooms={selectedRooms}
+                        setSelectedRooms={setSelectedRooms}
+                        selectedDueBefore={selectedDueBefore}
+                        setSelectedDueBefore={setSelectedDueBefore}
+                        selectedSort={selectedSort}
+                        setSelectedSort={setSelectedSort}
+                    />
 
                     <AddButton src={addbuttonsvg} onClick={() => navigate("add")}></AddButton>
                 </FilterandSortContainer>
@@ -139,6 +193,17 @@ const Page2 = () => {
 }
 
 export default Page2
+
+const sortOptions = new Map([
+    ["Due date", (
+        a: Database['public']['Tables']['Tasks']['Row'],
+        b: Database['public']['Tables']['Tasks']['Row']
+    ) => (Date.parse(a.due_date) > Date.parse(b.due_date) ? 1 : -1)],
+    ["Title", (
+        a: Database['public']['Tables']['Tasks']['Row'],
+        b: Database['public']['Tables']['Tasks']['Row']
+    ) => (a.title.localeCompare(b.title))]
+]);
 
 const TaskContainer = styled.div`
     display: flex;

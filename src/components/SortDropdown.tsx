@@ -3,8 +3,6 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Checkbox, Menu, MenuItem, styled } from '@mui/material';
 import { useState } from 'react';
 
-
-
 interface DropdownOption {
     id: number,
     label: string,
@@ -42,8 +40,6 @@ const SortDropdown = (props: {
             setSelected(currentlySelected ? [] : [option]);
         }
     }
-
-
 
     return (
         <div>

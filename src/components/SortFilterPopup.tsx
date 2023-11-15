@@ -1,31 +1,49 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import ChevronRight from '@mui/icons-material/ChevronRight';
-import { Dialog, DialogContent, DialogTitle, FormControlLabel, FormGroup, Typography } from '@mui/material';
+import {
+  Dialog, DialogContent, DialogTitle, FormControlLabel,
+  FormGroup, RadioGroup, Radio, FormLabel
+} from '@mui/material';
 import { getTags } from '../controllers/TagController';
 import { displayError } from '../App';
 import { Database } from '../supabase/supabase';
 import { getRooms } from '../controllers/RoomController';
-import { getTasksAndTagsOfProperty } from '../controllers/TaskController';
 
 
-interface FiltersProps {
+interface SortFilterProps {
   propertyId: number,
-  allTasks: Database['public']['Tables']['Tasks']['Row'][],
-  setFilteredTasks: (tasks: Database['public']['Tables']['Tasks']['Row'][]) => void,
+  // allTasks: Database['public']['Tables']['Tasks']['Row'][],
+
+  selectedTags: Database['public']['Tables']['Tags']['Row'][],
+  setSelectedTags: React.Dispatch<React.SetStateAction<Database['public']['Tables']['Tags']['Row'][]>>,
+  selectedDueBefore: string,
+  setSelectedDueBefore: React.Dispatch<React.SetStateAction<string>>,
+  selectedRooms: Database['public']['Tables']['Rooms']['Row'][],
+  setSelectedRooms: React.Dispatch<React.SetStateAction<Database['public']['Tables']['Rooms']['Row'][]>>,
+  selectedSort: string | null,
+  setSelectedSort: React.Dispatch<React.SetStateAction<string | null>>,
+
+  sortOptions: string[]
 }
 
-export default function FiltersPopup(props: Readonly<FiltersProps>) {
-
+export default function SortFilterPopup(props: Readonly<SortFilterProps>) {
+  const {
+    // propertyId,
+    // allTasks,
+    selectedTags, setSelectedTags,
+    // selectedDueBefore, 
+    setSelectedDueBefore,
+    selectedRooms, setSelectedRooms,
+    selectedSort, setSelectedSort,
+    sortOptions,
+  } = props;
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const [allTags, setAllTags] = useState<Database['public']['Tables']['Tags']['Row'][]>([]);
   const [allRooms, setAllRooms] = useState<Database['public']['Tables']['Rooms']['Row'][]>([]);
-  const [selectedTags, setSelectedTags] = useState<Database['public']['Tables']['Tags']['Row'][]>([]);
-  const [selectedDueBefore, setSelectedDueBefore] = useState<string>(new Date().toISOString());
-  const [selectedRooms, setSelectedRooms] = useState<Database['public']['Tables']['Rooms']['Row'][]>([]);
 
   useEffect(() => {
     if (props.propertyId) {
@@ -34,40 +52,10 @@ export default function FiltersPopup(props: Readonly<FiltersProps>) {
     }
   }, [props.propertyId]);
 
-  const doFiltering = useCallback(async () => {
-    let tasksWithTags;
-    try {
-      tasksWithTags = await getTasksAndTagsOfProperty(props.propertyId);
-    } catch (err) {
-      displayError(err, "fetch tasks and their corresponding tags");
-      return;
-    }
+  const handleClose = async () => {
+    setDialogOpen(false)
+  }
 
-    props.setFilteredTasks(tasksWithTags.filter((task) => {
-      let passes = true;
-      if (selectedTags.length > 0) {
-        passes = passes && selectedTags.some((tag) => task.TasksWithTags.some((taskTag) => taskTag.tag_name === tag.tag_name));
-      }
-      if (selectedRooms.length > 0) {
-        passes = passes && selectedRooms.some((room) => task.room_id === room.room_id);
-      }
-
-      if (selectedDueBefore.length > 0) {
-        const taskDue = new Date(task.due_date);
-        const selectedDueBeforeDate = new Date(selectedDueBefore);
-        passes = passes && taskDue < selectedDueBeforeDate;
-      }
-
-      return passes;
-    }))
-  }, [props, selectedRooms, selectedTags]);
-
-
-  // any time the list of tasks changes, we need to re-filter
-  // (also, display all tasks upon loading the page for the first time)
-  useEffect(() => {
-    doFiltering();
-  }, [props.allTasks, doFiltering]);
   return (
     <div>
       <Button
@@ -76,23 +64,30 @@ export default function FiltersPopup(props: Readonly<FiltersProps>) {
         color='secondary'
         onClick={() => setDialogOpen(true)}
       >
-        Filter
+        Sort & Filter
         <ChevronRight />
       </Button>
       <Dialog
         open={dialogOpen}
-        onClose={async () => {
-          await doFiltering();
-          setDialogOpen(false)
-        }}
+        onClose={handleClose}
         maxWidth='md'
       >
-        <DialogTitle>Filter</DialogTitle>
+        <DialogTitle>Sort by</DialogTitle>
+        <DialogContent>
+          <RadioGroup row value={selectedSort || undefined} onChange={(event) => setSelectedSort(event.target.value)}>
+            {
+              sortOptions.map((option) =>
+                <FormControlLabel value={option} control={<Radio />} label={option} key={option} />
+              )
+            }
+          </RadioGroup>
+        </DialogContent>
+        <DialogTitle>Filters</DialogTitle>
         <DialogContent>
           <FormGroup>
             <DialogColumns>
               <Col>
-                <Typography><b>Tags</b></Typography>
+                <FormLabel><b>Tags</b></FormLabel>
                 {allTags.map((tag) => <FormControlLabel
                   control={<Checkbox
                     checked={selectedTags.some((t) => t.tag_name === tag.tag_name)}
@@ -115,14 +110,14 @@ export default function FiltersPopup(props: Readonly<FiltersProps>) {
                 />)}
               </Col>
               <Col>
-                <Typography><b>Due Before</b></Typography>
+                <FormLabel><b>Due Before</b></FormLabel>
                 <input
                   type='date'
                   onChange={(e) => setSelectedDueBefore(e.target.value)}
                 />
               </Col>
               <Col>
-                <Typography><b>Rooms</b></Typography>
+                <FormLabel><b>Rooms</b></FormLabel>
                 {allRooms.map((room) => <FormControlLabel
                   control={<Checkbox
                     checked={selectedRooms.some((r) => r.room_id === room.room_id)}
@@ -147,6 +142,13 @@ export default function FiltersPopup(props: Readonly<FiltersProps>) {
             </DialogColumns>
           </FormGroup>
 
+        </DialogContent>
+        <DialogContent sx={{ display: 'flex', flexDirection: 'row-reverse' }}>
+          <Button
+            variant='contained'
+            sx={{ alignSelf: 'flex-end' }}
+            onClick={handleClose}
+          >Save</Button>
         </DialogContent>
       </Dialog>
     </div>
