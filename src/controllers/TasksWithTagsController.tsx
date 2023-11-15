@@ -28,3 +28,16 @@ export const addTaskWithTags = async (taskWithTag: Database['public']['Tables'][
     // returns the newly created taskWithTag
     return res.data;
 }
+
+export const deleteTagsOfTask = async (task_id: number) => {
+    const res = await supabase
+        .from('TasksWithTags')
+        .delete()
+        .eq('task_id', task_id);
+
+    if (res.error) {
+        throw res.error;
+    }
+
+    return res.data;
+}

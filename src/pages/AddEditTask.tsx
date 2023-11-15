@@ -8,7 +8,7 @@ import { getRooms, getRoom } from '../controllers/RoomController';
 import { Database } from '../supabase/supabase';
 import { Link, useParams } from 'react-router-dom';
 import ColorPickerCard from '../components/ColorPickerCard';
-import { addTaskWithTags, getTagsOfTask } from '../controllers/TasksWithTagsController';
+import { addTaskWithTags, getTagsOfTask, deleteTagsOfTask } from '../controllers/TasksWithTagsController';
 import { displayError } from '../App';
 
 
@@ -72,7 +72,7 @@ const AddTask = (props: AddTaskProps) => {
         if (params.taskid) {
             fillBoxes(+params.taskid);
         }
-        
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
@@ -149,6 +149,7 @@ const AddTask = (props: AddTaskProps) => {
             // taskId = await addTask(task);
             if (params.taskid) {
                 taskId = await updateTask(task, +params.taskid);
+                await deleteTagsOfTask(+params.taskid);
             } else {
                 taskId = await addTask(task);
             }
