@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { addTask, getTask } from '../controllers/TaskController';
+import { addTask, getTask, updateTask } from '../controllers/TaskController';
 import { createTag, getTags, getTag } from '../controllers/TagController';
 import AsyncCreateableSelect from 'react-select/async-creatable';
 import AsyncSelect from 'react-select/async';
@@ -145,15 +145,28 @@ const AddTask = (props: AddTaskProps) => {
         let taskId: Database['public']['Tables']['Tasks']['Row']['task_id'];
 
         try {
-            taskId = await addTask(task);
+            // taskId = await addTask(task);
+            if (params.taskid) {
+                taskId = await updateTask(task, +params.taskid);
+            } else {
+                taskId = await addTask(task);
+            }
         } catch (err) {
-            displayError(err, "add task")
+            displayError(err, "add/edit task")
             return;
         } finally {
             props.goBack();
         }
 
+        let curr_tag_rows = await getTagsOfTask(taskId);
+        let curr_tags = await Promise.all(curr_tag_rows.map(async (tag_name) => {
+            return (await getTag(tag_name.tag_name)).tag_name;
+        }));
         await Promise.all(selectedTags.map(async (tag) => {
+            if (curr_tags.includes(tag.tag_name)) {
+                // tag is already in the db
+                return;
+            }
             const taskWithTag: Database['public']['Tables']['TasksWithTags']['Insert'] = {
                 task_id: taskId,
                 tag_name: tag.tag_name,
