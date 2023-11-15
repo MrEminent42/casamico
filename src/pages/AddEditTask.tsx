@@ -94,7 +94,7 @@ const AddTask = (props: AddTaskProps) => {
         const dbTagsNames = await getTags();
 
         if (!dbTagsNames) {
-            return Promise.reject("Problem getting tags;");
+            return Promise.reject(new Error("Problem getting tags."));
         }
 
         const dbTagSet = new Set(dbTagsNames.map((tag) => tag.tag_name));
@@ -146,7 +146,6 @@ const AddTask = (props: AddTaskProps) => {
         let taskId: Database['public']['Tables']['Tasks']['Row']['task_id'];
 
         try {
-            // taskId = await addTask(task);
             if (params.taskid) {
                 taskId = await updateTask(task, +params.taskid);
                 await deleteTagsOfTask(+params.taskid);

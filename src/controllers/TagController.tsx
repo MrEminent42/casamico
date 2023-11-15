@@ -1,6 +1,6 @@
 import { supabase } from "../supabase/db";
 
-export const getTag = async (tag_name: String) => {
+export const getTag = async (tag_name: string) => {
     const res = await supabase
         .from('Tags')
         .select()
