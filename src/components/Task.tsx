@@ -51,7 +51,10 @@ const TaskCard = ({ task, handleClick, handleBoxClick }: TaskProps) => {
             <TaskForeground style={{ backgroundColor: task.completed ? '#94a3b8' : task.color }}>
                 <BasicCheckbox
                     checked={task.completed}
-                    onClick={handleCheckboxClick}
+                    onClick={(e: React.MouseEvent) => {
+                        handleCheckboxClick();
+                        e.stopPropagation();
+                    }}
                     color='default'
                 />
                 <TaskTitle>
