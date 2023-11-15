@@ -177,7 +177,7 @@ const AddEditProperty = (props: AddEditPropertyProps) => {
                 <TitleAndFile title="Upload Photo" name="photo" handleChange={uploadFile} />
             </GridItemCol12>
             <GridItemCol12>
-                <TitleAndText title="Rooms Names" name="rooms" value={newRooms} handleChange={handleRoomsChange} />
+                <TitleAndText title="Room Names" name="rooms" value={newRooms} handleChange={handleRoomsChange} />
             </GridItemCol12>
             <PreviewAndSubmitContainer>
                 <PreviewContainer>
