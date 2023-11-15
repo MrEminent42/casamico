@@ -148,6 +148,7 @@ const Page2 = () => {
                     handleClick={
                         (task) => navigate("edit-task/" + task.task_id)
                     }
+                    handleBoxClick={handleToggleTask}
                     noTaskMsg="No Tasks 🎉"
                 />
                 <TasksSection
@@ -156,6 +157,7 @@ const Page2 = () => {
                     handleClick={
                         (task) => navigate("edit-task/" + task.task_id)
                     }
+                    handleBoxClick={handleToggleTask}
                     noTaskMsg="No Tasks Completed Yet 🏗️"
                 />
                 <div style={{ color: 'grey', fontSize: '.8rem' }}>
