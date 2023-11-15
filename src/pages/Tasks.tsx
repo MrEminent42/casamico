@@ -86,11 +86,13 @@ const Page2 = () => {
                     sectionLabel='To Do'
                     tasks={tasks.filter((task) => !task.completed)}
                     handleClick={handleToggle}
+                    handleBoxClick={handleToggle}
                 />
                 <TasksSection
                     sectionLabel="Completed"
                     tasks={tasks.filter((task) => task.completed)}
                     handleClick={handleToggle}
+                    handleBoxClick={handleToggle}
                 />
             </TaskContainer>
             <Routes>

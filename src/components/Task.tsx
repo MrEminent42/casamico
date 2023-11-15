@@ -13,13 +13,19 @@ function hexToRgb(hex: string, alpha: number) {
 interface TaskProps {
     task: Database['public']['Tables']['Tasks']['Row'];
     handleClick: (task: Database['public']['Tables']['Tasks']['Row']) => void;
+    handleBoxClick: (task: Database['public']['Tables']['Tasks']['Row']) => void;
 }
 
-const TaskCard = ({ task, handleClick }: TaskProps) => {
+const TaskCard = ({ task, handleClick, handleBoxClick }: TaskProps) => {
     const [isComplete, setIsComplete] = useState(task.completed);
     const currentDate = new Date();
 
     const handleCheckboxClick = () => {
+        setIsComplete(!isComplete);
+        handleBoxClick(task);
+    }
+
+    const handleTaskClick = () => {
         setIsComplete(!isComplete);
         handleClick(task);
     }
@@ -36,7 +42,9 @@ const TaskCard = ({ task, handleClick }: TaskProps) => {
     }
 
     return (
-        <TaskBackground style={{ backgroundColor: task.completed ? hexToRgb('#94a3b8', 0.5) : hexToRgb(task.color, 0.5) }}>
+        <TaskBackground 
+            style={{ backgroundColor: task.completed ? hexToRgb('#94a3b8', 0.5) : hexToRgb(task.color, 0.5) }}
+            onClick={handleTaskClick}>
             <TaskForeground style={{ backgroundColor: task.completed ? '#94a3b8' : task.color }}>
                 <BasicCheckbox
                     checked={task.completed}
