@@ -6,10 +6,12 @@ const TasksSection = (props: {
     sectionLabel: string,
     tasks: Database['public']['Tables']['Tasks']['Row'][],
     handleClick: (task: Database['public']['Tables']['Tasks']['Row']) => any,
+    noTaskMsg?: string,
 }) => {
     return (
         <TaskListSectionContainer>
-            <SectionLabel>{props.sectionLabel}</SectionLabel>
+            <SectionLabel>{props.sectionLabel} ({props.tasks.length})</SectionLabel>
+            {props.tasks.length === 0 && <NoTasks>{props.noTaskMsg}</NoTasks>}
             {
                 props.tasks.map((task) => (
                     <TaskCard
@@ -44,4 +46,8 @@ const SectionLabel = styled.p`
     color: #5F5F5F;
     margin: 5px 0;
     padding: 5px;
+`
+const NoTasks = styled.div`
+    width: 80vw;
+    text-align: center;
 `

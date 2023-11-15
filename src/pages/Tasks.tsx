@@ -1,16 +1,18 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import styled from 'styled-components';
 import backbuttonsvg from '../assets/arrow-left-circle.svg';
 import addbuttonsvg from "../assets/plus-button.svg";
-import TaskViewButton from '../components/TaskViewButton';
 import { Route, Routes, useNavigate, useParams } from 'react-router';
-import { getTasksOfProperty, toggleTaskStatus } from '../controllers/TaskController';
+import { getTasksAndTagsOfProperty, getTasksOfProperty, toggleTaskStatus } from '../controllers/TaskController';
 import { getProperty } from '../controllers/PropertyController';
 import AddTask from './AddTask';
 import Popup from '../components/Popup';
 import { Database } from "../supabase/supabase";
+import SortFilterPopup from '../components/SortFilterPopup';
+
 import TasksSection from '../components/TasksSection';
 import { displayError } from '../App';
+
 
 const Page2 = () => {
 
@@ -18,24 +20,18 @@ const Page2 = () => {
     const [propertyId, setPropertyId] = useState<number>(0);
     const [property, setProperty] = useState<Database['public']['Tables']['Properties']['Row'] | null>(null);
     const params = useParams();
-    const [tasks, setTasks] = useState<Database['public']['Tables']['Tasks']['Row'][]>([]);
+    // holds all tasks. these aren't displayed
+    const [allTasks, setAllTasks] = useState<Database['public']['Tables']['Tasks']['Row'][]>([]);
+    // holds filtered & sorted tasks
+    const [aggregatedTasks, setAggregatedTasks] = useState<Database['public']['Tables']['Tasks']['Row'][]>([]);
 
-    // this when propertyId is changed (when the page changes)
-    useEffect(() => {
-        if (propertyId) {
-            getProperty(propertyId).then((property) => {
-                setProperty(property);
-                getTasksOfProperty(propertyId).then((tasks) => {
-                    setTasks(tasks);
-                }).catch((error) => displayError(error, "get tasks of selected property"));
-            }).catch((error) => {
-                displayError(error, "get selected property");
-                navigate('/');
-            });
-        }
-    }, [propertyId, navigate]);
+    // aggregation options
+    const [selectedTags, setSelectedTags] = useState<Database['public']['Tables']['Tags']['Row'][]>([]);
+    const [selectedDueBefore, setSelectedDueBefore] = useState<string>("");
+    const [selectedRooms, setSelectedRooms] = useState<Database['public']['Tables']['Rooms']['Row'][]>([]);
+    const [selectedSort, setSelectedSort] = useState<string | null>(null);
 
-    // this runs whenever params.id or navigate changes
+    // whenever params.id or navigate changes, verify that a valid property id is selected
     useEffect(() => {
         if (!params.id) {
             alert("No property id provided!");
@@ -45,16 +41,76 @@ const Page2 = () => {
         }
     }, [params.id, navigate])
 
-    const handleToggle = async (task: Database['public']['Tables']['Tasks']['Row']) => {
+    // fetches and property info and task list and puts them in their corresponding states
+    const fetchTasksAndProperty = useCallback(async () => {
+        if (propertyId) {
+            try {
+                // fetch & set property and tasks in parallel
+                await Promise.all([
+                    getProperty(propertyId).then((property) => setProperty(property)),
+                    getTasksOfProperty(propertyId).then((tasks) => setAllTasks(tasks))
+                ]);
+            } catch (err) {
+                displayError(err, "loading property info & tasks");
+                navigate('/');
+                return;
+            }
+        }
+    }, [navigate, propertyId]);
+
+    // fetch info when propertyId is changed (when the page is first loaded, 
+    // or when the user navigates to a different property)
+    useEffect(() => {
+        fetchTasksAndProperty();
+    }, [propertyId, navigate, fetchTasksAndProperty]);
+
+    // mark task as completed or not should be done locally and in DB
+    const handleToggleTask = async (task: Database['public']['Tables']['Tasks']['Row']) => {
         try {
             const updatedTask = await toggleTaskStatus(task.task_id, task.completed);
-            // update the task in the state
-            setTasks(tasks.map((t) => (t.task_id === updatedTask.task_id ? updatedTask : t)));
+            // update all tasks. another useEffect should automatically update 
+            // aggregated tasks, which is what is shown to the user
+            setAllTasks(allTasks.map((t) => (t.task_id === updatedTask.task_id ? updatedTask : t)));
         } catch (error) {
             displayError(error, "toggle task completion status")
         }
-    }
+    };
 
+    const doFiltering = useCallback(async () => {
+        getTasksAndTagsOfProperty(propertyId)
+            .then((tasksWithTags) => {
+
+                // filter the tasks the appropriate tasks
+                let filtered = tasksWithTags.filter((task) => {
+                    let passes = true;
+                    if (selectedTags.length > 0) {
+                        passes = passes && selectedTags.some((tag) => task.TasksWithTags.some((taskTag) => taskTag.tag_name === tag.tag_name));
+                    }
+                    if (selectedRooms.length > 0) {
+                        passes = passes && selectedRooms.some((room) => task.room_id === room.room_id);
+                    }
+
+                    if (selectedDueBefore.length > 0) {
+                        const taskDue = new Date(task.due_date);
+                        const selectedDueBeforeDate = new Date(selectedDueBefore);
+                        passes = passes && taskDue < selectedDueBeforeDate;
+                    }
+
+                    return passes;
+                })
+                if (selectedSort && sortOptions.has(selectedSort)) {
+                    filtered.sort(sortOptions.get(selectedSort));
+                }
+                setAggregatedTasks(filtered);
+            })
+            .catch((err) => displayError(err, "fetch tasks and their corresponding tags"));
+    }, [propertyId, selectedSort, selectedRooms, selectedTags, selectedDueBefore]);
+
+    // any time the list of tasks changes, we need to re-filter
+    // (also, display all tasks upon loading the page for the first time)
+    useEffect(() => {
+        doFiltering();
+    }, [propertyId, allTasks, doFiltering])
 
     return (
         <>
@@ -70,28 +126,37 @@ const Page2 = () => {
                     </HouseLabel>
                 </HouseContainer>
                 <FilterandSortContainer>
-                    <TaskViewButton
-                        label="Filter"
-                        onClick={() => console.log("Filter button clicked")}
+                    <SortFilterPopup
+                        propertyId={propertyId}
+                        sortOptions={Array.from(sortOptions.keys())}
+
+                        selectedTags={selectedTags}
+                        setSelectedTags={setSelectedTags}
+                        selectedRooms={selectedRooms}
+                        setSelectedRooms={setSelectedRooms}
+                        selectedDueBefore={selectedDueBefore}
+                        setSelectedDueBefore={setSelectedDueBefore}
+                        selectedSort={selectedSort}
+                        setSelectedSort={setSelectedSort}
                     />
-                    <TaskViewButton
-                        label="Sort"
-                        onClick={() => console.log("Sort button clicked")}
-                    />
-                    <div style={{ flexGrow: 1 }} />
 
                     <AddButton src={addbuttonsvg} onClick={() => navigate("add")}></AddButton>
                 </FilterandSortContainer>
                 <TasksSection
                     sectionLabel='To Do'
-                    tasks={tasks.filter((task) => !task.completed)}
-                    handleClick={handleToggle}
+                    tasks={aggregatedTasks.filter((task) => !task.completed)}
+                    handleClick={handleToggleTask}
+                    noTaskMsg="No Tasks 🎉"
                 />
                 <TasksSection
                     sectionLabel="Completed"
-                    tasks={tasks.filter((task) => task.completed)}
-                    handleClick={handleToggle}
+                    tasks={aggregatedTasks.filter((task) => task.completed)}
+                    handleClick={handleToggleTask}
+                    noTaskMsg="No Tasks Completed Yet 🏗️"
                 />
+                <div style={{ color: 'grey', fontSize: '.8rem' }}>
+                    {allTasks.length - aggregatedTasks.length > 0 && <em>({allTasks.length - aggregatedTasks.length} tasks filtered out)</em>}
+                </div>
             </TaskContainer>
             <Routes>
                 <Route path="add" element={
@@ -107,6 +172,17 @@ const Page2 = () => {
 }
 
 export default Page2
+
+const sortOptions = new Map([
+    ["Due date", (
+        a: Database['public']['Tables']['Tasks']['Row'],
+        b: Database['public']['Tables']['Tasks']['Row']
+    ) => (Date.parse(a.due_date) > Date.parse(b.due_date) ? 1 : -1)],
+    ["Title", (
+        a: Database['public']['Tables']['Tasks']['Row'],
+        b: Database['public']['Tables']['Tasks']['Row']
+    ) => (a.title.localeCompare(b.title))]
+]);
 
 const TaskContainer = styled.div`
     display: flex;
@@ -186,3 +262,23 @@ const AddButton = styled.img`
     cursor: pointer;
     margin-left: auto;
 `
+export const DropdownStyling = {
+    '&:hover': {
+        backgroundColor: 'white',
+        border: '1px solid black',
+        boxSizing: ''
+    },
+    '&:active': {
+        backgroundColor: 'black'
+    },
+    backgroundColor: '#D9D9D9',
+    color: '#5F5F5F',
+    width: '100px',
+    height: '40px',
+    padding: '10px 0',
+    fontSize: '14px',
+    margin: '5px 0 0 0',
+    cursor: 'pointer',
+    borderRadius: '40px',
+    textAlign: 'center'
+}
