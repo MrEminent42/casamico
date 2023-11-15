@@ -154,6 +154,9 @@ const Page2 = () => {
                     handleClick={handleToggleTask}
                     noTaskMsg="No Tasks Completed Yet 🏗️"
                 />
+                <div style={{ color: 'grey', fontSize: '.8rem' }}>
+                    {allTasks.length - aggregatedTasks.length > 0 && <em>({allTasks.length - aggregatedTasks.length} tasks filtered out)</em>}
+                </div>
             </TaskContainer>
             <Routes>
                 <Route path="add" element={
