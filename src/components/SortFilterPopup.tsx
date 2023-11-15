@@ -31,7 +31,7 @@ export default function SortFilterPopup(props: Readonly<SortFilterProps>) {
   const {
     propertyId,
     selectedTags, setSelectedTags,
-    setSelectedDueBefore,
+    selectedDueBefore, setSelectedDueBefore,
     selectedRooms, setSelectedRooms,
     selectedSort, setSelectedSort,
     sortOptions,
@@ -108,9 +108,20 @@ export default function SortFilterPopup(props: Readonly<SortFilterProps>) {
               <Col>
                 <FormLabel><b>Due Before</b></FormLabel>
                 <input
+                  value={selectedDueBefore}
                   type='date'
                   onChange={(e) => setSelectedDueBefore(e.target.value)}
                 />
+                <div>
+
+                  <Button
+                    variant='contained'
+                    color='secondary'
+                    disableElevation
+                    onClick={() => setSelectedDueBefore("")}
+                    sx={{ mt: '15px' }}
+                  >Clear</Button>
+                </div>
               </Col>
               <Col>
                 <FormLabel><b>Rooms</b></FormLabel>
@@ -144,7 +155,7 @@ export default function SortFilterPopup(props: Readonly<SortFilterProps>) {
             variant='contained'
             sx={{ alignSelf: 'flex-end' }}
             onClick={handleClose}
-          >Save</Button>
+          >Done</Button>
         </DialogContent>
       </Dialog>
     </div>
