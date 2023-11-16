@@ -1,6 +1,6 @@
 ﻿import { supabase } from "../supabase/db";
 import { Database } from "../supabase/supabase";
-import { createRooms } from "./RoomController";
+import { createRooms } from "./CreateRoomController";
 
 
 export const updateProperty = async (property: Database['public']['Tables']['Properties']['Update'], rooms: string) => {

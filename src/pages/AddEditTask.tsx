@@ -4,7 +4,7 @@ import { addTask, getTask, updateTask } from '../controllers/TaskController';
 import { createTag, getTags, getTag } from '../controllers/TagController';
 import AsyncCreateableSelect from 'react-select/async-creatable';
 import AsyncSelect from 'react-select/async';
-import { getRooms, getRoom } from '../controllers/RoomController';
+import { getRooms, getRoom } from '../controllers/GetRoomController';
 import { Database } from '../supabase/supabase';
 import { Link, useParams } from 'react-router-dom';
 import ColorPickerCard from '../components/ColorPickerCard';

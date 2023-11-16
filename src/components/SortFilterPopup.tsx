@@ -10,7 +10,7 @@ import {
 import { getTags } from '../controllers/TagController';
 import { displayError } from '../App';
 import { Database } from '../supabase/supabase';
-import { getRooms } from '../controllers/RoomController';
+import { getRooms } from '../controllers/GetRoomController';
 import RotateLeftIcon from '@mui/icons-material/RotateLeft';
 
 interface SortFilterProps {

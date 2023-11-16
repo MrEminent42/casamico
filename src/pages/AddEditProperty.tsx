@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom'
 import uploadIcon from '../assets/upload.png';
 import PropertyCardPreview from '../components/properties/PropertyCardPreview';
 import { displayError } from '../App';
-import { getRooms } from '../controllers/RoomController';
+import { getRooms } from '../controllers/GetRoomController';
 import { deletePropertyPhoto, getPropertyPhotoUrl, storePropertyPhoto } from '../controllers/PropertyPhotoController';
 import { getProperty } from '../controllers/GetPropertyController';
 import { updateProperty } from '../controllers/UpdatePropertyController';
