@@ -3,7 +3,8 @@ import styled from 'styled-components'
 import { getTask } from '../controllers/GetTaskController';
 import { updateTask } from "../controllers/UpdateTaskController";
 import { addTask } from "../controllers/AddTaskController";
-import { createTag, getTags, getTag } from '../controllers/TagController';
+import { getTags, getTag } from '../controllers/GetTagController';
+import { createTag } from "../controllers/CreateTagController";
 import AsyncCreateableSelect from 'react-select/async-creatable';
 import AsyncSelect from 'react-select/async';
 import { getRooms, getRoom } from '../controllers/GetRoomController';

@@ -7,7 +7,7 @@ import {
   Dialog, DialogContent, DialogTitle, FormControlLabel,
   FormGroup, RadioGroup, Radio, FormLabel, IconButton
 } from '@mui/material';
-import { getTags } from '../controllers/TagController';
+import { getTags } from '../controllers/GetTagController';
 import { displayError } from '../App';
 import { Database } from '../supabase/supabase';
 import { getRooms } from '../controllers/GetRoomController';
