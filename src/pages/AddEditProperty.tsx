@@ -2,10 +2,13 @@ import React, { FormEvent, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { useParams } from 'react-router-dom'
 import uploadIcon from '../assets/upload.png';
-import { createProperty, deletePropertyPhoto, getProperty, getPropertyPhotoUrl, storePropertyPhoto, updateProperty } from '../controllers/PropertyController';
 import PropertyCardPreview from '../components/properties/PropertyCardPreview';
 import { displayError } from '../App';
 import { getRooms } from '../controllers/RoomController';
+import { deletePropertyPhoto, getPropertyPhotoUrl, storePropertyPhoto } from '../controllers/PropertyPhotoController';
+import { getProperty } from '../controllers/GetPropertyController';
+import { updateProperty } from '../controllers/UpdatePropertyController';
+import { createProperty } from '../controllers/CreatePropertyController';
 
 interface DummyProperty {
     address: string

@@ -4,7 +4,6 @@ import backbuttonsvg from '../assets/arrow-left-circle.svg';
 import addbuttonsvg from "../assets/plus-button.svg";
 import { Route, Routes, useNavigate, useParams } from 'react-router';
 import { getTasksAndTagsOfProperty, getTasksOfProperty, toggleTaskStatus } from '../controllers/TaskController';
-import { getProperty } from '../controllers/PropertyController';
 import AddEditTask from './AddEditTask';
 import Popup from '../components/Popup';
 import { Database } from "../supabase/supabase";
@@ -12,6 +11,7 @@ import SortFilterPopup from '../components/SortFilterPopup';
 
 import TasksSection from '../components/TasksSection';
 import { displayError } from '../App';
+import { getProperty } from '../controllers/GetPropertyController';
 
 
 const Page2 = () => {
