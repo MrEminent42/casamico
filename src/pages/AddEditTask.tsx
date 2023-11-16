@@ -111,8 +111,8 @@ const AddTask = (props: AddTaskProps) => {
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        if (!selectedRoom) {
-            alert("You must select a room.");
+        if (!title) {
+            alert("You must enter a title.");
             return;
         }
 
@@ -120,6 +120,11 @@ const AddTask = (props: AddTaskProps) => {
             alert("You must select a due date.");
             return;
         }
+
+        if (!selectedRoom) {
+            alert("You must select a room.");
+            return;
+        }        
 
         try {
             await updateTagsIfNecessary();
