@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { addTask, getTask, updateTask } from '../controllers/TaskController';
+import { getTask } from '../controllers/GetTaskController';
+import { updateTask } from "../controllers/UpdateTaskController";
+import { addTask } from "../controllers/AddTaskController";
 import { createTag, getTags, getTag } from '../controllers/TagController';
 import AsyncCreateableSelect from 'react-select/async-creatable';
 import AsyncSelect from 'react-select/async';

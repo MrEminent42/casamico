@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { PropertyGridItemPadding } from '../../pages/Home';
-import { getTasksOfProperty } from '../../controllers/TaskController';
+import { getTasksOfProperty } from '../../controllers/GetTaskController';
 import { Database } from '../../supabase/supabase';
 import { displayError } from '../../App';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
