@@ -1,15 +1,16 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { addTask } from '../controllers/TaskController';
-import { createTag, getTags } from '../controllers/TagController';
+import { addTask, getTask, updateTask } from '../controllers/TaskController';
+import { createTag, getTags, getTag } from '../controllers/TagController';
 import AsyncCreateableSelect from 'react-select/async-creatable';
 import AsyncSelect from 'react-select/async';
-import { getRooms } from '../controllers/RoomController';
+import { getRooms, getRoom } from '../controllers/RoomController';
 import { Database } from '../supabase/supabase';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import ColorPickerCard from '../components/ColorPickerCard';
-import { addTaskWithTags } from '../controllers/TasksWithTagsController';
+import { addTaskWithTags, getTagsOfTask, deleteTagsOfTask } from '../controllers/TasksWithTagsController';
 import { displayError } from '../App';
+
 
 interface AddTaskProps {
     goBack: () => void;
@@ -17,37 +18,65 @@ interface AddTaskProps {
 }
 
 const AddTask = (props: AddTaskProps) => {
+    const params = useParams();
 
     const [selectedTags, setSelectedTags] = useState<readonly Database['public']['Tables']['Tags']['Row'][]>([]);
     const [selectedRoom, setSelectedRoom] = useState<Database['public']['Tables']['Rooms']['Row'] | null>();
+    const [selectedColor, setSelectedColor] = useState<string>("#fca5a5");
 
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [dueDate, setDueDate] = useState("");
     const [done, setDone] = useState(false);
+    const [taskId, setTaskId] = useState<number | null>(null);
 
-    const [colors, setColors] = useState(() => {
-        return [
-            { color: "#fca5a5", selected: true },
-            { color: "#fdba74", selected: false },
-            { color: "#fde047", selected: false },
-            { color: "#d9f99d", selected: false },
-            { color: "#6ee7b7", selected: false },
-            { color: "#67e8f9", selected: false },
-            { color: "#93c5fd", selected: false },
-            { color: "#c4b5fd", selected: false },
-            { color: "#f0abfc", selected: false },
-        ];
-    });
+    const colors = [
+        { hex: "#fca5a5" },
+        { hex: "#fdba74" },
+        { hex: "#fde047" },
+        { hex: "#d9f99d" },
+        { hex: "#6ee7b7" },
+        { hex: "#67e8f9" },
+        { hex: "#93c5fd" },
+        { hex: "#c4b5fd" },
+        { hex: "#f0abfc" },
+    ];
+
+    useEffect(() => {
+        if (params.taskid) {
+            setTaskId(+params.taskid);
+        }
+    }, [params])
+
+    // if the task already exists, populate the fields
+    useEffect(() => {
+        async function fillBoxes(task_id: number) {
+            const task = await getTask(task_id);
+            setTitle(task.title);
+            setDueDate(task.due_date);
+            setDescription(task.description);
+            setDone(task.completed);
+            setSelectedColor(task.color)
+
+            const room = await getRoom(task.room_id);
+            setSelectedRoom(room);
+
+            const tags_of_task = await getTagsOfTask(task_id);
+            const tags = await Promise.all(tags_of_task.map(async (tag_of_task) => {
+                return await getTag(tag_of_task.tag_name);
+            }));
+            setSelectedTags(tags);
+        }
+
+        if (taskId) {
+            fillBoxes(taskId);
+        }
+
+    }, [taskId])
+
 
     const handleColorClick = (color: string) => {
-        let newColors = colors.map((c) => {
-            if (c.color === color) {
-                return { color: c.color, selected: true };
-            }
-            return { color: c.color, selected: false };
-        });
-        setColors(newColors);
+        setSelectedColor(color);
     }
 
     const updateTagsIfNecessary = async () => {
@@ -57,7 +86,7 @@ const AddTask = (props: AddTaskProps) => {
         const dbTagsNames = await getTags();
 
         if (!dbTagsNames) {
-            return Promise.reject("Problem getting tags;");
+            return Promise.reject(new Error("Problem getting tags."));
         }
 
         const dbTagSet = new Set(dbTagsNames.map((tag) => tag.tag_name));
@@ -102,22 +131,35 @@ const AddTask = (props: AddTaskProps) => {
             due_date: dueDate,
             property_id: props.property_id,
             room_id: selectedRoom.room_id,
-            color: colors.filter((color) => color.selected)[0].color,
+            color: selectedColor,
             completed: done,
         }
 
         let taskId: Database['public']['Tables']['Tasks']['Row']['task_id'];
 
         try {
-            taskId = await addTask(task);
+            if (params.taskid) {
+                taskId = await updateTask(task, +params.taskid);
+                await deleteTagsOfTask(+params.taskid);
+            } else {
+                taskId = await addTask(task);
+            }
         } catch (err) {
-            displayError(err, "add task")
+            displayError(err, "add/edit task")
             return;
         } finally {
             props.goBack();
         }
 
+        let curr_tag_rows = await getTagsOfTask(taskId);
+        let curr_tags = await Promise.all(curr_tag_rows.map(async (tag_name) => {
+            return (await getTag(tag_name.tag_name)).tag_name;
+        }));
         await Promise.all(selectedTags.map(async (tag) => {
+            if (curr_tags.includes(tag.tag_name)) {
+                // tag is already in the db
+                return;
+            }
             const taskWithTag: Database['public']['Tables']['TasksWithTags']['Insert'] = {
                 task_id: taskId,
                 tag_name: tag.tag_name,
@@ -127,6 +169,10 @@ const AddTask = (props: AddTaskProps) => {
             displayError(err, "set tags for task")
             props.goBack();
         })
+    }
+
+    const renderNoRooms = () => {
+        return <div>No rooms found. <Link to={"/"}>Create a new room first.</Link></div>
     }
 
     return (
@@ -161,10 +207,11 @@ const AddTask = (props: AddTaskProps) => {
                 <label>
                     Room
                     <AsyncSelect
+                        value={selectedRoom}
                         cacheOptions
                         defaultOptions
                         loadOptions={() => getRooms(props.property_id)}
-                        noOptionsMessage={() => <div>No rooms found. <Link to={"/"}>Create a new room first.</Link></div>}
+                        noOptionsMessage={renderNoRooms}
                         onChange={(selected) => setSelectedRoom(selected)}
                         getOptionLabel={(option) => option.name}
                         getOptionValue={(option) => option.name}
@@ -185,6 +232,7 @@ const AddTask = (props: AddTaskProps) => {
 
                 Tag
                 <AsyncCreateableSelect
+                    value={selectedTags}
                     isMulti
                     cacheOptions
                     createOptionPosition='first'
@@ -222,9 +270,9 @@ const AddTask = (props: AddTaskProps) => {
                     {colors.map((color) => {
                         return (
                             <ColorPickerCard
-                                key={color.color}
-                                color={color.color}
-                                selected={color.selected}
+                                key={color.hex}
+                                color={color.hex}
+                                selected={selectedColor === color.hex}
                                 handleColorClick={handleColorClick}
                             />
                         )

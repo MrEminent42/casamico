@@ -6,6 +6,7 @@ const TasksSection = (props: {
     sectionLabel: string,
     tasks: Database['public']['Tables']['Tasks']['Row'][],
     handleClick: (task: Database['public']['Tables']['Tasks']['Row']) => any,
+    handleBoxClick: (task: Database['public']['Tables']['Tasks']['Row']) => any
     noTaskMsg?: string,
 }) => {
     return (
@@ -18,6 +19,7 @@ const TasksSection = (props: {
                         key={task.task_id}
                         task={task}
                         handleClick={props.handleClick}
+                        handleBoxClick={props.handleBoxClick}
                     />
                 ))
             }

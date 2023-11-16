@@ -5,7 +5,7 @@ import addbuttonsvg from "../assets/plus-button.svg";
 import { Route, Routes, useNavigate, useParams } from 'react-router';
 import { getTasksAndTagsOfProperty, getTasksOfProperty, toggleTaskStatus } from '../controllers/TaskController';
 import { getProperty } from '../controllers/PropertyController';
-import AddTask from './AddTask';
+import AddEditTask from './AddEditTask';
 import Popup from '../components/Popup';
 import { Database } from "../supabase/supabase";
 import SortFilterPopup from '../components/SortFilterPopup';
@@ -145,13 +145,19 @@ const Page2 = () => {
                 <TasksSection
                     sectionLabel='To Do'
                     tasks={aggregatedTasks.filter((task) => !task.completed)}
-                    handleClick={handleToggleTask}
+                    handleClick={
+                        (task) => navigate("edit-task/" + task.task_id)
+                    }
+                    handleBoxClick={handleToggleTask}
                     noTaskMsg="No Tasks 🎉"
                 />
                 <TasksSection
                     sectionLabel="Completed"
                     tasks={aggregatedTasks.filter((task) => task.completed)}
-                    handleClick={handleToggleTask}
+                    handleClick={
+                        (task) => navigate("edit-task/" + task.task_id)
+                    }
+                    handleBoxClick={handleToggleTask}
                     noTaskMsg="No Tasks Completed Yet 🏗️"
                 />
                 <div style={{ color: 'grey', fontSize: '.8rem' }}>
@@ -163,7 +169,14 @@ const Page2 = () => {
                     <Popup
                         onClickOutside={() => navigate("")}
                         onKeyboardEsc={() => navigate("")}
-                        element={<AddTask goBack={() => navigate("")} property_id={propertyId} />}
+                        element={<AddEditTask goBack={() => navigate("")} property_id={propertyId} />}
+                    />
+                } />
+                <Route path="edit-task/:taskid/*" element={
+                    <Popup
+                        onClickOutside={() => navigate("")}
+                        onKeyboardEsc={() => navigate("")}
+                        element={<AddEditTask goBack={() => navigate("")} property_id={propertyId} />}
                     />
                 } />
             </Routes>
