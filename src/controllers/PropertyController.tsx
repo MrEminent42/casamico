@@ -50,7 +50,7 @@ export const createProperty = async (property: Database['public']['Tables']['Pro
 }
 
 export const updateProperty = async (property: Database['public']['Tables']['Properties']['Update'], rooms: string) => {
-    //create new Property entry in database
+    //update Property entry in database
     if (property.property_id) {
         const { data, error } = await supabase
             .from('Properties')
@@ -73,9 +73,24 @@ export const updateProperty = async (property: Database['public']['Tables']['Pro
     throw new Error("No property id was given");
 }
 
-export const deleteProperty = () => {
-    alert("You have asked PropertyController to delete a property.");
+export const deleteProperty = async (property_id: number, image_url: string) => {
+    const { error } = await supabase
+        .from('Properties')
+        .delete()
+        .eq('property_id', property_id);
+
+    if (error) {
+        throw (error);
+    }
+
+    //delete property photo ONLY IF it is not the default
+    image_url = image_url.substring(image_url.lastIndexOf('/') + 1);
+    if (image_url !== "default_house.png") {
+        await deletePropertyPhoto(image_url)
+            .catch(error => { throw (error) });
+    }
 }
+    
 
 //store given file in the database Property Photos bucket
 export const storePropertyPhoto = async (photo: File) => {

@@ -25,7 +25,6 @@ export default PropertyCardPreview
 const PropertyCardContainer = styled.div`
     display: flex;
     flex-direction: column;
-    width: 100%;
 `
 const PropertyImage = styled.img`
     // prevent image from overflowing
@@ -56,6 +55,9 @@ const CardTitle = styled.div`
     font-weight: 600;
     margin: 5px 0px;
     color: #4c4c4c;
+    -ms-word-break: break-word;
+    word-break: break-word;
+    white-space: pre-wrap;
 `
 
 const CardText = styled.div`
