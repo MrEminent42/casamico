@@ -1,4 +1,4 @@
-﻿import { supabase } from "../supabase/db";
+import { supabase } from "../supabase/db";
 
 
 export const createTag = async (tag_name: string) => {

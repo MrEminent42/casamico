@@ -1,4 +1,4 @@
-﻿import { supabase } from "../supabase/db";
+import { supabase } from "../supabase/db";
 
 
 export const toggleTaskStatus = async (task_id: number, status: boolean) => {
