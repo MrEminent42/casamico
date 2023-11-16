@@ -3,11 +3,12 @@ import { Route, Routes, useNavigate } from 'react-router';
 import PropertyCard from '../components/properties/PropertyCard';
 import NewPropertyCard from '../components/properties/NewPropertyCard'
 import styled from 'styled-components';
-import { getAllProperties } from '../controllers/PropertyController';
+import { deleteProperty, getAllProperties, getProperty } from '../controllers/PropertyController';
 import { Database } from '../supabase/supabase';
 import { displayError } from '../App';
 import Popup from '../components/Popup';
 import AddProperty from './AddEditProperty';
+import Confirmation from '../components/Confirmation';
 
 const Home = () => {
     const [properties, setProperties] = useState<Database['public']['Tables']['Properties']['Row'][]>([]);
@@ -62,6 +63,28 @@ const Home = () => {
                         element={<AddProperty goBack={
                             homeGoBack
                         } />}
+                    />
+                } />
+                <Route path="delete-property/:id/*" element={
+                    <Popup
+                        onClickOutside={homeGoBack}
+                        onKeyboardEsc={homeGoBack}
+                        element={<Confirmation
+                            confirmationText="Are you sure you want to delete this property?"
+                            goBack={homeGoBack}
+                            doConfirmed={
+                                async (id: number) => {
+                                    await getProperty(id)
+                                        .then(async (res) => {
+                                            await deleteProperty(id, res.image_url)
+                                                .catch((error) => displayError(error, "delete property"));
+                                        })
+                                        .catch((error) => displayError(error, "get property when deleting property"));
+                                   
+                                    homeGoBack();
+                                }
+                            }
+                        />}
                     />
                 } />
             </Routes>

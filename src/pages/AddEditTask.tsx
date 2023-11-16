@@ -321,7 +321,7 @@ const TextArea = styled.textarea`
     color: gray;
     font-weight: bold;
     resize: none;
-    height: 100px;
+    height: 50px;
 `
 
 const StatusCheckbox = styled.input`
@@ -335,7 +335,7 @@ const AddPropertyForm = styled.form`
     margin: 0px 30px;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: 3rem 3rem 5rem 5rem 5rem 9rem;
+    grid-template-rows: 3rem 3rem 5rem 5rem 5rem 6rem;
     gap: 10px 20px;
     width: 700px;
     height: 85vh;
@@ -389,7 +389,6 @@ const ColorPickerContainer = styled.div`
     justify-content: space-between;
     align-items: center;
     margin: 10px 0px;
-
 `
 
 const DropdownStyles = {
