@@ -16,6 +16,7 @@
     "@types/node": "^16.18.57",
     "@types/react": "^18.2.24",
     "@types/react-dom": "^18.2.9",
+    "jest-cli": "^29.7.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.16.0",
@@ -29,7 +30,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "jest --setupFiles dotenv/config",
     "eject": "react-scripts eject",
     "before-pr": "cross-env CI=true npm run build",
     "update-types": "npx supabase gen types typescript --project-id ifgorfdgcwortivlypji --schema public > src/supabase/supabase.ts"
@@ -53,8 +54,13 @@
     ]
   },
   "devDependencies": {
+    "@babel/core": "^7.23.3",
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@babel/preset-env": "^7.23.3",
+    "@babel/preset-typescript": "^7.23.3",
+    "babel-jest": "^29.7.0",
     "cross-env": "^7.0.3",
+    "jest": "^27.5.1",
     "supabase": "^1.106.1"
   }
 }

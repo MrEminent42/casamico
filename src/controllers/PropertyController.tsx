@@ -74,10 +74,12 @@ export const updateProperty = async (property: Database['public']['Tables']['Pro
 }
 
 export const deleteProperty = async (property_id: number, image_url: string) => {
-    const { error } = await supabase
+    const { data, error } = await supabase
         .from('Properties')
         .delete()
-        .eq('property_id', property_id);
+        .eq('property_id', property_id)
+        .select()
+        .single();
 
     if (error) {
         throw (error);
@@ -89,8 +91,10 @@ export const deleteProperty = async (property_id: number, image_url: string) => 
         await deletePropertyPhoto(image_url)
             .catch(error => { throw (error) });
     }
+
+    return Promise.resolve(data.property_id);
 }
-    
+
 
 //store given file in the database Property Photos bucket
 export const storePropertyPhoto = async (photo: File) => {
