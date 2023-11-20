@@ -1,4 +1,3 @@
-import { createProperty } from "../src/controllers/CreatePropertyController"
 import { deleteProperty } from "../src/controllers/DeletePropertyController"
 import { test_manualCreateProperty } from "./TestUtil";
 
