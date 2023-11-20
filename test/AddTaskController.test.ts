@@ -27,7 +27,7 @@ describe('adding a task', () => {
     test('should throw error if task_id is duplicate', async () => {
         const property = await test_manualCreateProperty();
         const room = await test_manualCreateRoom(property.property_id);
-        const testTask = await test_manualCreateTask(property.property_id, room.room_id)
+        const testTask = await test_manualCreateTask(property.property_id, room.room_id);
 
         // create object test task to add to database
         const task: Database['public']['Tables']['Tasks']['Insert'] = {
