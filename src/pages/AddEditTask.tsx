@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { addTask, getTask, updateTask } from '../controllers/TaskController';
-import { createTag, getTags, getTag } from '../controllers/TagController';
+import { getTask } from '../controllers/GetTaskController';
+import { updateTask } from "../controllers/UpdateTaskController";
+import { addTask } from "../controllers/AddTaskController";
+import { getTags, getTag } from '../controllers/GetTagController';
+import { createTag } from "../controllers/CreateTagController";
 import AsyncCreateableSelect from 'react-select/async-creatable';
 import AsyncSelect from 'react-select/async';
-import { getRooms, getRoom } from '../controllers/RoomController';
+import { getRooms, getRoom } from '../controllers/GetRoomController';
 import { Database } from '../supabase/supabase';
 import { Link, useParams } from 'react-router-dom';
 import ColorPickerCard from '../components/ColorPickerCard';
@@ -108,8 +111,8 @@ const AddTask = (props: AddTaskProps) => {
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        if (!selectedRoom) {
-            alert("You must select a room.");
+        if (!title) {
+            alert("You must enter a title.");
             return;
         }
 
@@ -117,6 +120,11 @@ const AddTask = (props: AddTaskProps) => {
             alert("You must select a due date.");
             return;
         }
+
+        if (!selectedRoom) {
+            alert("You must select a room.");
+            return;
+        }        
 
         try {
             await updateTagsIfNecessary();
