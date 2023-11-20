@@ -3,12 +3,13 @@ import { Route, Routes, useNavigate } from 'react-router';
 import PropertyCard from '../components/properties/PropertyCard';
 import NewPropertyCard from '../components/properties/NewPropertyCard'
 import styled from 'styled-components';
-import { deleteProperty, getAllProperties, getProperty } from '../controllers/PropertyController';
 import { Database } from '../supabase/supabase';
 import { displayError } from '../App';
 import Popup from '../components/Popup';
 import AddProperty from './AddEditProperty';
 import Confirmation from '../components/Confirmation';
+import { getAllProperties, getProperty } from '../controllers/GetPropertyController';
+import { deleteProperty } from '../controllers/DeletePropertyController';
 
 const Home = () => {
     const [properties, setProperties] = useState<Database['public']['Tables']['Properties']['Row'][]>([]);

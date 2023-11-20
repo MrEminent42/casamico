@@ -2,18 +2,14 @@ import React, { FormEvent, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { useParams } from 'react-router-dom'
 import uploadIcon from '../assets/upload.png';
-import { createProperty, deletePropertyPhoto, getProperty, getPropertyPhotoUrl, storePropertyPhoto, updateProperty } from '../controllers/PropertyController';
 import PropertyCardPreview from '../components/properties/PropertyCardPreview';
 import { displayError } from '../App';
-import { getRooms } from '../controllers/RoomController';
-
-interface DummyProperty {
-    address: string
-    city?: string | null
-    country?: string | null
-    image_url: string
-    state_province?: string | null
-}
+import { getRooms } from '../controllers/GetRoomController';
+import { deletePropertyPhoto, getPropertyPhotoUrl, storePropertyPhoto } from '../controllers/PropertyPhotoController';
+import { getProperty } from '../controllers/GetPropertyController';
+import { updateProperty } from '../controllers/UpdatePropertyController';
+import { createProperty } from '../controllers/CreatePropertyController';
+import { Database } from '../supabase/supabase';
 
 interface AddEditPropertyProps {
     goBack: () => void;
@@ -22,7 +18,7 @@ interface AddEditPropertyProps {
 const AddEditProperty = (props: AddEditPropertyProps) => {
     const params = useParams();
 
-    const [newProperty, setNewProperty] = useState<DummyProperty>({ image_url: getPropertyPhotoUrl('default_house.png') } as DummyProperty);
+    const [newProperty, setNewProperty] = useState<Database['public']['Tables']['Properties']['Insert']>({ address: "", image_url: getPropertyPhotoUrl('default_house.png') });
     const [newRooms, setNewRooms] = useState<string>();
     const [newPhoto, setNewPhoto] = useState<File>();
     const [preview, setPreview] = useState<string>();
@@ -33,7 +29,7 @@ const AddEditProperty = (props: AddEditPropertyProps) => {
     const handleChange = (event: FormEvent<HTMLInputElement>) => {
         const name = event.currentTarget.name;
         const value = event.currentTarget.value;
-        setNewProperty(values => ({ ...values, [name]: value }) as DummyProperty)
+        setNewProperty(values => ({ ...values, [name]: value }) as Database['public']['Tables']['Properties']['Insert'])
     }
 
     //called from room input
@@ -99,7 +95,7 @@ const AddEditProperty = (props: AddEditPropertyProps) => {
     //change newProperty to use this preview photo
     useEffect(() => {
         if (preview) {
-            setNewProperty(values => ({ ...values, image_url: preview }) as DummyProperty);
+            setNewProperty(values => ({ ...values, image_url: preview }) as Database['public']['Tables']['Properties']['Insert']);
         }
     }, [preview])
 
