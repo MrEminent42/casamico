@@ -11,14 +11,14 @@ export const deleteProperty = async (property_id: number, image_url: string) => 
         .single();
 
     if (error) {
-        throw (error);
+        throw new Error(error.message);
     }
 
     //delete property photo ONLY IF it is not the default
     image_url = image_url.substring(image_url.lastIndexOf('/') + 1);
     if (image_url !== "default_house.png") {
         await deletePropertyPhoto(image_url)
-            .catch(error => { throw (error); });
+            .catch(error => { throw new Error(JSON.stringify(error)); });
     }
 
     return Promise.resolve(data.property_id);

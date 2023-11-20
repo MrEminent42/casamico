@@ -8,7 +8,7 @@ export const getTag = async (tag_name: string) => {
         .maybeSingle();
 
     if (res.error || res.data === null) {
-        throw (res.error || `Tag id ${tag_name} not found.`);
+        throw new Error(res.error?.message || `Tag id ${tag_name} not found.`);
     }
 
     return res.data;
@@ -21,7 +21,7 @@ export const getTags = async () => {
         .order('tag_name', { ascending: true });
 
     if (res.error || res.data === null) {
-        throw (res.error || `Tags not found.`);
+        throw new Error(res.error?.message || `Tags not found.`);
     }
     return res.data;
 }

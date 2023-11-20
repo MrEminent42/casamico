@@ -10,7 +10,7 @@ export const toggleTaskStatus = async (task_id: number, status: boolean) => {
         .single();
 
     if (res.error) {
-        throw (res.error);
+        throw new Error(res.error.message);
     }
 
     return res.data;

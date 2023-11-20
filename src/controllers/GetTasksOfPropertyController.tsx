@@ -10,7 +10,7 @@ export const getTasksOfProperty = async (propertyId: number) => {
         .order('due_date', { ascending: true });
 
     if (res.error) {
-        throw (res.error);
+        throw new Error(res.error.message);
     }
 
     return res.data as Database['public']['Tables']['Tasks']['Row'][];
@@ -23,7 +23,7 @@ export const getTasksAndTagsOfProperty = async (propertyId: number) => {
         .eq('property_id', propertyId);
 
     if (res.error) {
-        throw (res.error);
+        throw new Error(res.error.message);
     }
 
     return res.data;

@@ -12,7 +12,7 @@ export const updateProperty = async (property: Database['public']['Tables']['Pro
             .eq('property_id', property.property_id)
             .select();
         if (error) {
-            throw error;
+            throw new Error(error.message);
         }
 
         //create new Room entries in database if needed

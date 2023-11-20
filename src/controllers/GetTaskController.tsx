@@ -8,7 +8,7 @@ export const getTask = async (taskId: number) => {
         .maybeSingle();
 
     if (res.error || res.data === null) {
-        throw (res.error || `Task id ${taskId} not found.`);
+        throw new Error(res.error?.message || `Task id ${taskId} not found.`);
     }
 
     return res.data;

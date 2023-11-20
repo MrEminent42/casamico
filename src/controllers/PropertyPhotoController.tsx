@@ -1,5 +1,5 @@
 import { supabase } from "../supabase/db";
-    
+
 
 //store given file in the database Property Photos bucket
 export const storePropertyPhoto = async (photo: File) => {
@@ -14,7 +14,7 @@ export const storePropertyPhoto = async (photo: File) => {
         })
 
     if (error) {
-        throw error;
+        throw new Error(error.message);
     }
 
     return data.path; //this is the file path to the stored file in the database
@@ -28,7 +28,7 @@ export const deletePropertyPhoto = async (name: string) => {
         .remove([name])
 
     if (error) {
-        throw error;
+        throw new Error(error.message);
     }
 
     return data; //array of FileObjects, each object has info on the file that was deleted
