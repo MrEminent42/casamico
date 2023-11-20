@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import backbuttonsvg from '../assets/arrow-left-circle.svg';
 import addbuttonsvg from "../assets/plus-button.svg";
 import { Route, Routes, useNavigate, useParams } from 'react-router';
-import { getTasksAndTagsOfProperty, getTasksOfProperty } from '../controllers/GetTaskController';
+import { getTasksAndTagsOfProperty, getTasksOfProperty } from "../controllers/GetTasksOfPropertyController";
 import { toggleTaskStatus } from "../controllers/ToggleTaskStatusController";
 import AddEditTask from './AddEditTask';
 import Popup from '../components/Popup';
@@ -15,7 +15,7 @@ import { displayError } from '../App';
 import { getProperty } from '../controllers/GetPropertyController';
 
 
-const Page2 = () => {
+const Tasks = () => {
 
     const navigate = useNavigate();
     const [propertyId, setPropertyId] = useState<number>(0);
@@ -185,7 +185,7 @@ const Page2 = () => {
     )
 }
 
-export default Page2
+export default Tasks
 
 const sortOptions = new Map([
     ["Due date", (
