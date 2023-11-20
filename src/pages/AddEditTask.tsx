@@ -150,7 +150,7 @@ const AddTask = (props: AddTaskProps) => {
                 taskId = await updateTask(task, +params.taskid);
                 await deleteTagsOfTask(+params.taskid);
             } else {
-                taskId = await addTask(task);
+                taskId = (await addTask(task)).task_id;
             }
         } catch (err) {
             displayError(err, "add/edit task")

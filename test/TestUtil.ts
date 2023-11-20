@@ -130,7 +130,7 @@ export const test_manualCreateTask = async (property_id: number, room_id: number
     const { data, error } = await supabase
         .from('Tasks')
         .insert({
-            ...bare_bones_testing_room,
+            ...bare_bones_testing_task,
             property_id: property_id,
             room_id: room_id
         })
