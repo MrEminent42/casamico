@@ -3,7 +3,7 @@ import { addTask } from "../src/controllers/AddTaskController"
 import { test_manualCreateProperty, test_manualCreateRoom, test_manualCreateTask, test_manualDeleteProperty } from "./TestUtil";
 
 describe('adding a task', () => {
-    test('task_id is unique', async () => {
+    test('should create a task with a unique task id', async () => {
         const property = await test_manualCreateProperty();
         const room = await test_manualCreateRoom(property.property_id);
 
@@ -24,7 +24,7 @@ describe('adding a task', () => {
         await test_manualDeleteProperty(property.property_id); // cascade delete from property will delete rooms and tasks associated with it
     })
 
-    test('task_id is duplicate', async () => {
+    test('should throw error if task_id is duplicate', async () => {
         const property = await test_manualCreateProperty();
         const room = await test_manualCreateRoom(property.property_id);
         const testTask = await test_manualCreateTask(property.property_id, room.room_id)
