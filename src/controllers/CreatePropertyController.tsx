@@ -11,7 +11,7 @@ export const createProperty = async (property: Database['public']['Tables']['Pro
         .select();
 
     if (error) {
-        throw error;
+        throw new Error(error.message);
     }
 
     //create new Room entries in database if needed
