@@ -1,43 +1,71 @@
 import { Database } from "../src/supabase/supabase";
 import { addTask } from "../src/controllers/AddTaskController"
+import { updateTask } from "../src/controllers/UpdateTaskController"
 import { test_manualCreateProperty, test_manualCreateRoom, test_manualCreateTask, test_manualDeleteProperty } from "./TestUtil";
 
-describe('adding a task', () => {
-    test('should create a task with a unique task id', async () => {
-        const property = await test_manualCreateProperty();
-        const room = await test_manualCreateRoom(property.property_id);
+describe('tasks', () => {
+    describe('adding a task', () => {
+        test('should create a task with a unique task id', async () => {
+            const property = await test_manualCreateProperty();
+            const room = await test_manualCreateRoom(property.property_id);
 
-        // create object test task to add to database
-        // task_id must be specified so we know that function returns correct ID
-        const task: Database['public']['Tables']['Tasks']['Insert'] = {
-            title: "AUTOMATED TESTING TASK",
-            due_date: "2023-01-01",
-            property_id: property.property_id,
-            room_id: room.room_id
-        }
+            // create object test task to add to database
+            // task_id must be specified so we know that function returns correct ID
+            const task: Database['public']['Tables']['Tasks']['Insert'] = {
+                title: "AUTOMATED TESTING TASK",
+                due_date: "2023-01-01",
+                property_id: property.property_id,
+                room_id: room.room_id
+            }
 
-        //returned value from adding task is its task_id
-        let res = await addTask(task);
-        expect(res).toHaveProperty("title", "AUTOMATED TESTING TASK");
+            //returned value from adding task is its task_id
+            let res = await addTask(task);
+            expect(res).toHaveProperty("title", "AUTOMATED TESTING TASK");
 
-        // tests should be independent of each other, so we need to delete all created entries
-        await test_manualDeleteProperty(property.property_id); // cascade delete from property will delete rooms and tasks associated with it
+            // tests should be independent of each other, so we need to delete all created entries
+            await test_manualDeleteProperty(property.property_id); // cascade delete from property will delete rooms and tasks associated with it
+        })
+
+        test('should throw error if task_id is duplicate', async () => {
+            const property = await test_manualCreateProperty();
+            const room = await test_manualCreateRoom(property.property_id);
+            const testTask = await test_manualCreateTask(property.property_id, room.room_id);
+
+            // create object test task to add to database
+            const task: Database['public']['Tables']['Tasks']['Insert'] = {
+                ...testTask,
+                task_id: testTask.task_id
+            }
+
+            await expect(addTask(task)).rejects.toThrowError("duplicate key");
+
+            // tests should be independent of each other, so we need to delete all created entries
+            await test_manualDeleteProperty(property.property_id); // cascade delete from property will delete rooms and tasks associated with it
+        })
     })
 
-    test('should throw error if task_id is duplicate', async () => {
-        const property = await test_manualCreateProperty();
-        const room = await test_manualCreateRoom(property.property_id);
-        const testTask = await test_manualCreateTask(property.property_id, room.room_id);
+    describe('updating a task', () => {
+        test('should change the task entry to match the new data', async () => {
+            const property = await test_manualCreateProperty();
+            const room = await test_manualCreateRoom(property.property_id);
+            const task = await test_manualCreateTask(property.property_id, room.room_id);
 
-        // create object test task to add to database
-        const task: Database['public']['Tables']['Tasks']['Insert'] = {
-            ...testTask,
-            task_id: testTask.task_id
-        }
+            //returned value from adding task is its task_id
+            let res = await updateTask({ ...task, title: task.title + " 2" }, task.task_id);
+            expect(res).toHaveProperty("title", "AUTOMATED TESTING TASK 2");
 
-        await expect(addTask(task)).rejects.toThrowError("duplicate key");
+            // tests should be independent of each other, so we need to delete all created entries
+            await test_manualDeleteProperty(property.property_id); // cascade delete from property will delete rooms and tasks associated with it
+        })
 
-        // tests should be independent of each other, so we need to delete all created entries
-        await test_manualDeleteProperty(property.property_id); // cascade delete from property will delete rooms and tasks associated with it
+        test('should throw error if no task with given id exists', async () => {
+            //returned value from adding task is its task_id
+            await expect(updateTask({
+                title: "AUTOMATED TESTING TASK",
+                due_date: "2023-01-01",
+                room_id: -1,
+                property_id: -1
+            }, -1)).rejects.toThrowError("JSON object requested, multiple (or no) rows returned");
+        })
     })
 })
