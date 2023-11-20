@@ -30,7 +30,6 @@ describe('adding a task', () => {
         const testTask = await test_manualCreateTask(property.property_id, room.room_id)
 
         // create object test task to add to database
-        // task_id must be specified so we know that function returns correct ID
         const task: Database['public']['Tables']['Tasks']['Insert'] = {
             ...testTask,
             task_id: testTask.task_id

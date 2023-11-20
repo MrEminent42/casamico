@@ -147,7 +147,7 @@ const AddTask = (props: AddTaskProps) => {
 
         try {
             if (params.taskid) {
-                taskId = await updateTask(task, +params.taskid);
+                taskId = (await updateTask(task, +params.taskid)).task_id;
                 await deleteTagsOfTask(+params.taskid);
             } else {
                 taskId = (await addTask(task)).task_id;
