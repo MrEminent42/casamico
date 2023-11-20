@@ -35,7 +35,7 @@ export const createRooms = async (input: string, property_id: number) => {
             .select();
 
         if (error) {
-            throw (error);
+            throw new Error(error.message);
         }
 
         existingNames.add(data[0].name); //include newly created room names to avoid future duplicates

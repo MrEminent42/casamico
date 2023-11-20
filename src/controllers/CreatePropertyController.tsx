@@ -11,14 +11,14 @@ export const createProperty = async (property: Database['public']['Tables']['Pro
         .select();
 
     if (error) {
-        throw error;
+        throw new Error(error.message);
     }
 
     //create new Room entries in database if needed
     let room_ids: Array<number> = [];
     if (rooms) {
         room_ids = await createRooms(rooms, data[0].property_id)
-            .catch(err => { throw (err); });
+            .catch(err => { throw new Error(JSON.stringify(err)); });
     }
 
     return { property_id: data[0].property_id, room_ids: room_ids };

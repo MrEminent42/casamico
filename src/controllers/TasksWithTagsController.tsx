@@ -8,7 +8,7 @@ export const getTagsOfTask = async (task_id: number) => {
         .eq('task_id', task_id);
 
     if (res.error) {
-        throw res.error;
+        throw new Error(res.error.message);
     }
 
     return res.data;
@@ -22,7 +22,7 @@ export const addTaskWithTags = async (taskWithTag: Database['public']['Tables'][
         .single();
 
     if (res.error) {
-        throw res.error;
+        throw new Error(res.error.message);
     }
 
     // returns the newly created taskWithTag
@@ -36,7 +36,7 @@ export const deleteTagsOfTask = async (task_id: number) => {
         .eq('task_id', task_id);
 
     if (res.error) {
-        throw res.error;
+        throw new Error(res.error.message);
     }
 
     return res.data;

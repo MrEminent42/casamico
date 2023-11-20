@@ -9,7 +9,7 @@ export const getRoom = async (room_id: number) => {
         .maybeSingle();
 
     if (res.error || res.data === null) {
-        throw (res.error || `Room id ${room_id} not found.`);
+        throw new Error(res.error?.message || `Room id ${room_id} not found.`);
     }
 
     return res.data;
@@ -22,7 +22,7 @@ export const getRooms = async (property_id: Database['public']['Tables']['Proper
         .eq('property_id', property_id);
 
     if (res.error) {
-        throw (res.error);
+        throw new Error(res.error.message);
     }
 
     return res.data;

@@ -11,7 +11,7 @@ export const updateTask = async (task: Database['public']['Tables']['Tasks']['Up
         .single();
 
     if (res.error) {
-        throw (res.error);
+        throw new Error(res.error.message);
     }
 
     return res.data.task_id;

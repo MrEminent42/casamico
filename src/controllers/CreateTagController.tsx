@@ -9,7 +9,7 @@ export const createTag = async (tag_name: string) => {
         .single();
 
     if (res.error) {
-        throw res.error;
+        throw new Error(res.error.message);
     }
 
     return res.data.tag_name;

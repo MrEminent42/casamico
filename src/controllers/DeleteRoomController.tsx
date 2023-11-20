@@ -8,6 +8,6 @@ export const deleteRoom = async (room_id: number) => {
         .eq('room_id', room_id);
 
     if (error) {
-        throw (error);
+        throw new Error(error.message);
     }
 };

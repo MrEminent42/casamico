@@ -7,7 +7,7 @@ export const getAllProperties = async () => {
         .select();
 
     if (res.error) {
-        throw (res.error);
+        throw new Error(res.error.message);
     }
 
     return res.data;
@@ -21,7 +21,7 @@ export const getProperty = async (propertyId: number) => {
         .maybeSingle();
 
     if (res.error || res.data === null) {
-        throw (res.error || `Property id ${propertyId} not found.`);
+        throw new Error(res.error?.message || `Property id ${propertyId} not found.`);
     }
 
     return res.data;
