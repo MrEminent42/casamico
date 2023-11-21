@@ -1,6 +1,7 @@
 import { Database } from "../src/supabase/supabase";
 import { addTask } from "../src/controllers/AddTaskController"
 import { updateTask } from "../src/controllers/UpdateTaskController"
+import { toggleTaskStatus } from "../src/controllers/ToggleTaskStatusController"
 import { test_manualCreateProperty, test_manualCreateRoom, test_manualCreateTask, test_manualDeleteProperty, test_manualDeleteTask } from "./TestUtil";
 
 describe('tasks', () => {
@@ -76,4 +77,43 @@ describe('tasks', () => {
             }, -1)).rejects.toThrowError("JSON object requested, multiple (or no) rows returned");
         })
     })
+    
+    describe('updating a task', () => {
+        test('should change the task entry to match the new data', async () => {
+            const task: Database['public']['Tables']['Tasks']['Insert'] = {
+                title: "AUTOMATED TESTING TASK",
+                due_date: "2023-01-01",
+                completed: false,
+                property_id: property.property_id,
+                room_id: room.room_id
+            }
+            // check that task title is correct
+
+            let temp_task = await addTask(task);
+
+            toggleTaskStatus(temp_task.task_id, false)
+
+            expect(temp_task.completed).toBe(true)
+
+            // tests should be independent, so remove created task
+            await test_manualDeleteTask(temp_task.task_id);
+        })
+
+        test('should throw error if no task with given id exists', async () => {
+            // check that error is thrown
+            const bad_task: Database['public']['Tables']['Tasks']['Insert'] = {
+                title: "AUTOMATED TESTING TASK",
+                due_date: "2023-01-01",
+                completed: false,
+                property_id: -1,
+                room_id: -1
+            }
+            let test_bad_task = await addTask(bad_task);
+
+            await expect(toggleTaskStatus(test_bad_task.task_id, false)).rejects.toThrowError("JSON object requested, multiple (or no) rows returned");
+
+            await test_manualDeleteTask(test_bad_task.task_id);
+        })
+    })
+
 })
