@@ -79,7 +79,7 @@ describe('tasks', () => {
     })
 
     describe('toggle status a task', () => {
-        test('should change the status of task when toggled', async () => {
+        test('should change the status of task when toggled from false to true', async () => {
             //create a task with completed = false
             const task: Database['public']['Tables']['Tasks']['Insert'] = {
                 title: "ZACH TESTING TASK",
@@ -98,13 +98,12 @@ describe('tasks', () => {
             toggleTaskStatus(temp_task.task_id, false)
 
             //expect statemenet to check results
-            expect(temp_task).toHaveProperty("completed", true);
-
+            expect(temp_task.completed).toBeTruthy;
             // tests should be independent, so remove created task
             await test_manualDeleteTask(temp_task.task_id);
         })
 
-        test('should change the status of task when toggled', async () => {
+        test(' change the status of task when toggled from true to false', async () => {
             //create a task with completed = true
             const task: Database['public']['Tables']['Tasks']['Insert'] = {
                 title: "ZACH TESTING TASK",
@@ -123,7 +122,7 @@ describe('tasks', () => {
             toggleTaskStatus(temp_task.task_id, true)
 
             //expect statemenet to check results
-            expect(temp_task).toHaveProperty("completed", false);
+            expect(temp_task.completed).toBeFalsy
 
             // tests should be independent, so remove created task
             await test_manualDeleteTask(temp_task.task_id);
