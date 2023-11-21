@@ -2,7 +2,10 @@ import { Database } from "../src/supabase/supabase";
 import { addTask } from "../src/controllers/AddTaskController"
 import { updateTask } from "../src/controllers/UpdateTaskController"
 import { toggleTaskStatus } from "../src/controllers/ToggleTaskStatusController"
+import { getTask } from "../src/controllers/GetTaskController"
 import { test_manualCreateProperty, test_manualCreateRoom, test_manualCreateTask, test_manualDeleteProperty, test_manualDeleteTask } from "./TestUtil";
+import { get } from "http";
+
 
 describe('tasks', () => {
     let property: Database['public']['Tables']['Properties']['Row'];
@@ -99,7 +102,6 @@ describe('tasks', () => {
 
             //expect statemenet to check results
             expect(res).toHaveProperty("completed", true)
-
             // tests should be independent, so remove created task
             await test_manualDeleteTask(temp_task.task_id);
         })
@@ -129,41 +131,26 @@ describe('tasks', () => {
             await test_manualDeleteTask(temp_task2.task_id);
         })
     })
-    // describe('get a task', () => {
-    //     test('should return the correct task when running getTask', async () => {
-    //         const task: Database['public']['Tables']['Tasks']['Insert'] = {
-    //             title: "AUTOMATED TESTING TASK",
-    //             due_date: "2023-01-01",
-    //             property_id: property.property_id,
-    //             room_id: room.room_id
-    //         }
-    //         // check that task title is correct
 
-    //         let temp_task = await addTask(task);
+    describe('get a task', () => {
+        test('should return the correct task when running getTask', async () => {
+            const task = await test_manualCreateTask(property.property_id, room.room_id);
 
-    //         toggleTaskStatus(temp_task.task_id, false)
+            let ret_task = await getTask(task.task_id)
 
-    //         expect(temp_task.completed).toBe(true)
+            expect(ret_task.task_id).toEqual(task.task_id)
 
-    //         // tests should be independent, so remove created task
-    //         await test_manualDeleteTask(temp_task.task_id);
-    //     })
+            // tests should be independent, so remove created task
+            await test_manualDeleteTask(task.task_id);
+        })
 
-    //     test('should throw error if toggling task with false id exists', async () => {
-    //         // check that error is thrown
-    //         const bad_task: Database['public']['Tables']['Tasks']['Insert'] = {
-    //             title: "AUTOMATED TESTING TASK",
-    //             due_date: "2023-01-01",
-    //             completed: false,
-    //             property_id: -1,
-    //             room_id: -1
-    //         }
-    //         let test_bad_task = await addTask(bad_task);
+        test('should throw error if toggling task with false id exists', async () => {
+            // check that error is thrown
+            let wrong_task = await getTask(-1)
 
-    //         await expect(toggleTaskStatus(test_bad_task.task_id, false)).rejects.toThrowError("JSON object requested, multiple (or no) rows returned");
+            await expect (getTask(-1)) .rejects.toThrowError("Property id -1 not found");
 
-    //         await test_manualDeleteTask(test_bad_task.task_id);
-    //     })
-    // })
+        })
+    })
 
 })
