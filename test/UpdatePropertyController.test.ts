@@ -1,15 +1,13 @@
 import { Database } from "../src/supabase/supabase";
-import { test_manualCreateProperty, test_manualCreateRoom, test_manualCreateTask, test_manualDeleteProperty, test_manualDeleteTask } from "./TestUtil";
+import { test_manualCreateProperty, test_manualCreateRoom, test_manualDeleteProperty } from "./TestUtil";
 import { updateProperty } from "../src/controllers/UpdatePropertyController";
 
 describe('updating a property', () => {
     let property: Database['public']['Tables']['Properties']['Row'];
-    let room: Database['public']['Tables']['Rooms']['Row'];
 
     beforeAll(async () => {
         // create temp property and room for tasks to correspond to
         property = await test_manualCreateProperty();
-        room = await test_manualCreateRoom(property.property_id);
     })
 
     afterAll(async () => {
