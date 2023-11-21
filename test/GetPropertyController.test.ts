@@ -1,8 +1,8 @@
 import { Database } from "../src/supabase/supabase";
 import { test_manualCreateProperty, test_manualCreateRoom, test_manualCreateTask, test_manualDeleteProperty, test_manualDeleteTask } from "./TestUtil";
-import { updateProperty } from "../src/controllers/UpdatePropertyController";
+import { getProperty } from "../src/controllers/GetPropertyController";
 
-describe('updating a property', () => {
+describe('get property', () => {
     let property: Database['public']['Tables']['Properties']['Row'];
     let room: Database['public']['Tables']['Rooms']['Row'];
 
@@ -15,20 +15,17 @@ describe('updating a property', () => {
     afterAll(async () => {
         // delete temp property cascades to delete room too
         await test_manualDeleteProperty(property.property_id);
-        await test_manualDeleteProperty(-1);
     })
 
-    // test update property (remove room)
-    test('should update the property entry to match the new data', async () => {
-        let res = await updateProperty(property, '');
+    // test get property
+    test('should return property with matching id', async () => {
+        let res = await getProperty(property.property_id);
 
-        expect(res).toHaveProperty("room_ids", []);
+        expect(res).toHaveProperty("property_id", property.property_id);
     })
 
-    // test throw error if no property was updated
-    test('should throw error if no property was updated', async () => {
-        property.property_id = -1;
-
-        await expect(updateProperty(property, '')).rejects.toThrowError("No property was updated");
+    // test invalid property id
+    test('should throw error if property id is invalid', async () => {
+        await expect(getProperty(-1)).rejects.toThrowError("Property id -1 not found");
     })
 })

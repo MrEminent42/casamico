@@ -5,7 +5,7 @@ import { supabase } from "../src/supabase/db"
  * other than the property_id
  */
 export const bare_bones_testing_property = {
-    address: "AUTOMATED TESTING PROPERTY",
+    address: "AUTOMATED TESTING PROPERTYGGGG",
     image_url: "https://picsum.photos/200",
 }
 
