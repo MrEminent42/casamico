@@ -95,10 +95,11 @@ describe('tasks', () => {
 
             //run the testToggle from the controller
 
-            toggleTaskStatus(temp_task.task_id, false)
+            let res = await toggleTaskStatus(temp_task.task_id, false)
 
             //expect statemenet to check results
-            expect(temp_task.completed).toBeTruthy;
+            expect(res).toHaveProperty("completed", true)
+
             // tests should be independent, so remove created task
             await test_manualDeleteTask(temp_task.task_id);
         })
@@ -119,10 +120,10 @@ describe('tasks', () => {
 
             //run the testToggle from the controller
 
-            toggleTaskStatus(temp_task2.task_id, true)
+            let res = await toggleTaskStatus(temp_task2.task_id, true)
 
             //expect statemenet to check results
-            expect(temp_task2.completed).toBeFalsy
+            expect(res).toHaveProperty("completed", false)
 
             // tests should be independent, so remove created task
             await test_manualDeleteTask(temp_task2.task_id);
