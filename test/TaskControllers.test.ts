@@ -77,9 +77,9 @@ describe('tasks', () => {
             }, -1)).rejects.toThrowError("JSON object requested, multiple (or no) rows returned");
         })
     })
-    
-    describe('updating a task', () => {
-        test('should change the task entry to match the new data', async () => {
+
+    describe('toggle status a task', () => {
+        test('should change the status of task when toggled', async () => {
             const task: Database['public']['Tables']['Tasks']['Insert'] = {
                 title: "AUTOMATED TESTING TASK",
                 due_date: "2023-01-01",
@@ -99,7 +99,7 @@ describe('tasks', () => {
             await test_manualDeleteTask(temp_task.task_id);
         })
 
-        test('should throw error if no task with given id exists', async () => {
+        test('should throw error if toggling task with false id exists', async () => {
             // check that error is thrown
             const bad_task: Database['public']['Tables']['Tasks']['Insert'] = {
                 title: "AUTOMATED TESTING TASK",
