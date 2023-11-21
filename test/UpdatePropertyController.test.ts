@@ -1,5 +1,5 @@
 import { Database } from "../src/supabase/supabase";
-import { test_manualCreateProperty, test_manualDeleteProperty } from "./TestUtil";
+import { test_manualCreateProperty, test_manualDeleteProperty, bare_bones_testing_property } from "./TestUtil";
 import { updateProperty } from "../src/controllers/UpdatePropertyController";
 
 describe('updating a property', () => {
@@ -13,7 +13,6 @@ describe('updating a property', () => {
     afterAll(async () => {
         // delete temp property cascades to delete room too
         await test_manualDeleteProperty(property.property_id);
-        await test_manualDeleteProperty(-1);
     })
 
     // test update property (remove room)
@@ -21,12 +20,16 @@ describe('updating a property', () => {
         let res = await updateProperty(property, '');
 
         expect(res).toHaveProperty("room_ids", []);
+
+        await test_manualDeleteProperty(property.property_id);
     })
 
-    // test throw error if no property was updated
-    test('should throw error if no property was updated', async () => {
-        property.property_id = -1;
-
-        await expect(updateProperty(property, '')).rejects.toThrowError("No property was updated");
+    // test property with negative id
+    test('should throw an error when the property id is negative', async () => {
+        await expect(updateProperty({
+            property_id: -1,
+            ...bare_bones_testing_property
+        }, '')).rejects.toThrowError('No property was updated');
     })
+
 })
