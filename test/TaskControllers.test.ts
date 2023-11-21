@@ -81,7 +81,7 @@ describe('tasks', () => {
     describe('toggle status a task', () => {
         test('should change the status of task when toggled', async () => {
             const task: Database['public']['Tables']['Tasks']['Insert'] = {
-                title: "AUTOMATED TESTING TASK",
+                title: "ZACH TESTING TASK",
                 due_date: "2023-01-01",
                 completed: false,
                 property_id: property.property_id,
@@ -93,7 +93,7 @@ describe('tasks', () => {
 
             toggleTaskStatus(temp_task.task_id, false)
 
-            expect(temp_task.completed).toBe(true)
+            expect(temp_task).toHaveProperty("completed", true);
 
             // tests should be independent, so remove created task
             await test_manualDeleteTask(temp_task.task_id);
@@ -102,7 +102,7 @@ describe('tasks', () => {
         test('should throw error if toggling task with false id exists', async () => {
             // check that error is thrown
             const bad_task: Database['public']['Tables']['Tasks']['Insert'] = {
-                title: "AUTOMATED TESTING TASK",
+                title: "ZACH BAD TESTING TASK",
                 due_date: "2023-01-01",
                 completed: false,
                 property_id: -1,
@@ -115,5 +115,41 @@ describe('tasks', () => {
             await test_manualDeleteTask(test_bad_task.task_id);
         })
     })
+    // describe('get a task', () => {
+    //     test('should return the correct task when running getTask', async () => {
+    //         const task: Database['public']['Tables']['Tasks']['Insert'] = {
+    //             title: "AUTOMATED TESTING TASK",
+    //             due_date: "2023-01-01",
+    //             property_id: property.property_id,
+    //             room_id: room.room_id
+    //         }
+    //         // check that task title is correct
+
+    //         let temp_task = await addTask(task);
+
+    //         toggleTaskStatus(temp_task.task_id, false)
+
+    //         expect(temp_task.completed).toBe(true)
+
+    //         // tests should be independent, so remove created task
+    //         await test_manualDeleteTask(temp_task.task_id);
+    //     })
+
+    //     test('should throw error if toggling task with false id exists', async () => {
+    //         // check that error is thrown
+    //         const bad_task: Database['public']['Tables']['Tasks']['Insert'] = {
+    //             title: "AUTOMATED TESTING TASK",
+    //             due_date: "2023-01-01",
+    //             completed: false,
+    //             property_id: -1,
+    //             room_id: -1
+    //         }
+    //         let test_bad_task = await addTask(bad_task);
+
+    //         await expect(toggleTaskStatus(test_bad_task.task_id, false)).rejects.toThrowError("JSON object requested, multiple (or no) rows returned");
+
+    //         await test_manualDeleteTask(test_bad_task.task_id);
+    //     })
+    // })
 
 })
