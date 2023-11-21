@@ -1,5 +1,5 @@
 import { Database } from "../src/supabase/supabase";
-import { test_manualCreateProperty, test_manualCreateRoom, test_manualDeleteProperty } from "./TestUtil";
+import { test_manualCreateProperty, test_manualDeleteProperty } from "./TestUtil";
 import { getProperty } from "../src/controllers/GetPropertyController";
 
 describe('get property', () => {
