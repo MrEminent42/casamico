@@ -105,8 +105,8 @@ describe('tasks', () => {
 
         test(' change the status of task when toggled from true to false', async () => {
             //create a task with completed = true
-            const task: Database['public']['Tables']['Tasks']['Insert'] = {
-                title: "ZACH TESTING TASK",
+            const task2: Database['public']['Tables']['Tasks']['Insert'] = {
+                title: "ZACH TESTING TASK2",
                 due_date: "2023-01-01",
                 completed: true,
                 property_id: property.property_id,
@@ -115,17 +115,17 @@ describe('tasks', () => {
             
             // store the add task in temp_task
 
-            let temp_task = await addTask(task);
+            let temp_task2 = await addTask(task2);
 
             //run the testToggle from the controller
 
-            toggleTaskStatus(temp_task.task_id, true)
+            toggleTaskStatus(temp_task2.task_id, true)
 
             //expect statemenet to check results
-            expect(temp_task.completed).toBeFalsy
+            expect(temp_task2.completed).toBeFalsy
 
             // tests should be independent, so remove created task
-            await test_manualDeleteTask(temp_task.task_id);
+            await test_manualDeleteTask(temp_task2.task_id);
         })
     })
     // describe('get a task', () => {
