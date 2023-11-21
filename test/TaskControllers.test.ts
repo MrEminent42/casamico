@@ -144,11 +144,10 @@ describe('tasks', () => {
             await test_manualDeleteTask(task.task_id);
         })
 
-        test('should throw error if toggling task with false id exists', async () => {
+        test('should throw error if getting task with false id exists', async () => {
             // check that error is thrown
-            let wrong_task = await getTask(-1)
 
-            await expect (getTask(-1)) .rejects.toThrowError("Property id -1 not found");
+            await expect (getTask(-1)) .rejects.toThrowError("Task id -1 not found");
 
         })
     })
