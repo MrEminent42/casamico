@@ -147,7 +147,7 @@ describe('tasks', () => {
         test('should throw error if getting task with false id exists', async () => {
             // check that error is thrown
 
-            await expect (getTask(-1)) .rejects.toThrowError("Task id -1 not found");
+            await expect(getTask(-1)).rejects.toThrowError("Task id -1 not found");
 
         })
     })
