@@ -9,6 +9,7 @@ export const deleteProperty = async (property_id: number, image_url: string) => 
         .eq('property_id', property_id)
         .select()
         .single();
+    // single() throws an error if anything happens other than 1 property is deleted (none or multiple)
 
     if (error) {
         throw new Error(error.message);
