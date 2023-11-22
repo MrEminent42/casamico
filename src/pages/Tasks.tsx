@@ -9,6 +9,7 @@ import AddEditTask from './AddEditTask';
 import Popup from '../components/Popup';
 import { Database } from "../supabase/supabase";
 import SortFilterPopup from '../components/SortFilterPopup';
+import { deleteTask } from '../controllers/DeleteTaskController';
 
 import TasksSection from '../components/TasksSection';
 import { displayError } from '../App';
@@ -150,6 +151,16 @@ const Tasks = () => {
                         (task) => navigate("edit-task/" + task.task_id)
                     }
                     handleBoxClick={handleToggleTask}
+                    handleDelete={
+                        async (task) => {
+                            try {
+                                await deleteTask(task.task_id);
+                                setAllTasks(allTasks.filter((t) => t.task_id !== task.task_id));
+                            } catch (error) {
+                                displayError(error, "delete task");
+                            }
+                        }
+                    }
                     noTaskMsg="No Tasks 🎉"
                 />
                 <TasksSection
@@ -159,6 +170,16 @@ const Tasks = () => {
                         (task) => navigate("edit-task/" + task.task_id)
                     }
                     handleBoxClick={handleToggleTask}
+                    handleDelete={
+                        async (task) => {
+                            try {
+                                await deleteTask(task.task_id);
+                                setAllTasks(allTasks.filter((t) => t.task_id !== task.task_id));
+                            } catch (error) {
+                                displayError(error, "delete task");
+                            }
+                        }
+                    }
                     noTaskMsg="No Tasks Completed Yet 🏗️"
                 />
                 <div style={{ color: 'grey', fontSize: '.8rem' }}>

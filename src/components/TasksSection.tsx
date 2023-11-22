@@ -5,6 +5,7 @@ import TaskCard from './Task';
 const TasksSection = (props: {
     sectionLabel: string,
     tasks: Database['public']['Tables']['Tasks']['Row'][],
+    handleDelete: (task: Database['public']['Tables']['Tasks']['Row']) => any,
     handleClick: (task: Database['public']['Tables']['Tasks']['Row']) => any,
     handleBoxClick: (task: Database['public']['Tables']['Tasks']['Row']) => any
     noTaskMsg?: string,
@@ -20,6 +21,7 @@ const TasksSection = (props: {
                         task={task}
                         handleClick={props.handleClick}
                         handleBoxClick={props.handleBoxClick}
+                        handleDelete={props.handleDelete}
                     />
                 ))
             }
