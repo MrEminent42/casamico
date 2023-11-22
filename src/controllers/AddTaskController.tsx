@@ -18,5 +18,5 @@ export const addTask = async (task: Database['public']['Tables']['Tasks']['Inser
         throw new Error(res.error.message);
     }
 
-    return res.data.task_id;
+    return res.data;
 };
