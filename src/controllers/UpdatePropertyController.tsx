@@ -15,6 +15,11 @@ export const updateProperty = async (property: Database['public']['Tables']['Pro
             throw new Error(error.message);
         }
 
+        // throw error if no property was updated
+        if (data.length < 1) {
+            throw new Error("No property was updated");
+        }
+
         //create new Room entries in database if needed
         let room_ids: Array<number> = [];
         if (rooms) {
