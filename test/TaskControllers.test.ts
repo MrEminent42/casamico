@@ -1,7 +1,10 @@
 import { Database } from "../src/supabase/supabase";
 import { addTask } from "../src/controllers/AddTaskController"
 import { updateTask } from "../src/controllers/UpdateTaskController"
+import { toggleTaskStatus } from "../src/controllers/ToggleTaskStatusController"
+import { getTask } from "../src/controllers/GetTaskController"
 import { test_manualCreateProperty, test_manualCreateRoom, test_manualCreateTask, test_manualDeleteProperty, test_manualDeleteTask } from "./TestUtil";
+
 
 describe('tasks', () => {
     let property: Database['public']['Tables']['Properties']['Row'];
@@ -76,4 +79,76 @@ describe('tasks', () => {
             }, -1)).rejects.toThrowError("JSON object requested, multiple (or no) rows returned");
         })
     })
+
+    describe('toggle status a task', () => {
+        test('should change the status of task when toggled from false to true', async () => {
+            //create a task with completed = false
+            const task: Database['public']['Tables']['Tasks']['Insert'] = {
+                title: "ZACH TESTING TASK",
+                due_date: "2023-01-01",
+                completed: false,
+                property_id: property.property_id,
+                room_id: room.room_id
+            }
+            
+            // store the add task in temp_task
+
+            let temp_task = await addTask(task);
+
+            //run the testToggle from the controller
+
+            let res = await toggleTaskStatus(temp_task.task_id, false)
+
+            //expect statemenet to check results
+            expect(res).toHaveProperty("completed", true)
+            // tests should be independent, so remove created task
+            await test_manualDeleteTask(temp_task.task_id);
+        })
+
+        test(' change the status of task when toggled from true to false', async () => {
+            //create a task with completed = true
+            const task2: Database['public']['Tables']['Tasks']['Insert'] = {
+                title: "ZACH TESTING TASK2",
+                due_date: "2023-01-01",
+                completed: true,
+                property_id: property.property_id,
+                room_id: room.room_id
+            }
+            
+            // store the add task in temp_task
+
+            let temp_task2 = await addTask(task2);
+
+            //run the testToggle from the controller
+
+            let res = await toggleTaskStatus(temp_task2.task_id, true)
+
+            //expect statemenet to check results
+            expect(res).toHaveProperty("completed", false)
+
+            // tests should be independent, so remove created task
+            await test_manualDeleteTask(temp_task2.task_id);
+        })
+    })
+
+    describe('get a task', () => {
+        test('should return the correct task when running getTask', async () => {
+            const task = await test_manualCreateTask(property.property_id, room.room_id);
+
+            let ret_task = await getTask(task.task_id)
+
+            expect(ret_task.task_id).toEqual(task.task_id)
+
+            // tests should be independent, so remove created task
+            await test_manualDeleteTask(task.task_id);
+        })
+
+        test('should throw error if getting task with false id exists', async () => {
+            // check that error is thrown
+
+            await expect(getTask(-1)).rejects.toThrowError("Task id -1 not found");
+
+        })
+    })
+
 })
