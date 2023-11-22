@@ -22,7 +22,7 @@ describe('tasks', () => {
     })
 
     describe('adding a task', () => {
-        test('should create a task with a unique task id', async () => {
+        test('should successfully create a task with', async () => {
             // create object test task to add to database
             // task_id must be specified so we know that function returns correct ID
             const task: Database['public']['Tables']['Tasks']['Insert'] = {
@@ -90,7 +90,7 @@ describe('tasks', () => {
                 property_id: property.property_id,
                 room_id: room.room_id
             }
-            
+
             // store the add task in temp_task
 
             let temp_task = await addTask(task);
@@ -114,7 +114,7 @@ describe('tasks', () => {
                 property_id: property.property_id,
                 room_id: room.room_id
             }
-            
+
             // store the add task in temp_task
 
             let temp_task2 = await addTask(task2);
