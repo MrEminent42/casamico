@@ -2,6 +2,7 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import Checkbox from '@mui/material/Checkbox';
 import { Database } from '../supabase/supabase';
+import DeleteForeverRoundedIcon from '@mui/icons-material/DeleteForeverRounded';
 
 function hexToRgb(hex: string, alpha: number) {
     const r = parseInt(hex.substring(1, 3), 16);
@@ -14,9 +15,10 @@ interface TaskProps {
     task: Database['public']['Tables']['Tasks']['Row'];
     handleClick: (task: Database['public']['Tables']['Tasks']['Row']) => void;
     handleBoxClick: (task: Database['public']['Tables']['Tasks']['Row']) => void;
+    handleDelete: (task: Database['public']['Tables']['Tasks']['Row']) => void;
 }
 
-const TaskCard = ({ task, handleClick, handleBoxClick }: TaskProps) => {
+const TaskCard = ({ task, handleClick, handleBoxClick, handleDelete }: TaskProps) => {
     const [isComplete, setIsComplete] = useState(task.completed);
     const currentDate = new Date();
 
@@ -62,6 +64,14 @@ const TaskCard = ({ task, handleClick, handleBoxClick }: TaskProps) => {
                     daysBetween(new Date(task.due_date), currentDate) + " days left" :
                     "Overdue"}
             </TaskDue>
+            <DeleteDiv
+                onClick={(e: React.MouseEvent) => {
+                    handleDelete(task);
+                    e.stopPropagation();
+                }}
+            >
+                <DeleteForeverRoundedIcon htmlColor="#6f5f5f" />
+            </DeleteDiv>
         </TaskBackground >
     )
 }
@@ -98,10 +108,23 @@ const TaskDue = styled.p`
     color: rgba(0, 0, 0, 0.5);
     margin: 10px;
     margin-left: auto;
-    padding-right: 10px;
 `
 
 const BasicCheckbox = styled(Checkbox)`
     margin: 0;
     padding: 0;
 `
+
+const DeleteDiv = styled.div`
+    margin: 0;
+    padding: 5px;
+    margin-right: 10px;
+
+    cursor: pointer;
+
+    &:hover {
+        background: rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+    }
+`
+
