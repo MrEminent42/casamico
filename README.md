@@ -1,17 +1,18 @@
-This is a Cal Poly CSC 308/309 project and is intended to comply with all standard software engineering practices.
+This is a Cal Poly CSC 308/309 project and is intended to comply with standard software engineering practices.
 # casamico
-A task tracker for your house!
+A task tracker for your house! You can see the deployed (live) version of the website here: https://casamico.netlify.app/
 
 ## Contributing
 
 1. Clone this repo locally
+
 2. Install NodeJS and NPM, LTS version 18.18.0: https://nodejs.org/en/download
 
 3. In this repo's directory, run `npm i` to install all the required packages associated with this project
 
-4. In this repo's directory, run `npm start` to start the program
+4. In this repo's directory, run `npm start` to start the program and run the website. You can access it at `http://localhost:3000`.
 
-5. Make & checkout to a feature branch with `git branch feature-branch name` and `git checkout feature-branch-name` 
+5. Make & checkout to a feature branch with `git branch feature-branch-name` and `git checkout feature-branch-name` 
 
 6. Make your changes
 
